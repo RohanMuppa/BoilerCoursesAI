@@ -14,6 +14,10 @@ Built by students, for students. Works with any university, any major, any cours
 
 Powered by Claude Code CLI, local RAG, and the Brightspace MCP.
 
+<p align="center">
+  <img src="assets/architecture-overview.svg" alt="System Architecture" width="800"/>
+</p>
+
 ## What You Can Do With This
 
 ### Search Your Textbooks Instantly
@@ -107,6 +111,10 @@ Claude automatically reads CLAUDE.md and understands your project structure.
 
 ### Local RAG System
 
+<p align="center">
+  <img src="assets/rag-pipeline.svg" alt="RAG Pipeline" width="800"/>
+</p>
+
 RAG stands for Retrieval Augmented Generation. Your PDF gets split into small chunks of 400 to 600 characters each. Each chunk becomes a searchable vector using Xenova embeddings stored in LanceDB. When you query, the system finds chunks that match your question by meaning, not exact words.
 
 A 900 page textbook creates approximately 6000 to 7000 searchable chunks.
@@ -193,6 +201,10 @@ For electrical engineering courses, SymPy based solvers handle nodal analysis, K
 Set up equations symbolically showing each KVL and KCL equation. Solve the system symbolically. Substitute numerical values only at the end. Use SymPy units module to track units throughout. This eliminates mental math errors and provides both symbolic and numerical answers.
 
 ### Multi-Agent Verification Workflows
+
+<p align="center">
+  <img src="assets/verification-workflow.svg" alt="Verification Workflow" width="800"/>
+</p>
 
 The repo includes pre-built multi-agent workflows ready to use. The circuits workflow demonstrates the full pattern with six specialized agents running in coordinated phases.
 

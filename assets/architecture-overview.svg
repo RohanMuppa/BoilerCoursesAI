@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600">
+  <defs>
+    <linearGradient id="claudeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#D97706;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#B45309;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="ragGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2563EB;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1D4ED8;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="brightspaceGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#7C3AED;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6D28D9;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="driveGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#059669;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#047857;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="outputGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#DC2626;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#B91C1C;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="2" dy="4" stdDeviation="4" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="600" fill="#f8fafc"/>
+
+  <!-- Title -->
+  <text x="450" y="40" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="700" fill="#1e293b">BoilerCourses-AI Architecture</text>
+
+  <!-- User Box -->
+  <rect x="375" y="70" width="150" height="50" rx="8" fill="#334155" filter="url(#shadow)"/>
+  <text x="450" y="102" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="600" fill="white">You (Terminal)</text>
+
+  <!-- Arrow from User to Claude -->
+  <path d="M450 120 L450 160" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Claude Code CLI (Center) -->
+  <rect x="300" y="170" width="300" height="80" rx="12" fill="url(#claudeGrad)" filter="url(#shadow)"/>
+  <text x="450" y="200" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="700" fill="white">Claude Code CLI</text>
+  <text x="450" y="225" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="rgba(255,255,255,0.85)">Orchestrates all tools and agents</text>
+
+  <!-- MCP Servers Row -->
+  <!-- Local RAG -->
+  <rect x="50" y="320" width="180" height="100" rx="10" fill="url(#ragGrad)" filter="url(#shadow)"/>
+  <text x="140" y="355" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="600" fill="white">Local RAG MCP</text>
+  <text x="140" y="375" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="rgba(255,255,255,0.85)">Semantic search</text>
+  <text x="140" y="395" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="rgba(255,255,255,0.85)">LanceDB + Xenova</text>
+
+  <!-- Brightspace MCP -->
+  <rect x="260" y="320" width="180" height="100" rx="10" fill="url(#brightspaceGrad)" filter="url(#shadow)"/>
+  <text x="350" y="355" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="600" fill="white">Brightspace MCP</text>
+  <text x="350" y="375" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="rgba(255,255,255,0.85)">Courses, assignments</text>
+  <text x="350" y="395" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="rgba(255,255,255,0.85)">Playwright automation</text>
+
+  <!-- Google Drive -->
+  <rect x="470" y="320" width="180" height="100" rx="10" fill="url(#driveGrad)" filter="url(#shadow)"/>
+  <text x="560" y="355" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="600" fill="white">Google Drive API</text>
+  <text x="560" y="375" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="rgba(255,255,255,0.85)">Sync lecture files</text>
+  <text x="560" y="395" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="rgba(255,255,255,0.85)">OAuth / Service Account</text>
+
+  <!-- Subagents -->
+  <rect x="680" y="320" width="180" height="100" rx="10" fill="url(#outputGrad)" filter="url(#shadow)"/>
+  <text x="770" y="355" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="600" fill="white">Verification Agents</text>
+  <text x="770" y="375" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="rgba(255,255,255,0.85)">Solver, Checker</text>
+  <text x="770" y="395" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="rgba(255,255,255,0.85)">Textbook Method</text>
+
+  <!-- Connecting lines from Claude to MCPs -->
+  <path d="M350 250 L140 320" stroke="#64748b" stroke-width="2" fill="none"/>
+  <path d="M400 250 L350 320" stroke="#64748b" stroke-width="2" fill="none"/>
+  <path d="M500 250 L560 320" stroke="#64748b" stroke-width="2" fill="none"/>
+  <path d="M550 250 L770 320" stroke="#64748b" stroke-width="2" fill="none"/>
+
+  <!-- Data Sources Row -->
+  <rect x="50" y="480" width="120" height="70" rx="8" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="110" y="510" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#475569">Textbooks</text>
+  <text x="110" y="528" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">PDF, 900+ pages</text>
+
+  <rect x="190" y="480" width="120" height="70" rx="8" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="250" y="510" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#475569">Context DB</text>
+  <text x="250" y="528" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">JSON knowledge</text>
+
+  <rect x="330" y="480" width="120" height="70" rx="8" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="390" y="510" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#475569">Brightspace</text>
+  <text x="390" y="528" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Purdue LMS</text>
+
+  <rect x="470" y="480" width="120" height="70" rx="8" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="530" y="510" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#475569">Google Drive</text>
+  <text x="530" y="528" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Lecture slides</text>
+
+  <rect x="610" y="480" width="120" height="70" rx="8" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="670" y="510" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#475569">CLAUDE.md</text>
+  <text x="670" y="528" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Course rules</text>
+
+  <rect x="750" y="480" width="120" height="70" rx="8" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="810" y="510" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#475569">Skills</text>
+  <text x="810" y="528" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">/solve, /lookup</text>
+
+  <!-- Connecting lines from MCPs to data sources -->
+  <path d="M140 420 L110 480" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,2"/>
+  <path d="M140 420 L250 480" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,2"/>
+  <path d="M350 420 L390 480" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,2"/>
+  <path d="M560 420 L530 480" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,2"/>
+  <path d="M770 420 L670 480" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,2"/>
+  <path d="M770 420 L810 480" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,2"/>
+
+  <!-- Legend -->
+  <rect x="30" y="565" width="12" height="12" rx="2" fill="url(#claudeGrad)"/>
+  <text x="48" y="575" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Orchestrator</text>
+
+  <rect x="130" y="565" width="12" height="12" rx="2" fill="url(#ragGrad)"/>
+  <text x="148" y="575" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">MCP Server</text>
+
+  <rect x="230" y="565" width="12" height="12" rx="2" fill="#e2e8f0" stroke="#cbd5e1"/>
+  <text x="248" y="575" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Data Source</text>
+</svg>
