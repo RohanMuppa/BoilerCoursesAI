@@ -32,9 +32,19 @@ Returns matching chunks with relevance scores. Lower scores mean better matches.
 
 ### Generate Interactive Study Guides On Demand
 
-Claude generates comprehensive HTML tutorials from scratch based on your course materials. Not templates. Not fill in the blank. Fully generated content tailored to exactly what you need to learn.
+**This is the flagship feature.** Tell Claude any topic and it generates a complete, standalone HTML tutorial you can open in any browser. Not templates. Not fill in the blank. Fully generated content with interactive visualizations, animations, and practice problems.
 
-Works for any subject. Organic chemistry reaction mechanisms with animated electron flow. Microeconomics graphs you can manipulate. Algorithm visualizations that step through execution. Historical timelines with expandable events. Language conjugation drills with instant feedback. Whatever you are studying.
+<p align="center">
+  <img src="assets/interactive-content.svg" alt="Interactive Content Generation" width="800"/>
+</p>
+
+**What you get in each generated tutorial:**
+
+Deep explanations with multiple paragraphs covering why and how, not just definitions. Numerous worked examples with step by step solutions. Intuitive analogies that make abstract concepts concrete. Edge cases and common student mistakes highlighted. 10 to 15 practice problems with detailed solutions. Interactive visualizations from draggable graphs to animated diagrams. Tabbed navigation with smooth animations. Multiple explanations of the same concept for different learning styles.
+
+**Works for any subject.** Organic chemistry reaction mechanisms with animated electron flow. Microeconomics graphs you can manipulate. Algorithm visualizations that step through execution. Circuit diagrams with current flow animations. Historical timelines with expandable events. Language conjugation drills with instant feedback. Whatever you are studying.
+
+**Learn entire topics without the lecture.** These tutorials are thorough enough to be your primary learning resource. Open in any browser, works offline, no dependencies.
 
 The included CLAUDE.md files contain optimized instructions for generating these tutorials, specifying depth requirements, diagram standards, practice problem counts, and formatting rules. These took iteration to refine and produce consistently high quality output.
 

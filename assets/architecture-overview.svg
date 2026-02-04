@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 650">
   <defs>
     <linearGradient id="claudeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" style="stop-color:#D97706;stop-opacity:1" />
@@ -20,100 +20,140 @@
       <stop offset="0%" style="stop-color:#DC2626;stop-opacity:1" />
       <stop offset="100%" style="stop-color:#B91C1C;stop-opacity:1" />
     </linearGradient>
+    <linearGradient id="htmlGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#EC4899"/>
+      <stop offset="100%" style="stop-color:#DB2777"/>
+    </linearGradient>
     <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
       <feDropShadow dx="2" dy="4" stdDeviation="4" flood-opacity="0.15"/>
+    </filter>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
     </filter>
   </defs>
 
   <!-- Background -->
-  <rect width="900" height="600" fill="#f8fafc"/>
+  <rect width="900" height="650" fill="#f8fafc"/>
 
   <!-- Title -->
   <text x="450" y="40" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="700" fill="#1e293b">BoilerCourses-AI Architecture</text>
 
   <!-- User Box -->
-  <rect x="375" y="70" width="150" height="50" rx="8" fill="#334155" filter="url(#shadow)"/>
-  <text x="450" y="102" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="600" fill="white">You (Terminal)</text>
+  <rect x="375" y="65" width="150" height="50" rx="8" fill="#334155" filter="url(#shadow)"/>
+  <text x="450" y="97" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="600" fill="white">You (Terminal)</text>
 
   <!-- Arrow from User to Claude -->
-  <path d="M450 120 L450 160" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <path d="M450 115 L450 150" stroke="#64748b" stroke-width="2"/>
 
   <!-- Claude Code CLI (Center) -->
-  <rect x="300" y="170" width="300" height="80" rx="12" fill="url(#claudeGrad)" filter="url(#shadow)"/>
-  <text x="450" y="200" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="700" fill="white">Claude Code CLI</text>
-  <text x="450" y="225" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="rgba(255,255,255,0.85)">Orchestrates all tools and agents</text>
+  <rect x="300" y="160" width="300" height="80" rx="12" fill="url(#claudeGrad)" filter="url(#shadow)"/>
+  <text x="450" y="195" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="700" fill="white">Claude Code CLI</text>
+  <text x="450" y="218" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="rgba(255,255,255,0.85)">Orchestrates all tools and agents</text>
+
+  <!-- FLAGSHIP FEATURE: Interactive Content Generation -->
+  <rect x="620" y="155" width="260" height="90" rx="12" fill="url(#htmlGrad)" filter="url(#shadow)" filter="url(#glow)"/>
+  <text x="750" y="182" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="rgba(255,255,255,0.8)">⭐ FLAGSHIP FEATURE</text>
+  <text x="750" y="203" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="white">Interactive HTML Generation</text>
+  <text x="750" y="223" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="rgba(255,255,255,0.9)">Complete tutorials with visualizations</text>
+  <text x="750" y="238" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="rgba(255,255,255,0.9)">animations, and practice problems</text>
+
+  <!-- Arrow from Claude to Interactive -->
+  <path d="M600 200 L620 200" stroke="#64748b" stroke-width="2"/>
 
   <!-- MCP Servers Row -->
   <!-- Local RAG -->
-  <rect x="50" y="320" width="180" height="100" rx="10" fill="url(#ragGrad)" filter="url(#shadow)"/>
-  <text x="140" y="355" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="600" fill="white">Local RAG MCP</text>
-  <text x="140" y="375" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="rgba(255,255,255,0.85)">Semantic search</text>
-  <text x="140" y="395" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="rgba(255,255,255,0.85)">LanceDB + Xenova</text>
+  <rect x="30" y="300" width="160" height="100" rx="10" fill="url(#ragGrad)" filter="url(#shadow)"/>
+  <text x="110" y="335" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="white">Local RAG MCP</text>
+  <text x="110" y="355" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="rgba(255,255,255,0.85)">Semantic search</text>
+  <text x="110" y="375" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="rgba(255,255,255,0.85)">LanceDB + Xenova</text>
+  <text x="110" y="390" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(255,255,255,0.7)">900+ page textbooks</text>
 
   <!-- Brightspace MCP -->
-  <rect x="260" y="320" width="180" height="100" rx="10" fill="url(#brightspaceGrad)" filter="url(#shadow)"/>
-  <text x="350" y="355" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="600" fill="white">Brightspace MCP</text>
-  <text x="350" y="375" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="rgba(255,255,255,0.85)">Courses, assignments</text>
-  <text x="350" y="395" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="rgba(255,255,255,0.85)">Playwright automation</text>
+  <rect x="210" y="300" width="160" height="100" rx="10" fill="url(#brightspaceGrad)" filter="url(#shadow)"/>
+  <text x="290" y="335" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="white">Brightspace MCP</text>
+  <text x="290" y="355" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="rgba(255,255,255,0.85)">Courses, assignments</text>
+  <text x="290" y="375" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="rgba(255,255,255,0.85)">grades, due dates</text>
+  <text x="290" y="390" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(255,255,255,0.7)">Playwright + Duo 2FA</text>
 
   <!-- Google Drive -->
-  <rect x="470" y="320" width="180" height="100" rx="10" fill="url(#driveGrad)" filter="url(#shadow)"/>
-  <text x="560" y="355" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="600" fill="white">Google Drive API</text>
-  <text x="560" y="375" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="rgba(255,255,255,0.85)">Sync lecture files</text>
-  <text x="560" y="395" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="rgba(255,255,255,0.85)">OAuth / Service Account</text>
+  <rect x="390" y="300" width="160" height="100" rx="10" fill="url(#driveGrad)" filter="url(#shadow)"/>
+  <text x="470" y="335" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="white">Google Drive API</text>
+  <text x="470" y="355" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="rgba(255,255,255,0.85)">Sync lecture files</text>
+  <text x="470" y="375" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="rgba(255,255,255,0.85)">assignments, slides</text>
+  <text x="470" y="390" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(255,255,255,0.7)">OAuth / Service Account</text>
 
   <!-- Subagents -->
-  <rect x="680" y="320" width="180" height="100" rx="10" fill="url(#outputGrad)" filter="url(#shadow)"/>
-  <text x="770" y="355" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="600" fill="white">Verification Agents</text>
-  <text x="770" y="375" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="rgba(255,255,255,0.85)">Solver, Checker</text>
-  <text x="770" y="395" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="rgba(255,255,255,0.85)">Textbook Method</text>
+  <rect x="570" y="300" width="160" height="100" rx="10" fill="url(#outputGrad)" filter="url(#shadow)"/>
+  <text x="650" y="335" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="white">Verification Agents</text>
+  <text x="650" y="355" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="rgba(255,255,255,0.85)">Solver, Arithmetic</text>
+  <text x="650" y="375" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="rgba(255,255,255,0.85)">Textbook Method</text>
+  <text x="650" y="390" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(255,255,255,0.7)">Multi-phase workflow</text>
 
-  <!-- Connecting lines from Claude to MCPs -->
-  <path d="M350 250 L140 320" stroke="#64748b" stroke-width="2" fill="none"/>
-  <path d="M400 250 L350 320" stroke="#64748b" stroke-width="2" fill="none"/>
-  <path d="M500 250 L560 320" stroke="#64748b" stroke-width="2" fill="none"/>
-  <path d="M550 250 L770 320" stroke="#64748b" stroke-width="2" fill="none"/>
+  <!-- Skills -->
+  <rect x="750" y="300" width="130" height="100" rx="10" fill="#475569" filter="url(#shadow)"/>
+  <text x="815" y="335" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="white">Skills</text>
+  <text x="815" y="355" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="rgba(255,255,255,0.85)">/solve /lookup</text>
+  <text x="815" y="375" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="rgba(255,255,255,0.85)">/verify /examples</text>
+  <text x="815" y="390" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(255,255,255,0.7)">Course-specific</text>
+
+  <!-- Connecting lines from Claude to components -->
+  <path d="M350 240 L110 300" stroke="#64748b" stroke-width="2" fill="none"/>
+  <path d="M400 240 L290 300" stroke="#64748b" stroke-width="2" fill="none"/>
+  <path d="M470 240 L470 300" stroke="#64748b" stroke-width="2" fill="none"/>
+  <path d="M530 240 L650 300" stroke="#64748b" stroke-width="2" fill="none"/>
+  <path d="M570 240 L815 300" stroke="#64748b" stroke-width="2" fill="none"/>
 
   <!-- Data Sources Row -->
-  <rect x="50" y="480" width="120" height="70" rx="8" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/>
-  <text x="110" y="510" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#475569">Textbooks</text>
-  <text x="110" y="528" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">PDF, 900+ pages</text>
+  <text x="450" y="440" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="600" fill="#64748b">DATA SOURCES</text>
 
-  <rect x="190" y="480" width="120" height="70" rx="8" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/>
-  <text x="250" y="510" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#475569">Context DB</text>
-  <text x="250" y="528" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">JSON knowledge</text>
+  <rect x="30" y="460" width="110" height="65" rx="8" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="85" y="488" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#475569">Textbooks</text>
+  <text x="85" y="505" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="#64748b">PDF, 900+ pages</text>
 
-  <rect x="330" y="480" width="120" height="70" rx="8" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/>
-  <text x="390" y="510" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#475569">Brightspace</text>
-  <text x="390" y="528" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Purdue LMS</text>
+  <rect x="155" y="460" width="110" height="65" rx="8" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="210" y="488" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#475569">Context DB</text>
+  <text x="210" y="505" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="#64748b">JSON knowledge</text>
 
-  <rect x="470" y="480" width="120" height="70" rx="8" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/>
-  <text x="530" y="510" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#475569">Google Drive</text>
-  <text x="530" y="528" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Lecture slides</text>
+  <rect x="280" y="460" width="110" height="65" rx="8" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="335" y="488" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#475569">Brightspace</text>
+  <text x="335" y="505" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="#64748b">Purdue LMS</text>
 
-  <rect x="610" y="480" width="120" height="70" rx="8" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/>
-  <text x="670" y="510" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#475569">CLAUDE.md</text>
-  <text x="670" y="528" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Course rules</text>
+  <rect x="405" y="460" width="110" height="65" rx="8" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="460" y="488" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#475569">Google Drive</text>
+  <text x="460" y="505" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="#64748b">Lecture slides</text>
 
-  <rect x="750" y="480" width="120" height="70" rx="8" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/>
-  <text x="810" y="510" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#475569">Skills</text>
-  <text x="810" y="528" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">/solve, /lookup</text>
+  <rect x="530" y="460" width="110" height="65" rx="8" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="585" y="488" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#475569">CLAUDE.md</text>
+  <text x="585" y="505" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="#64748b">Course rules</text>
 
-  <!-- Connecting lines from MCPs to data sources -->
-  <path d="M140 420 L110 480" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,2"/>
-  <path d="M140 420 L250 480" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,2"/>
-  <path d="M350 420 L390 480" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,2"/>
-  <path d="M560 420 L530 480" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,2"/>
-  <path d="M770 420 L670 480" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,2"/>
-  <path d="M770 420 L810 480" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,2"/>
+  <rect x="655" y="460" width="110" height="65" rx="8" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="710" y="488" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#475569">Past Exams</text>
+  <text x="710" y="505" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="#64748b">Practice problems</text>
 
-  <!-- Legend -->
-  <rect x="30" y="565" width="12" height="12" rx="2" fill="url(#claudeGrad)"/>
-  <text x="48" y="575" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Orchestrator</text>
+  <rect x="780" y="460" width="100" height="65" rx="8" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="830" y="488" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#475569">Lectures</text>
+  <text x="830" y="505" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="#64748b">PDFs, notes</text>
 
-  <rect x="130" y="565" width="12" height="12" rx="2" fill="url(#ragGrad)"/>
-  <text x="148" y="575" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">MCP Server</text>
+  <!-- Outputs Row -->
+  <text x="450" y="555" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="600" fill="#64748b">OUTPUTS</text>
 
-  <rect x="230" y="565" width="12" height="12" rx="2" fill="#e2e8f0" stroke="#cbd5e1"/>
-  <text x="248" y="575" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Data Source</text>
+  <rect x="80" y="575" width="150" height="55" rx="8" fill="#fce7f3" stroke="#EC4899" stroke-width="2"/>
+  <text x="155" y="600" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#BE185D">Interactive HTML</text>
+  <text x="155" y="618" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="#9D174D">Full tutorials, visualizations</text>
+
+  <rect x="250" y="575" width="150" height="55" rx="8" fill="#dbeafe" stroke="#3B82F6" stroke-width="1"/>
+  <text x="325" y="600" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#1E40AF">Verified Answers</text>
+  <text x="325" y="618" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="#1E3A8A">Multi-agent checked</text>
+
+  <rect x="420" y="575" width="150" height="55" rx="8" fill="#d1fae5" stroke="#10B981" stroke-width="1"/>
+  <text x="495" y="600" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#047857">Synced Files</text>
+  <text x="495" y="618" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="#065F46">Always up to date</text>
+
+  <rect x="590" y="575" width="150" height="55" rx="8" fill="#ede9fe" stroke="#8B5CF6" stroke-width="1"/>
+  <text x="665" y="600" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#5B21B6">Assignment Info</text>
+  <text x="665" y="618" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="#4C1D95">Due dates, grades</text>
 </svg>

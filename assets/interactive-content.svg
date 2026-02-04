@@ -1,0 +1,140 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520">
+  <defs>
+    <linearGradient id="claudeGen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#D97706"/>
+      <stop offset="100%" style="stop-color:#B45309"/>
+    </linearGradient>
+    <linearGradient id="htmlGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#EC4899"/>
+      <stop offset="100%" style="stop-color:#DB2777"/>
+    </linearGradient>
+    <linearGradient id="sourceGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B82F6"/>
+      <stop offset="100%" style="stop-color:#2563EB"/>
+    </linearGradient>
+    <linearGradient id="featureGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#10B981"/>
+      <stop offset="100%" style="stop-color:#059669"/>
+    </linearGradient>
+    <filter id="shadowGen" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="2" dy="4" stdDeviation="4" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="520" fill="#f8fafc"/>
+
+  <!-- Title -->
+  <text x="450" y="35" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="700" fill="#1e293b">Interactive Content Generation</text>
+  <text x="450" y="58" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" fill="#64748b">Learn any topic from a single generated HTML file</text>
+
+  <!-- User Request -->
+  <rect x="30" y="90" width="160" height="80" rx="10" fill="white" stroke="#64748b" stroke-width="2" filter="url(#shadowGen)"/>
+  <text x="110" y="120" text-anchor="middle" font-family="system-ui, sans-serif" font-size="28">💬</text>
+  <text x="110" y="145" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#334155">"Explain Thevenin</text>
+  <text x="110" y="160" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#334155">equivalents"</text>
+
+  <!-- Arrow -->
+  <path d="M190 130 L230 130" stroke="#64748b" stroke-width="2" fill="none"/>
+  <polygon points="230,125 240,130 230,135" fill="#64748b"/>
+
+  <!-- Claude + CLAUDE.md -->
+  <rect x="250" y="80" width="200" height="100" rx="12" fill="url(#claudeGen)" filter="url(#shadowGen)"/>
+  <text x="350" y="115" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="700" fill="white">Claude Code</text>
+  <text x="350" y="138" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="rgba(255,255,255,0.9)">Follows CLAUDE.md rules</text>
+  <text x="350" y="155" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="rgba(255,255,255,0.75)">Depth, diagrams, practice problems</text>
+  <text x="350" y="170" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="rgba(255,255,255,0.75)">Quality requirements enforced</text>
+
+  <!-- Sources feeding into Claude -->
+  <rect x="270" y="210" width="80" height="50" rx="6" fill="url(#sourceGrad)" filter="url(#shadowGen)"/>
+  <text x="310" y="232" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="white">Textbook</text>
+  <text x="310" y="248" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(255,255,255,0.8)">RAG search</text>
+
+  <rect x="360" y="210" width="80" height="50" rx="6" fill="url(#sourceGrad)" filter="url(#shadowGen)"/>
+  <text x="400" y="232" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="white">Lectures</text>
+  <text x="400" y="248" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(255,255,255,0.8)">Drive sync</text>
+
+  <path d="M310 210 L330 180" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="4,2"/>
+  <path d="M400 210 L380 180" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="4,2"/>
+
+  <!-- Arrow to HTML -->
+  <path d="M450 130 L500 130" stroke="#64748b" stroke-width="2" fill="none"/>
+  <polygon points="500,125 510,130 500,135" fill="#64748b"/>
+
+  <!-- Generated HTML -->
+  <rect x="520" y="70" width="180" height="120" rx="12" fill="url(#htmlGrad)" filter="url(#shadowGen)"/>
+  <text x="610" y="105" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="700" fill="white">Generated HTML</text>
+  <text x="610" y="125" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="rgba(255,255,255,0.9)">Standalone file</text>
+  <text x="610" y="145" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="rgba(255,255,255,0.75)">Opens in any browser</text>
+  <text x="610" y="162" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="rgba(255,255,255,0.75)">Works offline</text>
+  <text x="610" y="179" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="rgba(255,255,255,0.75)">No dependencies</text>
+
+  <!-- Arrow to Browser -->
+  <path d="M700 130 L740 130" stroke="#64748b" stroke-width="2" fill="none"/>
+  <polygon points="740,125 750,130 740,135" fill="#64748b"/>
+
+  <!-- Browser Preview -->
+  <rect x="760" y="70" width="120" height="120" rx="10" fill="white" stroke="#e2e8f0" stroke-width="2" filter="url(#shadowGen)"/>
+  <rect x="760" y="70" width="120" height="20" rx="10" ry="10" fill="#f1f5f9"/>
+  <circle cx="775" cy="80" r="4" fill="#EF4444"/>
+  <circle cx="788" cy="80" r="4" fill="#F59E0B"/>
+  <circle cx="801" cy="80" r="4" fill="#10B981"/>
+  <rect x="770" y="100" width="100" height="8" rx="2" fill="#e2e8f0"/>
+  <rect x="770" y="115" width="80" height="6" rx="2" fill="#e2e8f0"/>
+  <rect x="770" y="128" width="90" height="6" rx="2" fill="#e2e8f0"/>
+  <rect x="770" y="145" width="50" height="30" rx="4" fill="#dbeafe"/>
+  <rect x="825" y="145" width="45" height="30" rx="4" fill="#dcfce7"/>
+  <text x="820" y="195" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Your browser</text>
+
+  <!-- What's Inside Section -->
+  <text x="450" y="295" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="700" fill="#1e293b">What's Inside Each Generated Tutorial</text>
+
+  <!-- Feature boxes - Row 1 -->
+  <rect x="30" y="320" width="170" height="85" rx="8" fill="url(#featureGrad)" filter="url(#shadowGen)"/>
+  <text x="115" y="345" text-anchor="middle" font-family="system-ui, sans-serif" font-size="20">📝</text>
+  <text x="115" y="368" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="white">Deep Explanations</text>
+  <text x="115" y="385" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(255,255,255,0.85)">Multiple paragraphs on why</text>
+  <text x="115" y="398" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(255,255,255,0.85)">and how, not just definitions</text>
+
+  <rect x="215" y="320" width="170" height="85" rx="8" fill="url(#featureGrad)" filter="url(#shadowGen)"/>
+  <text x="300" y="345" text-anchor="middle" font-family="system-ui, sans-serif" font-size="20">🎯</text>
+  <text x="300" y="368" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="white">Worked Examples</text>
+  <text x="300" y="385" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(255,255,255,0.85)">Step-by-step solutions</text>
+  <text x="300" y="398" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(255,255,255,0.85)">with detailed reasoning</text>
+
+  <rect x="400" y="320" width="170" height="85" rx="8" fill="url(#featureGrad)" filter="url(#shadowGen)"/>
+  <text x="485" y="345" text-anchor="middle" font-family="system-ui, sans-serif" font-size="20">🖱️</text>
+  <text x="485" y="368" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="white">Interactive Visuals</text>
+  <text x="485" y="385" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(255,255,255,0.85)">Draggable graphs, animations</text>
+  <text x="485" y="398" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(255,255,255,0.85)">step-through diagrams</text>
+
+  <rect x="585" y="320" width="170" height="85" rx="8" fill="url(#featureGrad)" filter="url(#shadowGen)"/>
+  <text x="670" y="345" text-anchor="middle" font-family="system-ui, sans-serif" font-size="20">✏️</text>
+  <text x="670" y="368" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="white">Practice Problems</text>
+  <text x="670" y="385" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(255,255,255,0.85)">10-15 problems per topic</text>
+  <text x="670" y="398" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(255,255,255,0.85)">with full solutions</text>
+
+  <!-- Feature boxes - Row 2 -->
+  <rect x="120" y="420" width="170" height="85" rx="8" fill="url(#featureGrad)" filter="url(#shadowGen)"/>
+  <text x="205" y="445" text-anchor="middle" font-family="system-ui, sans-serif" font-size="20">💡</text>
+  <text x="205" y="468" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="white">Intuitive Analogies</text>
+  <text x="205" y="485" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(255,255,255,0.85)">Abstract concepts made</text>
+  <text x="205" y="498" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(255,255,255,0.85)">concrete and memorable</text>
+
+  <rect x="305" y="420" width="170" height="85" rx="8" fill="url(#featureGrad)" filter="url(#shadowGen)"/>
+  <text x="390" y="445" text-anchor="middle" font-family="system-ui, sans-serif" font-size="20">⚠️</text>
+  <text x="390" y="468" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="white">Common Mistakes</text>
+  <text x="390" y="485" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(255,255,255,0.85)">Edge cases and pitfalls</text>
+  <text x="390" y="498" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(255,255,255,0.85)">students actually make</text>
+
+  <rect x="490" y="420" width="170" height="85" rx="8" fill="url(#featureGrad)" filter="url(#shadowGen)"/>
+  <text x="575" y="445" text-anchor="middle" font-family="system-ui, sans-serif" font-size="20">📑</text>
+  <text x="575" y="468" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="white">Tabbed Navigation</text>
+  <text x="575" y="485" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(255,255,255,0.85)">Organized sections with</text>
+  <text x="575" y="498" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="rgba(255,255,255,0.85)">smooth animations</text>
+
+  <!-- Tagline -->
+  <rect x="720" y="435" width="160" height="55" rx="8" fill="#fef3c7" stroke="#F59E0B" stroke-width="1"/>
+  <text x="800" y="458" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#92400E">Learn the entire topic</text>
+  <text x="800" y="475" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#92400E">without the lecture</text>
+</svg>
