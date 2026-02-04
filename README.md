@@ -267,7 +267,7 @@ When you ask a question, your query is embedded using the same model, and LanceD
 
 ```
 boilercourses-ai/
-    ECE-20001/                         # Example: Linear Circuit Analysis I
+    ECE-20001/                       # Example: Linear Circuit Analysis I
         lectures/
         labs/
         homework/
@@ -280,6 +280,14 @@ boilercourses-ai/
             circuit_formulas.json
             solved_problems.json
         CLAUDE.md                    # Course-specific instructions
+    ECE-20002/                       # Example: Linear Circuit Analysis II
+        lectures/
+        homework/
+        context_db/
+            .schema.json
+            ac_circuits.json
+            phasor_analysis.json
+        CLAUDE.md
     ECE-270/                         # Example: Introduction to Digital System Design
         lectures/
         labs/
@@ -303,6 +311,15 @@ boilercourses-ai/
         lectures/
         context_db/
             .schema.json
+        CLAUDE.md
+    ECE-368/                         # Example: Data Structures
+        lectures/
+        labs/
+        homework/
+        context_db/
+            .schema.json
+            algorithms.json
+            complexity_analysis.json
         CLAUDE.md
     textbooks/                       # PDF textbooks (gitignored)
         circuit-analysis.pdf
