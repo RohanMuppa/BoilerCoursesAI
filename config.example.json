@@ -1,0 +1,27 @@
+{
+  "workspace_path": "/path/to/your/workspace",
+  "context_db": {
+    "enabled": true,
+    "search_priority": "context_db_first",
+    "description": "Search context_db before textbooks for faster, class specific answers"
+  },
+  "courses": {
+    "EXAMPLE-101": {
+      "drive_folder_name": "Your Google Drive Folder Name",
+      "local_folder_name": "Example Course 101",
+      "context_db_path": "context_db"
+    },
+    "EXAMPLE-102": {
+      "local_folder_name": "Example Course 102",
+      "labs_path": "labs",
+      "textbook_filename": "your-textbook.pdf",
+      "context_db_path": "context_db"
+    },
+    "EXAMPLE-103": {
+      "local_folder_name": "Example Course 103",
+      "textbook_filename": "another-textbook.pdf",
+      "extracted_folder": "extracted",
+      "context_db_path": "context_db"
+    }
+  }
+}

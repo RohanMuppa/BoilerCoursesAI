@@ -1,0 +1,121 @@
+# Config with personal paths
+config.json
+
+# Credentials
+scripts/credentials.json
+scripts/token.json
+scripts/service_account.json
+*.pem
+*.key
+
+# Local Claude settings
+.claude/
+.mcp.json
+
+# Environment
+venv/
+.env
+.env.local
+
+# Vector database
+lancedb/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Course content (documents)
+*.pdf
+*.docx
+*.doc
+*.pptx
+*.ppt
+*.xlsx
+
+# Extracted content
+extracted/
+
+# Lab materials (cloned from course repo, users can get themselves)
+student-labs-main/
+
+# Lab submissions (personal work)
+**/submission/
+**/submissions/
+
+# Binary and test files
+*.labtest
+*.dll
+*.exe
+*.dmg
+*.appimage
+*.qm
+
+# Backup files
+*-backups/
+*.zip
+
+# Course content folders
+ECE*/lectures/
+ECE*/recitations*/
+ECE*/weeklyreview*/
+ECE*/Exams/
+
+# Personal diagrams
+**/lab*diagram/
+
+# HONR course reading materials
+HONR*/
+
+# Solver scripts with hardcoded values
+circuit_nodal_analysis.py
+ece_circuit_solution_clean.py
+ece_circuit_solver.py
+ece_20001_kvl_solver.py
+solve_vab.py
+solve_vab_v2.py
+solve_vab_v3.py
+VAB_solution.txt
+
+# Models folder (downloaded embeddings)
+models/
+
+# Context database content (personal notes)
+**/context_db/*.json
+!**/context_db/.schema.json
+
+# Jupyter notebooks
+*.ipynb
+
+# JSON data files (generated)
+**/student_submission.json
+**/index.json
+
+# Image files in course content
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.webm
+*.PNG
+*.JPG
+
+# KiCad files (personal work)
+*.kicad_*
+
+# Keep these specific files
+!README.md
+!CLAUDE.md
+!config.example.json
+!scripts/*.py
+!scripts/requirements.txt
+!**/CLAUDE.md
+!**/*.html

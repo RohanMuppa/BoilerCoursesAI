@@ -1,0 +1,37 @@
+{
+  "version": "1.0",
+  "course": "ECE 39595EE",
+  "description": "Local context database for ECE 39595EE class materials",
+  "priority": "high",
+  "search_order": 1,
+  "categories": {
+    "concepts": {
+      "description": "Core concepts, frameworks, and methodologies",
+      "file_pattern": "concepts_*.json"
+    },
+    "examples": {
+      "description": "Case studies, real world examples, project references",
+      "file_pattern": "examples_*.json"
+    },
+    "lecture_notes": {
+      "description": "Summarized lecture content and key points",
+      "file_pattern": "lecture_*.json"
+    },
+    "assignments": {
+      "description": "Assignment requirements, rubrics, and guidelines",
+      "file_pattern": "assignments_*.json"
+    },
+    "reflections": {
+      "description": "Personal reflections, insights, and learnings",
+      "file_pattern": "reflections_*.json"
+    }
+  },
+  "entry_schema": {
+    "id": "string, unique identifier",
+    "title": "string, brief descriptive title",
+    "content": "string, main content or explanation",
+    "keywords": "array of strings for search matching",
+    "created": "ISO date string",
+    "updated": "ISO date string"
+  }
+}

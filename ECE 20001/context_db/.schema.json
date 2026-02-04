@@ -1,0 +1,38 @@
+{
+  "version": "1.0",
+  "course": "ECE 20001",
+  "description": "Local context database for ECE 20001 class materials",
+  "priority": "high",
+  "search_order": 1,
+  "categories": {
+    "formulas": {
+      "description": "Key formulas, equations, and derivations",
+      "file_pattern": "formulas_*.json"
+    },
+    "concepts": {
+      "description": "Core concepts, definitions, and explanations",
+      "file_pattern": "concepts_*.json"
+    },
+    "examples": {
+      "description": "Worked examples and problem solutions",
+      "file_pattern": "examples_*.json"
+    },
+    "lecture_notes": {
+      "description": "Summarized lecture content and key points",
+      "file_pattern": "lecture_*.json"
+    },
+    "homework": {
+      "description": "Homework problem patterns and solution strategies",
+      "file_pattern": "homework_*.json"
+    }
+  },
+  "entry_schema": {
+    "id": "string, unique identifier",
+    "title": "string, brief descriptive title",
+    "content": "string, main content or explanation",
+    "keywords": "array of strings for search matching",
+    "related_textbook_sections": "array of section references",
+    "created": "ISO date string",
+    "updated": "ISO date string"
+  }
+}

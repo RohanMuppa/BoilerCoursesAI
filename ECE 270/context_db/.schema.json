@@ -1,0 +1,42 @@
+{
+  "version": "1.0",
+  "course": "ECE 270",
+  "description": "Local context database for ECE 270 Digital Design class materials",
+  "priority": "high",
+  "search_order": 1,
+  "categories": {
+    "formulas": {
+      "description": "Boolean algebra, logic expressions, timing calculations",
+      "file_pattern": "formulas_*.json"
+    },
+    "concepts": {
+      "description": "Digital logic concepts, gate types, circuit design principles",
+      "file_pattern": "concepts_*.json"
+    },
+    "examples": {
+      "description": "Worked examples, truth tables, circuit diagrams",
+      "file_pattern": "examples_*.json"
+    },
+    "lecture_notes": {
+      "description": "Summarized lecture content and key points",
+      "file_pattern": "lecture_*.json"
+    },
+    "lab_notes": {
+      "description": "Lab procedures, common issues, SystemVerilog patterns",
+      "file_pattern": "lab_*.json"
+    },
+    "verilog": {
+      "description": "SystemVerilog syntax, modules, testbenches",
+      "file_pattern": "verilog_*.json"
+    }
+  },
+  "entry_schema": {
+    "id": "string, unique identifier",
+    "title": "string, brief descriptive title",
+    "content": "string, main content or explanation",
+    "keywords": "array of strings for search matching",
+    "related_textbook_sections": "array of section references",
+    "created": "ISO date string",
+    "updated": "ISO date string"
+  }
+}
