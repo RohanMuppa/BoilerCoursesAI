@@ -17,6 +17,9 @@ venv/
 .env
 .env.local
 
+# External MCP servers (cloned repos)
+brightspace-mcp-server/
+
 # Vector database
 lancedb/
 
