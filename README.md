@@ -212,6 +212,20 @@ Low means unresolved flags remain.
 
 These workflows are ready to use as configured. You can also modify them, adding domain specific verification agents for your field, removing agents you do not need, changing parallelization, or defining custom resolution protocols.
 
+### LLM Performance on Circuit Analysis (Research Findings)
+
+Recent benchmarks specifically evaluating LLMs on undergraduate circuit analysis problems reveal significant differences.
+
+**Gemini 2.5 Pro** achieved the highest baseline accuracy at 79.52% on circuit problems (66 of 83 correct). With an enhanced pipeline including ngspice verification, accuracy reached 97.59%. Primary failure modes include source polarity recognition errors (35% of failures), current direction hallucinations (29%), and element connection hallucinations (12%). Source: [Enhancing LLMs for End-to-End Circuit Analysis](https://arxiv.org/html/2512.10159)
+
+**GPT-4o** achieved 48.04% accuracy on the CIRCUIT benchmark dataset (510 undergraduate circuit problems). However, pass@5/5 unit test accuracy (requiring correct answers across all five numerical variants of a problem) was only 27.45%, revealing inconsistency in reasoning. Performance improved to 67% on problems not requiring circuit topology interpretation. Source: [CIRCUIT Benchmark](https://arxiv.org/html/2502.07980v1)
+
+**Claude** was selected by the IDEEAS Lab for its "stronger ability to analyze circuit diagrams" compared to alternatives. It performs reliably on digital circuits but shows "variable accuracy with analog circuits" and is "less reliable with complex analog behaviors." Verification against simulation is recommended. Source: [IDEEAS Lab Teaching Resources](https://ideeaslab.com/resources/teaching/electrical-engineering-claude/)
+
+**Wolfram Alpha integration** provides reliable symbolic computation that any LLM struggles with natively. Combining an LLM for problem interpretation with Wolfram for computation addresses the "can't do actual nontrivial computations" limitation of neural networks. Works with GPT-4, Claude, and Gemini. Source: [Wolfram AI Ecosystem](https://www.wolfram.com/artificial-intelligence/)
+
+**Recommendation for ECE problems.** Use Gemini 2.5 Pro as the primary solver for circuit analysis when accuracy is critical, especially with an ngspice or SPICE verification step. Use Claude for diagram interpretation, concept explanation, and textbook methodology verification. Use Wolfram Alpha (via API or plugin) for any symbolic computation or numerical verification. The multi-agent workflow in this repo can be configured to route different subtasks to different models.
+
 Technical Architecture
 
 ### The Stack
@@ -240,37 +254,62 @@ When you ask a question, your query is embedded using the same model, and LanceD
 ## Project Structure
 
 ```
-boiler-ai/
-    courses/
-        ECE-270/
-            lectures/
-            labs/
-            explanations/
-            recitations/
-            Exams/
-            context_db/
-                .schema.json
-            CLAUDE.md
-        ECE-20001/
-            context_db/
-                .schema.json
-            CLAUDE.md
-        ECE-39595EE/
-            context_db/
-                .schema.json
-        HONR-299/
-            context_db/
-                .schema.json
-    textbooks/
+boilercourses-ai/
+    ECE-20001/                         # Example: Linear Circuit Analysis I
+        lectures/
+        labs/
+        homework/
+        exams/
+        explanations/                # Generated interactive HTML tutorials
+            nodal-analysis-explained.html
+            thevenin-norton-visualized.html
+        context_db/
+            .schema.json
+            circuit_formulas.json
+            solved_problems.json
+        CLAUDE.md                    # Course-specific instructions
+    ECE-270/                         # Example: Introduction to Digital System Design
+        lectures/
+        labs/
+        student-labs-main/           # Cloned course repo (gitignored)
+        explanations/
+            boolean-algebra.html
+            sequential-circuits.html
+        context_db/
+            .schema.json
+            verilog_patterns.json
+            lab_notes.json
+        CLAUDE.md
+    ECE-301/                         # Example: Signals and Systems
+        lectures/
+        homework/
+        context_db/
+            .schema.json
+            fourier_transforms.json
+        CLAUDE.md
+    ECE-302/                         # Example: Probabilistic Methods
+        lectures/
+        context_db/
+            .schema.json
+        CLAUDE.md
+    textbooks/                       # PDF textbooks (gitignored)
+        circuit-analysis.pdf
         digital-design.pdf
-        circuits.pdf
+        signals-and-systems.pdf
     scripts/
-        google_drive_api.py
-        google_drive_service_account.py
-        pull_ece_files.py
+        google_drive_api.py          # OAuth 2.0 client
+        google_drive_service_account.py  # Service Account client
+        pull_ece_files.py            # Sync all configured courses
+        sync_ece270_labs.py          # Course-specific sync
         requirements.txt
-    config.json
-    CLAUDE.md
+    lancedb/                         # Vector database (gitignored)
+    models/                          # Embedding models (gitignored)
+    venv/                            # Virtual environment (gitignored)
+    config.json                      # Your paths and settings (gitignored)
+    config.example.json              # Template configuration
+    .mcp.json                        # MCP server configuration (gitignored)
+    .gitignore
+    CLAUDE.md                        # Global instructions
     README.md
 ```
 
