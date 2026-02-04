@@ -228,7 +228,7 @@ These workflows are ready to use as configured. You can also modify them, adding
 
 Recent benchmarks specifically evaluating LLMs on undergraduate circuit analysis problems reveal significant differences.
 
-**Gemini 2.5 Pro** achieved the highest baseline accuracy at 79.52% on circuit problems (66 of 83 correct). With an enhanced pipeline including ngspice verification, accuracy reached 97.59%. Primary failure modes include source polarity recognition errors (35% of failures), current direction hallucinations (29%), and element connection hallucinations (12%). Source: [Enhancing LLMs for End-to-End Circuit Analysis](https://arxiv.org/html/2512.10159)
+**Gemini 3 Pro** achieved the highest baseline accuracy at 79.52% on circuit problems (66 of 83 correct). With an enhanced pipeline including ngspice verification, accuracy reached 97.59%. Primary failure modes include source polarity recognition errors (35% of failures), current direction hallucinations (29%), and element connection hallucinations (12%). Source: [Enhancing LLMs for End-to-End Circuit Analysis](https://arxiv.org/html/2512.10159)
 
 **GPT-4o** achieved 48.04% accuracy on the CIRCUIT benchmark dataset (510 undergraduate circuit problems). However, pass@5/5 unit test accuracy (requiring correct answers across all five numerical variants of a problem) was only 27.45%, revealing inconsistency in reasoning. Performance improved to 67% on problems not requiring circuit topology interpretation. Source: [CIRCUIT Benchmark](https://arxiv.org/html/2502.07980v1)
 
@@ -236,7 +236,7 @@ Recent benchmarks specifically evaluating LLMs on undergraduate circuit analysis
 
 **Wolfram Alpha integration** provides reliable symbolic computation that any LLM struggles with natively. Combining an LLM for problem interpretation with Wolfram for computation addresses the "can't do actual nontrivial computations" limitation of neural networks. Works with GPT-4, Claude, and Gemini. Source: [Wolfram AI Ecosystem](https://www.wolfram.com/artificial-intelligence/)
 
-**Recommendation for ECE problems.** Use Gemini 2.5 Pro as the primary solver for circuit analysis when accuracy is critical, especially with an ngspice or SPICE verification step. Use Claude for diagram interpretation, concept explanation, and textbook methodology verification. Use Wolfram Alpha (via API or plugin) for any symbolic computation or numerical verification. The multi-agent workflow in this repo can be configured to route different subtasks to different models.
+**Recommendation for ECE problems.** Use Gemini 3 Pro as the primary solver for circuit analysis when accuracy is critical, especially with an ngspice or SPICE verification step. Use Claude for diagram interpretation, concept explanation, and textbook methodology verification. Use Wolfram Alpha (via API or plugin) for any symbolic computation or numerical verification. The multi-agent workflow in this repo can be configured to route different subtasks to different models.
 
 Technical Architecture
 
