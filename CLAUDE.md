@@ -7,6 +7,9 @@ EVERY TIME a new chat session begins, immediately ask the user if they want to p
 ECE 270 is stored locally only, not on Google Drive. Do not offer to pull ECE 270 files from Google Drive.
 ECE 39595EE is synced from Google Drive.
 
+## File Organization
+Scripts and class related files MUST stay in their respective class folder. NEVER create course specific scripts or files in the root school directory. Each course has a scripts subfolder for Python files and other code. For example, ECE 20001 circuit solvers go in ECE 20001/scripts, ECE 270 Verilog tools go in ECE 270/scripts.
+
 ## Context Database
 
 Each course has a local context_db folder containing class specific context that should be searched BEFORE looking through textbooks. This provides faster, more relevant answers for common questions.

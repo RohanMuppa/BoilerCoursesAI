@@ -59,6 +59,14 @@ Exams/ contains exam learning objectives and past exams
 
 ## Labs
 
+### Syncing Labs from GitHub
+
+NEVER use git pull directly on the student-labs-main folder. This will overwrite completed work.
+
+Use the `/sync-ece270-labs` skill to safely pull new labs. This only adds NEW labs that don't exist locally and never touches existing lab folders or files.
+
+### Lab Environment
+
 Labs use SystemVerilog and simulate on FPGA hardware.
 Lab reference files are in student-labs-main/refs/ including datasheets for 74HC series chips.
 
