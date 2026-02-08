@@ -8,8 +8,6 @@ BoilerCourses-AI combines local semantic search, intelligent file organization, 
 
 The real power is generative interactive content. Tell Claude any topic you need to learn and it generates comprehensive HTML tutorials with visualizations, animations, tabbed navigation, and practice problems. Organic chemistry mechanisms with electron flow animations. Economics supply and demand curves you can drag. Physics free body diagrams that respond to changing forces. Any subject, any concept. These are standalone files you open in any browser, thorough enough to learn entire topics without the lecture.
 
-Built by students, for students. Works with any university, any major, any course.
-
 Powered by Claude Code CLI, local RAG, and the Brightspace MCP.
 
 <p align="center">
