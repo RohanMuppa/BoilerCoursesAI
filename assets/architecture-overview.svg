@@ -55,7 +55,7 @@
   <text x="450" y="218" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="rgba(255,255,255,0.85)">Orchestrates all tools and agents</text>
 
   <!-- FLAGSHIP FEATURE: Interactive Content Generation -->
-  <rect x="620" y="155" width="260" height="90" rx="12" fill="url(#htmlGrad)" filter="url(#shadow)" filter="url(#glow)"/>
+  <rect x="620" y="155" width="260" height="90" rx="12" fill="url(#htmlGrad)" filter="url(#glow)"/>
   <text x="750" y="182" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="rgba(255,255,255,0.8)">⭐ FLAGSHIP FEATURE</text>
   <text x="750" y="203" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="white">Interactive HTML Generation</text>
   <text x="750" y="223" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="rgba(255,255,255,0.9)">Complete tutorials with visualizations</text>
