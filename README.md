@@ -10,79 +10,27 @@ The real power is generative interactive content. Tell Claude any topic you need
 
 Powered by Claude Code CLI, local RAG, and the Brightspace MCP.
 
-```mermaid
-graph TD
-    User["🖥️ You (Terminal)"] --> Claude["🟠 Claude Code CLI<br/>Orchestrates all tools and agents"]
-    Claude --> RAG["🔵 Local RAG MCP<br/>Semantic search · LanceDB + Xenova"]
-    Claude --> BS["🟣 Brightspace MCP<br/>Courses · Assignments · Grades"]
-    Claude --> GD["🟢 Google Drive API<br/>Sync lectures · slides · files"]
-    Claude --> VA["🔴 Verification Agents<br/>Multi-phase solver pipeline"]
-    Claude --> HTML["⭐ Interactive HTML Generation<br/>Tutorials with visualizations"]
-
-    RAG --- Textbooks["📄 Textbooks"]
-    RAG --- CDB["📦 Context DB"]
-    BS --- LMS["🎓 Brightspace"]
-    GD --- Slides["📁 Google Drive"]
-
-    HTML --> O1["📝 Interactive Tutorials"]
-    VA --> O2["✅ Verified Answers"]
-    GD --> O3["📥 Synced Files"]
-    BS --> O4["📅 Due Dates & Grades"]
-
-    style Claude fill:#d97706,color:#fff,stroke:none
-    style RAG fill:#2563eb,color:#fff,stroke:none
-    style BS fill:#7c3aed,color:#fff,stroke:none
-    style GD fill:#059669,color:#fff,stroke:none
-    style VA fill:#dc2626,color:#fff,stroke:none
-    style HTML fill:#ec4899,color:#fff,stroke:none
-    style O1 fill:#fce7f3,stroke:#ec4899
-    style O2 fill:#dbeafe,stroke:#3b82f6
-    style O3 fill:#d1fae5,stroke:#10b981
-    style O4 fill:#ede9fe,stroke:#8b5cf6
-```
+<p align="center">
+  <img src="assets/architecture-overview.svg" alt="System Architecture" width="800"/>
+</p>
 
 ## Features
 
 ### Interactive Study Guides (Flagship Feature)
 
+<p align="center">
+  <img src="assets/interactive-content.svg" alt="Interactive Content Generation" width="800"/>
+</p>
+
 Tell Claude any topic and it generates a complete, standalone HTML tutorial you can open in any browser. Each tutorial includes deep explanations covering the why and how, numerous worked examples with step by step solutions, intuitive analogies that make abstract concepts concrete, common student mistakes highlighted, 10 to 15 practice problems with detailed solutions, and interactive visualizations from draggable graphs to animated diagrams. The included CLAUDE.md files contain optimized instructions for generating these consistently.
-
-```mermaid
-graph LR
-    Request["💬 'Explain Thevenin<br/>equivalents'"] --> Claude["🟠 Claude Code<br/>Follows CLAUDE.md rules"]
-    Textbook["📄 Textbook RAG"] -.-> Claude
-    Lectures["📁 Lectures"] -.-> Claude
-    Claude --> HTML["📝 Generated HTML<br/>Standalone · Offline · No deps"]
-    HTML --> Browser["🌐 Your Browser"]
-
-    style Claude fill:#d97706,color:#fff,stroke:none
-    style HTML fill:#ec4899,color:#fff,stroke:none
-    style Request fill:#fff,stroke:#64748b
-    style Browser fill:#fff,stroke:#64748b
-    style Textbook fill:#3b82f6,color:#fff,stroke:none
-    style Lectures fill:#3b82f6,color:#fff,stroke:none
-```
 
 ### Textbook Search (Local RAG)
 
+<p align="center">
+  <img src="assets/rag-pipeline.svg" alt="RAG Pipeline" width="800"/>
+</p>
+
 Ingest a 900 page PDF and search it by meaning, not keywords. Ask "how do flip flops work" and find the exact pages that explain sequential circuits, even if those pages never use the phrase "flip flop." Each course also has a local context_db that stores class specific knowledge and is searched before the textbook for faster answers.
-
-```mermaid
-graph LR
-    subgraph Ingestion["📥 INGESTION (one time)"]
-        PDF["📄 PDF Textbook"] --> Chunk["Chunking<br/>400-600 chars"] --> Embed["Embedding<br/>Xenova · 384-dim"] --> DB[("🗄️ LanceDB<br/>~6000 chunks")]
-    end
-
-    subgraph Retrieval["🔍 RETRIEVAL (each search)"]
-        Query["💬 Your Question"] --> QEmbed["Embed Query<br/>Same model"] --> Search["Similarity Search<br/>Cosine distance"] --> Results["Top K Results<br/>Ranked by score"]
-    end
-
-    Search -.->|lookup| DB
-    Results --> Answer["🟠 Claude<br/>Generates answer"]
-
-    style DB fill:#06b6d4,color:#fff,stroke:none
-    style Answer fill:#d97706,color:#fff,stroke:none
-```
 
 ```
 ingest_file("/path/to/textbook.pdf")
@@ -107,25 +55,11 @@ Query your courses, assignments, and grades through Claude using natural languag
 
 ### Multi-Agent Verification
 
+<p align="center">
+  <img src="assets/verification-workflow.svg" alt="Verification Workflow" width="800"/>
+</p>
+
 For technical problems like circuit analysis, a multi-agent workflow parses the problem, looks up textbook methods, solves symbolically with SymPy, then runs three independent checkers in parallel for units, physical sanity, and methodology compliance. Reports a confidence level so you know how much to trust the answer.
-
-```mermaid
-graph LR
-    P0["🟣 Phase 0<br/>Image Parsing<br/><i>Circuit Parser · Topology Verifier</i>"]
-    P1["🟣 Phase 1<br/>Problem Intake<br/><i>Problem Parser · Textbook Method</i>"]
-    P2["🩷 Phase 2<br/>Solution<br/><i>SymPy Solver · Units</i>"]
-    P3["🟡 Phase 3<br/>Verification<br/><i>Units · Sanity · Method</i>"]
-    P4["🟢 Phase 4<br/>Synthesis<br/><i>Opus Agent · Final Answer</i>"]
-
-    P0 --> P1 --> P2 --> P3 --> P4
-    P3 -.->|"❌ Error? Rerun"| P2
-
-    style P0 fill:#6366f1,color:#fff,stroke:none
-    style P1 fill:#8b5cf6,color:#fff,stroke:none
-    style P2 fill:#ec4899,color:#fff,stroke:none
-    style P3 fill:#f59e0b,color:#fff,stroke:none
-    style P4 fill:#10b981,color:#fff,stroke:none
-```
 
 ## Quick Start
 

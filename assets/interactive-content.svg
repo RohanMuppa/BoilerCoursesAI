@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 320">
+  <defs>
+    <filter id="s" x="-4%" y="-4%" width="108%" height="116%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <rect width="840" height="320" fill="#fafafa"/>
+
+  <text x="420" y="36" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="700" fill="#111">Interactive Content Generation</text>
+  <text x="420" y="56" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="12" fill="#888">Learn any topic from a single generated HTML file</text>
+
+  <!-- Request -->
+  <rect x="30" y="90" width="150" height="70" rx="8" fill="#fff" stroke="#ddd" stroke-width="1.5" filter="url(#s)"/>
+  <text x="105" y="120" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="600" fill="#333">"Explain Thevenin</text>
+  <text x="105" y="137" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="600" fill="#333">equivalents"</text>
+
+  <!-- Arrow -->
+  <line x1="180" y1="125" x2="220" y2="125" stroke="#ccc" stroke-width="1.5"/>
+  <polygon points="220,121 228,125 220,129" fill="#ccc"/>
+
+  <!-- Claude -->
+  <rect x="240" y="80" width="180" height="90" rx="10" fill="#d97706" filter="url(#s)"/>
+  <text x="330" y="112" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700" fill="#fff">Claude Code</text>
+  <text x="330" y="132" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="10" fill="rgba(255,255,255,0.8)">Follows CLAUDE.md rules</text>
+  <text x="330" y="148" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="10" fill="rgba(255,255,255,0.8)">Depth, diagrams, quality enforced</text>
+
+  <!-- Source feeds -->
+  <rect x="250" y="190" width="75" height="36" rx="6" fill="#2563eb" filter="url(#s)"/>
+  <text x="287" y="213" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="10" font-weight="500" fill="#fff">Textbook</text>
+  <rect x="335" y="190" width="75" height="36" rx="6" fill="#2563eb" filter="url(#s)"/>
+  <text x="372" y="213" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="10" font-weight="500" fill="#fff">Lectures</text>
+
+  <line x1="287" y1="190" x2="310" y2="170" stroke="#2563eb" stroke-width="1" stroke-dasharray="4,3" opacity="0.5"/>
+  <line x1="372" y1="190" x2="350" y2="170" stroke="#2563eb" stroke-width="1" stroke-dasharray="4,3" opacity="0.5"/>
+
+  <!-- Arrow -->
+  <line x1="420" y1="125" x2="470" y2="125" stroke="#ccc" stroke-width="1.5"/>
+  <polygon points="470,121 478,125 470,129" fill="#ccc"/>
+
+  <!-- HTML Output -->
+  <rect x="490" y="80" width="160" height="90" rx="10" fill="#ec4899" filter="url(#s)"/>
+  <text x="570" y="112" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700" fill="#fff">Generated HTML</text>
+  <text x="570" y="132" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="10" fill="rgba(255,255,255,0.8)">Standalone file</text>
+  <text x="570" y="148" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="10" fill="rgba(255,255,255,0.8)">Opens in any browser, offline</text>
+
+  <!-- Arrow -->
+  <line x1="650" y1="125" x2="690" y2="125" stroke="#ccc" stroke-width="1.5"/>
+  <polygon points="690,121 698,125 690,129" fill="#ccc"/>
+
+  <!-- Browser -->
+  <rect x="710" y="85" width="100" height="80" rx="8" fill="#fff" stroke="#e5e5e5" stroke-width="1.5" filter="url(#s)"/>
+  <rect x="710" y="85" width="100" height="18" rx="8" fill="#f5f5f5"/>
+  <circle cx="723" cy="94" r="3" fill="#ef4444"/>
+  <circle cx="733" cy="94" r="3" fill="#f59e0b"/>
+  <circle cx="743" cy="94" r="3" fill="#10b981"/>
+  <rect x="720" y="110" width="80" height="5" rx="2" fill="#eee"/>
+  <rect x="720" y="120" width="60" height="4" rx="2" fill="#eee"/>
+  <rect x="720" y="129" width="70" height="4" rx="2" fill="#eee"/>
+  <rect x="720" y="140" width="35" height="18" rx="3" fill="#dbeafe"/>
+  <rect x="760" y="140" width="35" height="18" rx="3" fill="#dcfce7"/>
+
+  <!-- Features row -->
+  <rect x="60" y="255" width="130" height="40" rx="20" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1"/>
+  <text x="125" y="280" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#15803d">Deep Explanations</text>
+
+  <rect x="205" y="255" width="130" height="40" rx="20" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1"/>
+  <text x="270" y="280" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#15803d">Worked Examples</text>
+
+  <rect x="350" y="255" width="140" height="40" rx="20" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1"/>
+  <text x="420" y="280" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#15803d">Interactive Visuals</text>
+
+  <rect x="505" y="255" width="140" height="40" rx="20" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1"/>
+  <text x="575" y="280" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#15803d">Practice Problems</text>
+
+  <rect x="660" y="255" width="130" height="40" rx="20" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1"/>
+  <text x="725" y="280" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#15803d">Common Mistakes</text>
+</svg>

@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 350">
+  <defs>
+    <filter id="s" x="-4%" y="-4%" width="108%" height="116%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.08"/>
+    </filter>
+    <marker id="a1" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L7,3 z" fill="#2563eb"/>
+    </marker>
+    <marker id="a2" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L7,3 z" fill="#7c3aed"/>
+    </marker>
+  </defs>
+
+  <rect width="840" height="350" fill="#fafafa"/>
+
+  <text x="420" y="36" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="700" fill="#111">Local RAG Pipeline</text>
+  <text x="420" y="56" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="12" fill="#888">Semantic search over 900+ page textbooks</text>
+
+  <!-- Ingestion label -->
+  <text x="80" y="90" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="600" fill="#2563eb" letter-spacing="1">INGESTION</text>
+
+  <!-- PDF -->
+  <rect x="30" y="105" width="100" height="60" rx="8" fill="#fff" stroke="#2563eb" stroke-width="1.5" filter="url(#s)"/>
+  <text x="80" y="135" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="600" fill="#333">PDF Textbook</text>
+  <text x="80" y="152" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="9" fill="#888">900+ pages</text>
+
+  <line x1="130" y1="135" x2="165" y2="135" stroke="#2563eb" stroke-width="1.5" marker-end="url(#a1)"/>
+
+  <!-- Chunk -->
+  <rect x="175" y="105" width="100" height="60" rx="8" fill="#2563eb" filter="url(#s)"/>
+  <text x="225" y="132" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="600" fill="#fff">Chunking</text>
+  <text x="225" y="150" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="9" fill="rgba(255,255,255,0.75)">400-600 chars each</text>
+
+  <line x1="275" y1="135" x2="310" y2="135" stroke="#2563eb" stroke-width="1.5" marker-end="url(#a1)"/>
+
+  <!-- Embed -->
+  <rect x="320" y="105" width="100" height="60" rx="8" fill="#2563eb" filter="url(#s)"/>
+  <text x="370" y="132" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="600" fill="#fff">Embedding</text>
+  <text x="370" y="150" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="9" fill="rgba(255,255,255,0.75)">Xenova, 384-dim</text>
+
+  <line x1="420" y1="135" x2="455" y2="135" stroke="#2563eb" stroke-width="1.5" marker-end="url(#a1)"/>
+
+  <!-- LanceDB -->
+  <rect x="465" y="95" width="120" height="80" rx="8" fill="#06b6d4" filter="url(#s)"/>
+  <text x="525" y="128" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700" fill="#fff">LanceDB</text>
+  <text x="525" y="148" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="10" fill="rgba(255,255,255,0.8)">Vector database</text>
+  <text x="525" y="164" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="9" fill="rgba(255,255,255,0.6)">~6000 chunks</text>
+
+  <!-- Stats -->
+  <rect x="630" y="95" width="180" height="80" rx="8" fill="#fff" stroke="#e5e5e5" stroke-width="1" filter="url(#s)"/>
+  <text x="720" y="118" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="600" fill="#333">Performance</text>
+  <text x="650" y="140" font-family="Inter, system-ui, sans-serif" font-size="10" fill="#888">Query time</text>
+  <text x="790" y="140" text-anchor="end" font-family="Inter, system-ui, sans-serif" font-size="10" font-weight="600" fill="#333">&lt;100ms</text>
+  <text x="650" y="158" font-family="Inter, system-ui, sans-serif" font-size="10" fill="#888">Score range</text>
+  <text x="790" y="158" text-anchor="end" font-family="Inter, system-ui, sans-serif" font-size="10" font-weight="600" fill="#333">0 (best) to 1</text>
+
+  <!-- Retrieval label -->
+  <text x="80" y="220" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="600" fill="#7c3aed" letter-spacing="1">RETRIEVAL</text>
+
+  <!-- Query -->
+  <rect x="30" y="235" width="100" height="60" rx="8" fill="#fff" stroke="#7c3aed" stroke-width="1.5" filter="url(#s)"/>
+  <text x="80" y="262" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="600" fill="#333">Your Question</text>
+
+  <line x1="130" y1="265" x2="165" y2="265" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#a2)"/>
+
+  <!-- Embed query -->
+  <rect x="175" y="235" width="100" height="60" rx="8" fill="#7c3aed" filter="url(#s)"/>
+  <text x="225" y="262" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="600" fill="#fff">Embed Query</text>
+  <text x="225" y="280" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="9" fill="rgba(255,255,255,0.75)">Same model</text>
+
+  <line x1="275" y1="265" x2="310" y2="265" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#a2)"/>
+
+  <!-- Search -->
+  <rect x="320" y="235" width="100" height="60" rx="8" fill="#7c3aed" filter="url(#s)"/>
+  <text x="370" y="258" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="600" fill="#fff">Similarity</text>
+  <text x="370" y="274" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="600" fill="#fff">Search</text>
+
+  <!-- Dashed line up to DB -->
+  <line x1="370" y1="235" x2="370" y2="200" stroke="#7c3aed" stroke-width="1" stroke-dasharray="4,3" opacity="0.4"/>
+  <line x1="370" y1="200" x2="465" y2="165" stroke="#7c3aed" stroke-width="1" stroke-dasharray="4,3" opacity="0.4"/>
+
+  <line x1="420" y1="265" x2="455" y2="265" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#a2)"/>
+
+  <!-- Results -->
+  <rect x="465" y="235" width="120" height="60" rx="8" fill="#fff" stroke="#7c3aed" stroke-width="1.5" filter="url(#s)"/>
+  <text x="525" y="262" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="600" fill="#6d28d9">Top K Results</text>
+  <text x="525" y="280" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="9" fill="#888">Ranked by score</text>
+
+  <line x1="585" y1="265" x2="620" y2="265" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#a2)"/>
+
+  <!-- Claude -->
+  <rect x="630" y="230" width="110" height="70" rx="8" fill="#d97706" filter="url(#s)"/>
+  <text x="685" y="260" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="600" fill="#fff">Claude</text>
+  <text x="685" y="278" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="9" fill="rgba(255,255,255,0.75)">Generates answer</text>
+  <text x="685" y="292" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="9" fill="rgba(255,255,255,0.75)">with context</text>
+
+  <line x1="740" y1="265" x2="770" y2="265" stroke="#d97706" stroke-width="1.5"/>
+
+  <!-- Answer -->
+  <rect x="780" y="245" width="40" height="40" rx="20" fill="#fff" stroke="#d97706" stroke-width="1.5" filter="url(#s)"/>
+  <text x="800" y="271" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="16" fill="#d97706">A</text>
+
+  <!-- Legend -->
+  <rect x="30" y="325" width="10" height="10" rx="2" fill="#2563eb"/>
+  <text x="46" y="334" font-family="Inter, system-ui, sans-serif" font-size="10" fill="#888">Ingestion (one time)</text>
+  <rect x="170" y="325" width="10" height="10" rx="2" fill="#7c3aed"/>
+  <text x="186" y="334" font-family="Inter, system-ui, sans-serif" font-size="10" fill="#888">Query (each search)</text>
+  <rect x="310" y="325" width="10" height="10" rx="2" fill="#06b6d4"/>
+  <text x="326" y="334" font-family="Inter, system-ui, sans-serif" font-size="10" fill="#888">Vector storage</text>
+</svg>

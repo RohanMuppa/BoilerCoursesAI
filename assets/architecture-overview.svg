@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 480">
+  <defs>
+    <filter id="s" x="-4%" y="-4%" width="108%" height="116%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <rect width="840" height="480" fill="#fafafa"/>
+
+  <!-- Title -->
+  <text x="420" y="36" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="700" fill="#111">System Architecture</text>
+
+  <!-- You -->
+  <rect x="345" y="58" width="150" height="40" rx="20" fill="#111" filter="url(#s)"/>
+  <text x="420" y="83" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="500" fill="#fff">You (Terminal)</text>
+
+  <!-- Line down -->
+  <line x1="420" y1="98" x2="420" y2="130" stroke="#ccc" stroke-width="1.5"/>
+
+  <!-- Claude Code CLI -->
+  <rect x="280" y="130" width="280" height="56" rx="10" fill="#d97706" filter="url(#s)"/>
+  <text x="420" y="155" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700" fill="#fff">Claude Code CLI</text>
+  <text x="420" y="174" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" fill="rgba(255,255,255,0.8)">Orchestrates all tools and agents</text>
+
+  <!-- Lines from Claude to 5 components -->
+  <line x1="330" y1="186" x2="100" y2="240" stroke="#ddd" stroke-width="1.5"/>
+  <line x1="370" y1="186" x2="260" y2="240" stroke="#ddd" stroke-width="1.5"/>
+  <line x1="420" y1="186" x2="420" y2="240" stroke="#ddd" stroke-width="1.5"/>
+  <line x1="470" y1="186" x2="580" y2="240" stroke="#ddd" stroke-width="1.5"/>
+  <line x1="510" y1="186" x2="740" y2="240" stroke="#ddd" stroke-width="1.5"/>
+
+  <!-- 5 Component Cards -->
+  <!-- Local RAG -->
+  <rect x="20" y="240" width="160" height="72" rx="8" fill="#2563eb" filter="url(#s)"/>
+  <text x="100" y="266" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="600" fill="#fff">Local RAG</text>
+  <text x="100" y="284" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="10" fill="rgba(255,255,255,0.75)">Semantic search</text>
+  <text x="100" y="300" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="10" fill="rgba(255,255,255,0.75)">LanceDB + Xenova</text>
+
+  <!-- Brightspace -->
+  <rect x="195" y="240" width="130" height="72" rx="8" fill="#7c3aed" filter="url(#s)"/>
+  <text x="260" y="266" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="600" fill="#fff">Brightspace</text>
+  <text x="260" y="284" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="10" fill="rgba(255,255,255,0.75)">Courses, grades</text>
+  <text x="260" y="300" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="10" fill="rgba(255,255,255,0.75)">due dates</text>
+
+  <!-- Google Drive -->
+  <rect x="340" y="240" width="160" height="72" rx="8" fill="#059669" filter="url(#s)"/>
+  <text x="420" y="266" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="600" fill="#fff">Google Drive</text>
+  <text x="420" y="284" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="10" fill="rgba(255,255,255,0.75)">Sync lectures</text>
+  <text x="420" y="300" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="10" fill="rgba(255,255,255,0.75)">slides, files</text>
+
+  <!-- Verification -->
+  <rect x="515" y="240" width="130" height="72" rx="8" fill="#dc2626" filter="url(#s)"/>
+  <text x="580" y="266" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="600" fill="#fff">Verification</text>
+  <text x="580" y="284" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="10" fill="rgba(255,255,255,0.75)">Multi-agent</text>
+  <text x="580" y="300" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="10" fill="rgba(255,255,255,0.75)">solver pipeline</text>
+
+  <!-- Interactive HTML -->
+  <rect x="660" y="240" width="160" height="72" rx="8" fill="#ec4899" filter="url(#s)"/>
+  <text x="740" y="266" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="600" fill="#fff">HTML Generation</text>
+  <text x="740" y="284" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="10" fill="rgba(255,255,255,0.75)">Interactive tutorials</text>
+  <text x="740" y="300" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="10" fill="rgba(255,255,255,0.75)">with visualizations</text>
+
+  <!-- Divider -->
+  <line x1="40" y1="345" x2="800" y2="345" stroke="#e5e5e5" stroke-width="1"/>
+  <text x="420" y="372" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="600" fill="#999" letter-spacing="2">DATA SOURCES</text>
+
+  <!-- Data source pills -->
+  <rect x="30" y="390" width="100" height="32" rx="16" fill="#f5f5f5" stroke="#e5e5e5" stroke-width="1"/>
+  <text x="80" y="411" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#555">Textbooks</text>
+
+  <rect x="145" y="390" width="100" height="32" rx="16" fill="#f5f5f5" stroke="#e5e5e5" stroke-width="1"/>
+  <text x="195" y="411" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#555">Context DB</text>
+
+  <rect x="260" y="390" width="100" height="32" rx="16" fill="#f5f5f5" stroke="#e5e5e5" stroke-width="1"/>
+  <text x="310" y="411" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#555">Lectures</text>
+
+  <rect x="375" y="390" width="100" height="32" rx="16" fill="#f5f5f5" stroke="#e5e5e5" stroke-width="1"/>
+  <text x="425" y="411" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#555">Past Exams</text>
+
+  <rect x="490" y="390" width="100" height="32" rx="16" fill="#f5f5f5" stroke="#e5e5e5" stroke-width="1"/>
+  <text x="540" y="411" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#555">Brightspace</text>
+
+  <rect x="605" y="390" width="110" height="32" rx="16" fill="#f5f5f5" stroke="#e5e5e5" stroke-width="1"/>
+  <text x="660" y="411" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#555">Google Drive</text>
+
+  <rect x="730" y="390" width="90" height="32" rx="16" fill="#f5f5f5" stroke="#e5e5e5" stroke-width="1"/>
+  <text x="775" y="411" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#555">CLAUDE.md</text>
+
+  <!-- Output row -->
+  <text x="420" y="455" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="600" fill="#999" letter-spacing="2">OUTPUTS</text>
+
+  <rect x="80" y="465" width="130" height="10" rx="5" fill="#ec4899" opacity="0.8"/>
+  <text x="145" y="462" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="10" fill="#777">Interactive HTML</text>
+
+  <rect x="260" y="465" width="130" height="10" rx="5" fill="#2563eb" opacity="0.8"/>
+  <text x="325" y="462" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="10" fill="#777">Verified Answers</text>
+
+  <rect x="440" y="465" width="130" height="10" rx="5" fill="#059669" opacity="0.8"/>
+  <text x="505" y="462" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="10" fill="#777">Synced Files</text>
+
+  <rect x="620" y="465" width="130" height="10" rx="5" fill="#7c3aed" opacity="0.8"/>
+  <text x="685" y="462" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="10" fill="#777">Grades &amp; Dates</text>
+</svg>
