@@ -64,7 +64,7 @@ For technical problems like circuit analysis, a multi-agent workflow parses the 
 ## Quick Start
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/boilercourses-ai.git
+git clone https://github.com/RohanMuppa/boilercourses-ai.git
 cd boilercourses-ai
 python3 -m venv venv
 source venv/bin/activate
