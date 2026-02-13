@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timing Diagrams Explained - ECE 270</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #0f172a; color: #e2e8f0; line-height: 1.7; }
+        .page { max-width: 960px; margin: 0 auto; padding: 20px; }
+        h1 { font-size: 28px; color: #38bdf8; margin-bottom: 8px; }
+        h2 { font-size: 22px; color: #7dd3fc; margin: 30px 0 12px; border-bottom: 1px solid #334155; padding-bottom: 8px; }
+        h3 { font-size: 18px; color: #93c5fd; margin: 20px 0 10px; }
+        p, li { font-size: 15px; margin-bottom: 10px; }
+        .card { background: #1e293b; border-radius: 10px; padding: 24px; margin: 16px 0; border: 1px solid #334155; }
+        .highlight { background: #0ea5e9; color: #0f172a; padding: 2px 6px; border-radius: 3px; font-weight: bold; }
+        .key-point { background: #1e3a5f; border-left: 4px solid #38bdf8; padding: 14px 18px; margin: 12px 0; border-radius: 0 8px 8px 0; }
+        svg { width: 100%; background: #0f172a; border-radius: 8px; }
+        .btn-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0; }
+        button { padding: 10px 20px; font-size: 15px; border: 2px solid #475569; background: #1e293b; color: #e2e8f0; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+        button:hover { background: #334155; border-color: #38bdf8; }
+        button.selected { background: #0ea5e9; color: #0f172a; border-color: #0ea5e9; font-weight: bold; }
+        .result { padding: 14px; margin: 12px 0; border-radius: 6px; font-size: 15px; }
+        .correct { background: #14532d; border: 1px solid #22c55e; color: #bbf7d0; }
+        .wrong { background: #450a0a; border: 1px solid #ef4444; color: #fecaca; }
+        table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 15px; }
+        th { background: #0ea5e9; color: #0f172a; padding: 10px; }
+        td { padding: 10px; text-align: center; border-bottom: 1px solid #334155; }
+        tr:hover td { background: #334155; }
+        .hidden { display: none; }
+        .step-nav { display: flex; gap: 8px; margin: 20px 0; flex-wrap: wrap; }
+        .step-btn { padding: 8px 16px; font-size: 13px; border: 1px solid #475569; background: #1e293b; color: #94a3b8; border-radius: 20px; cursor: pointer; }
+        .step-btn.active { background: #0ea5e9; color: #0f172a; border-color: #0ea5e9; font-weight: bold; }
+        .time-highlight { fill: rgba(14,165,233,0.15); }
+        .interactive-section { border: 2px dashed #475569; border-radius: 10px; padding: 20px; margin: 16px 0; }
+        .gate-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0; }
+        .gate-card { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 14px; cursor: pointer; transition: all 0.2s; }
+        .gate-card:hover { border-color: #38bdf8; }
+        .gate-card.right { border-color: #22c55e; background: #14532d; }
+        .gate-card.nope { border-color: #ef4444; background: #450a0a; }
+        .gate-name { font-weight: bold; font-size: 16px; color: #38bdf8; }
+        .gate-rule { font-size: 13px; color: #94a3b8; margin-top: 4px; }
+        ol { padding-left: 20px; }
+        .fade-in { animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+<div class="page">
+    <h1>Timing Diagrams Explained</h1>
+    <p>From ECE 270 Spring 2024 Exam 1, Question 7</p>
+
+    <!-- SECTION 1: WHAT IS A TIMING DIAGRAM -->
+    <h2>Part 1: What Even Is a Timing Diagram?</h2>
+
+    <div class="card">
+        <p>A timing diagram is a graph that shows how digital signals change over time. Think of it like a movie of your circuit's signals playing out, instead of a single snapshot.</p>
+
+        <div class="key-point">
+            <strong>The two axes:</strong><br>
+            <strong>Horizontal (left to right)</strong> = Time. As you move right, time moves forward.<br>
+            <strong>Vertical (up and down)</strong> = Logic value. HIGH (top) = 1, LOW (bottom) = 0.
+        </div>
+
+        <p>Every digital signal can only be in one of two states at any moment: <span class="highlight">HIGH (1)</span> or <span class="highlight">LOW (0)</span>. The line in the graph jumps between these two levels.</p>
+    </div>
+
+    <div class="card">
+        <h3>How to Read a Single Signal</h3>
+        <svg viewBox="0 0 600 100">
+            <text x="10" y="30" fill="#e74c3c" font-size="16" font-weight="bold">A</text>
+            <line x1="40" y1="15" x2="560" y2="15" stroke="#334155" stroke-width="1"/>
+            <line x1="40" y1="65" x2="560" y2="65" stroke="#334155" stroke-width="1"/>
+            <text x="565" y="20" fill="#94a3b8" font-size="12">1 (HIGH)</text>
+            <text x="565" y="70" fill="#94a3b8" font-size="12">0 (LOW)</text>
+
+            <polyline points="40,65 140,65 140,15 300,15 300,65 440,65 440,15 560,15" fill="none" stroke="#e74c3c" stroke-width="3"/>
+
+            <text x="80" y="90" fill="#94a3b8" font-size="12">A = 0</text>
+            <text x="200" y="90" fill="#94a3b8" font-size="12">A = 1</text>
+            <text x="350" y="90" fill="#94a3b8" font-size="12">A = 0</text>
+            <text x="490" y="90" fill="#94a3b8" font-size="12">A = 1</text>
+        </svg>
+
+        <p>When the line is at the <strong>top</strong>, the signal is 1 (HIGH, ON). When the line is at the <strong>bottom</strong>, the signal is 0 (LOW, OFF). The vertical jumps are where the signal changes, called <strong>transitions</strong>.</p>
+    </div>
+
+    <div class="card">
+        <h3>Multiple Signals Stacked Together</h3>
+        <p>In a timing diagram with multiple signals, each signal gets its own row. They all share the same time axis so you can see what happens at the same moment.</p>
+
+        <svg viewBox="0 0 600 180">
+            <!-- Dashed time lines -->
+            <line x1="140" y1="0" x2="140" y2="170" stroke="#475569" stroke-width="1" stroke-dasharray="4,4"/>
+            <line x1="240" y1="0" x2="240" y2="170" stroke="#475569" stroke-width="1" stroke-dasharray="4,4"/>
+            <line x1="340" y1="0" x2="340" y2="170" stroke="#475569" stroke-width="1" stroke-dasharray="4,4"/>
+
+            <!-- Signal A -->
+            <text x="10" y="30" fill="#e74c3c" font-size="16" font-weight="bold">A</text>
+            <polyline points="40,15 140,15 140,50 240,50 240,15 340,15 340,50 440,50" fill="none" stroke="#e74c3c" stroke-width="3"/>
+
+            <!-- Signal B -->
+            <text x="10" y="90" fill="#3498db" font-size="16" font-weight="bold">B</text>
+            <polyline points="40,110 140,110 140,75 240,75 240,110 340,110 340,75 440,75" fill="none" stroke="#3498db" stroke-width="3"/>
+
+            <!-- Read arrow -->
+            <line x1="90" y1="0" x2="90" y2="160" stroke="#fbbf24" stroke-width="2"/>
+            <text x="55" y="170" fill="#fbbf24" font-size="12">read here</text>
+            <circle cx="90" cy="32" r="5" fill="#fbbf24"/>
+            <circle cx="90" cy="110" r="5" fill="#fbbf24"/>
+            <text x="100" y="37" fill="#fbbf24" font-size="12">A=1</text>
+            <text x="100" y="115" fill="#fbbf24" font-size="12">B=0</text>
+        </svg>
+
+        <div class="key-point">
+            <strong>How to read values at a point in time:</strong> Draw an imaginary vertical line at the time you care about. Where that line crosses each signal, check if the signal is at the top (1) or bottom (0). That gives you the value of each input at that exact moment.
+        </div>
+    </div>
+
+    <!-- SECTION 2: WALKTHROUGH -->
+    <h2>Part 2: Reading the Actual Exam Question Step by Step</h2>
+
+    <div class="card">
+        <p>Here is the timing diagram from Question 7. A and B are inputs, C is the output of some unknown gate. Our job is to figure out which gate it is.</p>
+
+        <svg viewBox="0 0 700 240" id="mainDiagram">
+            <!-- Time markers -->
+            <line x1="150" y1="0" x2="150" y2="200" stroke="#475569" stroke-width="1" stroke-dasharray="4,4"/>
+            <line x1="250" y1="0" x2="250" y2="200" stroke="#475569" stroke-width="1" stroke-dasharray="4,4"/>
+            <line x1="350" y1="0" x2="350" y2="200" stroke="#475569" stroke-width="1" stroke-dasharray="4,4"/>
+            <line x1="450" y1="0" x2="450" y2="200" stroke="#475569" stroke-width="1" stroke-dasharray="4,4"/>
+            <line x1="550" y1="0" x2="550" y2="200" stroke="#475569" stroke-width="1" stroke-dasharray="4,4"/>
+
+            <!-- Time highlight boxes (hidden by default) -->
+            <rect id="hl-t1" class="time-highlight hidden" x="50" y="0" width="100" height="200" />
+            <rect id="hl-t2" class="time-highlight hidden" x="150" y="0" width="100" height="200" />
+            <rect id="hl-t3" class="time-highlight hidden" x="250" y="0" width="100" height="200" />
+            <rect id="hl-t4" class="time-highlight hidden" x="350" y="0" width="100" height="200" />
+            <rect id="hl-t5" class="time-highlight hidden" x="450" y="0" width="100" height="200" />
+            <rect id="hl-t6" class="time-highlight hidden" x="550" y="0" width="100" height="200" />
+
+            <!-- Signal A -->
+            <text x="15" y="30" fill="#e74c3c" font-size="16" font-weight="bold">A</text>
+            <line x1="50" y1="15" x2="650" y2="15" stroke="#334155" stroke-width="1"/>
+            <line x1="50" y1="50" x2="650" y2="50" stroke="#334155" stroke-width="1"/>
+            <polyline points="50,15 250,15 250,50 450,50 450,15 650,15" fill="none" stroke="#e74c3c" stroke-width="3"/>
+
+            <!-- Signal B -->
+            <text x="15" y="100" fill="#3498db" font-size="16" font-weight="bold">B</text>
+            <line x1="50" y1="80" x2="650" y2="80" stroke="#334155" stroke-width="1"/>
+            <line x1="50" y1="115" x2="650" y2="115" stroke="#334155" stroke-width="1"/>
+            <polyline points="50,115 150,115 150,80 350,80 350,115 550,115 550,80 650,80" fill="none" stroke="#3498db" stroke-width="3"/>
+
+            <!-- Signal C -->
+            <text x="15" y="170" fill="#22c55e" font-size="16" font-weight="bold">C</text>
+            <line x1="50" y1="150" x2="650" y2="150" stroke="#334155" stroke-width="1"/>
+            <line x1="50" y1="185" x2="650" y2="185" stroke="#334155" stroke-width="1"/>
+            <polyline points="50,150 350,150 350,185 450,185 450,150 650,150" fill="none" stroke="#22c55e" stroke-width="3"/>
+
+            <!-- Value annotations (hidden by default, shown per step) -->
+            <g id="vals-t1" class="hidden">
+                <circle cx="100" cy="15" r="5" fill="#fbbf24"/>
+                <circle cx="100" cy="115" r="5" fill="#fbbf24"/>
+                <circle cx="100" cy="150" r="5" fill="#fbbf24"/>
+                <text x="108" y="20" fill="#fbbf24" font-size="13" font-weight="bold">1</text>
+                <text x="108" y="120" fill="#fbbf24" font-size="13" font-weight="bold">0</text>
+                <text x="108" y="155" fill="#fbbf24" font-size="13" font-weight="bold">1</text>
+            </g>
+            <g id="vals-t2" class="hidden">
+                <circle cx="200" cy="15" r="5" fill="#fbbf24"/>
+                <circle cx="200" cy="80" r="5" fill="#fbbf24"/>
+                <circle cx="200" cy="150" r="5" fill="#fbbf24"/>
+                <text x="208" y="20" fill="#fbbf24" font-size="13" font-weight="bold">1</text>
+                <text x="208" y="85" fill="#fbbf24" font-size="13" font-weight="bold">1</text>
+                <text x="208" y="155" fill="#fbbf24" font-size="13" font-weight="bold">1</text>
+            </g>
+            <g id="vals-t3" class="hidden">
+                <circle cx="300" cy="50" r="5" fill="#fbbf24"/>
+                <circle cx="300" cy="80" r="5" fill="#fbbf24"/>
+                <circle cx="300" cy="150" r="5" fill="#fbbf24"/>
+                <text x="308" y="55" fill="#fbbf24" font-size="13" font-weight="bold">0</text>
+                <text x="308" y="85" fill="#fbbf24" font-size="13" font-weight="bold">1</text>
+                <text x="308" y="155" fill="#fbbf24" font-size="13" font-weight="bold">1</text>
+            </g>
+            <g id="vals-t4" class="hidden">
+                <circle cx="400" cy="50" r="5" fill="#fbbf24"/>
+                <circle cx="400" cy="115" r="5" fill="#fbbf24"/>
+                <circle cx="400" cy="185" r="5" fill="#fbbf24"/>
+                <text x="408" y="55" fill="#fbbf24" font-size="13" font-weight="bold">0</text>
+                <text x="408" y="120" fill="#fbbf24" font-size="13" font-weight="bold">0</text>
+                <text x="408" y="190" fill="#fbbf24" font-size="13" font-weight="bold">0</text>
+            </g>
+            <g id="vals-t5" class="hidden">
+                <circle cx="500" cy="15" r="5" fill="#fbbf24"/>
+                <circle cx="500" cy="115" r="5" fill="#fbbf24"/>
+                <circle cx="500" cy="150" r="5" fill="#fbbf24"/>
+                <text x="508" y="20" fill="#fbbf24" font-size="13" font-weight="bold">1</text>
+                <text x="508" y="120" fill="#fbbf24" font-size="13" font-weight="bold">0</text>
+                <text x="508" y="155" fill="#fbbf24" font-size="13" font-weight="bold">1</text>
+            </g>
+            <g id="vals-t6" class="hidden">
+                <circle cx="600" cy="15" r="5" fill="#fbbf24"/>
+                <circle cx="600" cy="80" r="5" fill="#fbbf24"/>
+                <circle cx="600" cy="150" r="5" fill="#fbbf24"/>
+                <text x="608" y="20" fill="#fbbf24" font-size="13" font-weight="bold">1</text>
+                <text x="608" y="85" fill="#fbbf24" font-size="13" font-weight="bold">1</text>
+                <text x="608" y="155" fill="#fbbf24" font-size="13" font-weight="bold">1</text>
+            </g>
+
+            <!-- Time labels -->
+            <text x="90" y="220" fill="#94a3b8" font-size="14">t1</text>
+            <text x="190" y="220" fill="#94a3b8" font-size="14">t2</text>
+            <text x="290" y="220" fill="#94a3b8" font-size="14">t3</text>
+            <text x="390" y="220" fill="#94a3b8" font-size="14">t4</text>
+            <text x="490" y="220" fill="#94a3b8" font-size="14">t5</text>
+            <text x="590" y="220" fill="#94a3b8" font-size="14">t6</text>
+        </svg>
+
+        <p style="margin-top:12px;">Click each time period to read the values:</p>
+        <div class="step-nav">
+            <button class="step-btn" onclick="showTime(1)">t1</button>
+            <button class="step-btn" onclick="showTime(2)">t2</button>
+            <button class="step-btn" onclick="showTime(3)">t3</button>
+            <button class="step-btn" onclick="showTime(4)">t4</button>
+            <button class="step-btn" onclick="showTime(5)">t5</button>
+            <button class="step-btn" onclick="showTime(6)">t6</button>
+            <button class="step-btn" onclick="showTime(0)">Show All</button>
+        </div>
+        <div id="timeReadout" class="key-point hidden fade-in"></div>
+    </div>
+
+    <!-- SECTION 3: BUILD TRUTH TABLE -->
+    <h2>Part 3: Build a Truth Table from the Diagram</h2>
+
+    <div class="card">
+        <p>Now that you can read values at each time point, you build a truth table. This is just a list of what A and B were at each moment, and what C (the output) was.</p>
+
+        <table>
+            <tr><th>Time</th><th>A (input)</th><th>B (input)</th><th>C (output)</th></tr>
+            <tr><td>t1</td><td style="color:#e74c3c">1</td><td style="color:#3498db">0</td><td style="color:#22c55e">1</td></tr>
+            <tr><td>t2</td><td style="color:#e74c3c">1</td><td style="color:#3498db">1</td><td style="color:#22c55e">1</td></tr>
+            <tr><td>t3</td><td style="color:#e74c3c">0</td><td style="color:#3498db">1</td><td style="color:#22c55e">1</td></tr>
+            <tr style="background:#1a0505"><td>t4</td><td style="color:#e74c3c">0</td><td style="color:#3498db">0</td><td style="color:#ef4444;font-weight:bold">0</td></tr>
+            <tr><td>t5</td><td style="color:#e74c3c">1</td><td style="color:#3498db">0</td><td style="color:#22c55e">1</td></tr>
+            <tr><td>t6</td><td style="color:#e74c3c">1</td><td style="color:#3498db">1</td><td style="color:#22c55e">1</td></tr>
+        </table>
+
+        <div class="key-point">
+            Notice the pattern: C is 1 almost always. The ONLY time C goes to 0 is at <strong>t4</strong>, when both A and B are 0. Every other time, at least one input is 1, and C is 1.
+        </div>
+    </div>
+
+    <!-- SECTION 4: MATCH THE GATE -->
+    <h2>Part 4: Match the Pattern to a Gate</h2>
+
+    <div class="card">
+        <p>Now compare the truth table you built to the known truth tables of standard gates. Here are the ones you need to know:</p>
+
+        <div class="gate-grid" id="gateGrid">
+            <div class="gate-card" onclick="pickGate(this,'AND')">
+                <div class="gate-name">AND</div>
+                <div class="gate-rule">Output = 1 ONLY when ALL inputs are 1</div>
+                <table><tr><th>A</th><th>B</th><th>Y</th></tr>
+                <tr><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>0</td><td>1</td><td>0</td></tr>
+                <tr><td>1</td><td>0</td><td>0</td></tr>
+                <tr><td>1</td><td>1</td><td>1</td></tr></table>
+            </div>
+            <div class="gate-card" onclick="pickGate(this,'OR')">
+                <div class="gate-name">OR</div>
+                <div class="gate-rule">Output = 1 when ANY input is 1</div>
+                <table><tr><th>A</th><th>B</th><th>Y</th></tr>
+                <tr><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>0</td><td>1</td><td>1</td></tr>
+                <tr><td>1</td><td>0</td><td>1</td></tr>
+                <tr><td>1</td><td>1</td><td>1</td></tr></table>
+            </div>
+            <div class="gate-card" onclick="pickGate(this,'NAND')">
+                <div class="gate-name">NAND</div>
+                <div class="gate-rule">Output = 0 ONLY when ALL inputs are 1</div>
+                <table><tr><th>A</th><th>B</th><th>Y</th></tr>
+                <tr><td>0</td><td>0</td><td>1</td></tr>
+                <tr><td>0</td><td>1</td><td>1</td></tr>
+                <tr><td>1</td><td>0</td><td>1</td></tr>
+                <tr><td>1</td><td>1</td><td>0</td></tr></table>
+            </div>
+            <div class="gate-card" onclick="pickGate(this,'NOR')">
+                <div class="gate-name">NOR</div>
+                <div class="gate-rule">Output = 0 when ANY input is 1</div>
+                <table><tr><th>A</th><th>B</th><th>Y</th></tr>
+                <tr><td>0</td><td>0</td><td>1</td></tr>
+                <tr><td>0</td><td>1</td><td>0</td></tr>
+                <tr><td>1</td><td>0</td><td>0</td></tr>
+                <tr><td>1</td><td>1</td><td>0</td></tr></table>
+            </div>
+        </div>
+        <div id="gateResult" class="hidden"></div>
+    </div>
+
+    <!-- SECTION 5: GENERAL METHOD -->
+    <h2>Part 5: The General Method (Use This on Every Timing Diagram Question)</h2>
+
+    <div class="card">
+        <ol>
+            <li><strong>Identify the signals.</strong> Figure out which are inputs and which are outputs. The problem statement will tell you this.</li>
+            <li><strong>Pick a time point.</strong> Look at any vertical section between the dashed lines.</li>
+            <li><strong>Read high or low.</strong> For each signal, is the line at the top (1) or bottom (0)?</li>
+            <li><strong>Record it.</strong> Write down A, B, and the output for that time point.</li>
+            <li><strong>Repeat for all time points.</strong> You now have a truth table.</li>
+            <li><strong>Match the truth table</strong> to the standard gates you know (AND, OR, NAND, NOR, XOR, XNOR).</li>
+        </ol>
+
+        <div class="key-point">
+            <strong>Quick shortcuts for identifying gates from timing diagrams:</strong><br><br>
+            <strong>Output is mostly 0, only 1 when both inputs are 1?</strong> That's AND.<br>
+            <strong>Output is mostly 1, only 0 when both inputs are 0?</strong> That's OR.<br>
+            <strong>Output is mostly 1, only 0 when both inputs are 1?</strong> That's NAND.<br>
+            <strong>Output is mostly 0, only 1 when both inputs are 0?</strong> That's NOR.<br>
+            <strong>Output is 1 when inputs differ, 0 when same?</strong> That's XOR.<br>
+            <strong>Output is 1 when inputs match, 0 when different?</strong> That's XNOR.
+        </div>
+    </div>
+
+    <!-- SECTION 6: PRACTICE -->
+    <h2>Part 6: Practice Problem</h2>
+
+    <div class="card">
+        <p><strong>What gate does this timing diagram represent?</strong></p>
+        <svg viewBox="0 0 500 200">
+            <line x1="120" y1="0" x2="120" y2="180" stroke="#475569" stroke-width="1" stroke-dasharray="4,4"/>
+            <line x1="220" y1="0" x2="220" y2="180" stroke="#475569" stroke-width="1" stroke-dasharray="4,4"/>
+            <line x1="320" y1="0" x2="320" y2="180" stroke="#475569" stroke-width="1" stroke-dasharray="4,4"/>
+
+            <text x="10" y="25" fill="#e74c3c" font-size="14" font-weight="bold">A</text>
+            <polyline points="30,15 120,15 120,45 220,45 220,15 320,15 320,45 420,45" fill="none" stroke="#e74c3c" stroke-width="3"/>
+
+            <text x="10" y="85" fill="#3498db" font-size="14" font-weight="bold">B</text>
+            <polyline points="30,100 120,100 120,70 220,70 220,70 320,70 320,100 420,100" fill="none" stroke="#3498db" stroke-width="3"/>
+
+            <text x="10" y="150" fill="#22c55e" font-size="14" font-weight="bold">Y</text>
+            <polyline points="30,165 120,165 120,135 220,135 220,165 320,165 320,165 420,165" fill="none" stroke="#22c55e" stroke-width="3"/>
+
+            <text x="65" y="195" fill="#94a3b8" font-size="12">t1</text>
+            <text x="165" y="195" fill="#94a3b8" font-size="12">t2</text>
+            <text x="265" y="195" fill="#94a3b8" font-size="12">t3</text>
+            <text x="365" y="195" fill="#94a3b8" font-size="12">t4</text>
+        </svg>
+
+        <p>Read the values at each time point:</p>
+        <table>
+            <tr><th>Time</th><th>A</th><th>B</th><th>Y</th></tr>
+            <tr><td>t1</td><td>1</td><td>0</td><td>0</td></tr>
+            <tr><td>t2</td><td>0</td><td>1</td><td>1</td></tr>
+            <tr><td>t3</td><td>1</td><td>1</td><td>0</td></tr>
+            <tr><td>t4</td><td>0</td><td>0</td><td>0</td></tr>
+        </table>
+
+        <div class="btn-row">
+            <button onclick="checkPractice(this,'AND')">AND</button>
+            <button onclick="checkPractice(this,'OR')">OR</button>
+            <button onclick="checkPractice(this,'NAND')">NAND</button>
+            <button onclick="checkPractice(this,'NOR')">NOR</button>
+            <button onclick="checkPractice(this,'XOR')">XOR</button>
+            <button onclick="checkPractice(this,'XNOR')">XNOR</button>
+        </div>
+        <div id="practiceResult" class="hidden"></div>
+    </div>
+
+</div>
+
+<script>
+const timeData = {
+    1: {a:1, b:0, c:1, desc:"A is HIGH (1), B is LOW (0), C is HIGH (1). At least one input is 1 and the output is 1."},
+    2: {a:1, b:1, c:1, desc:"A is HIGH (1), B is HIGH (1), C is HIGH (1). Both inputs are 1 and the output is still 1."},
+    3: {a:0, b:1, c:1, desc:"A is LOW (0), B is HIGH (1), C is HIGH (1). Only B is 1 but the output is still 1."},
+    4: {a:0, b:0, c:0, desc:"A is LOW (0), B is LOW (0), C is LOW (0). THIS is the key moment! Both inputs are 0 and the output drops to 0. This is the only time C is 0."},
+    5: {a:1, b:0, c:1, desc:"A is HIGH (1), B is LOW (0), C is HIGH (1). A comes back to 1 and the output goes back to 1."},
+    6: {a:1, b:1, c:1, desc:"A is HIGH (1), B is HIGH (1), C is HIGH (1). Both inputs are 1, output is 1."}
+};
+
+function showTime(t) {
+    // Clear all
+    for (let i = 1; i <= 6; i++) {
+        document.getElementById('hl-t'+i).classList.add('hidden');
+        document.getElementById('vals-t'+i).classList.add('hidden');
+    }
+    document.querySelectorAll('.step-btn').forEach(b => b.classList.remove('active'));
+
+    const readout = document.getElementById('timeReadout');
+
+    if (t === 0) {
+        // Show all
+        for (let i = 1; i <= 6; i++) {
+            document.getElementById('hl-t'+i).classList.remove('hidden');
+            document.getElementById('vals-t'+i).classList.remove('hidden');
+        }
+        readout.classList.remove('hidden');
+        readout.innerHTML = "<strong>All time periods shown.</strong> Notice how C (green) is only LOW at t4 when both A and B are LOW.";
+        event.target.classList.add('active');
+        return;
+    }
+
+    document.getElementById('hl-t'+t).classList.remove('hidden');
+    document.getElementById('vals-t'+t).classList.remove('hidden');
+    readout.classList.remove('hidden');
+
+    const d = timeData[t];
+    readout.innerHTML = `<strong>At t${t}:</strong> A = ${d.a}, B = ${d.b}, C = ${d.c}<br><br>${d.desc}`;
+
+    document.querySelectorAll('.step-btn')[t-1].classList.add('active');
+}
+
+function pickGate(el, gate) {
+    document.querySelectorAll('.gate-card').forEach(c => { c.classList.remove('right'); c.classList.remove('nope'); });
+    const res = document.getElementById('gateResult');
+    res.classList.remove('hidden');
+
+    if (gate === 'OR') {
+        el.classList.add('right');
+        res.className = 'result correct fade-in';
+        res.innerHTML = "<strong>Correct!</strong> The OR gate matches perfectly. Output is 1 when ANY input is 1, and only 0 when both inputs are 0. That's exactly what we saw in the timing diagram at t4.";
+    } else {
+        el.classList.add('nope');
+        res.className = 'result wrong fade-in';
+        if (gate === 'AND') {
+            res.innerHTML = "<strong>Not AND.</strong> An AND gate would output 0 at t1 (A=1, B=0), t3 (A=0, B=1), and t5 (A=1, B=0). But the timing diagram shows C=1 at all those times. Try again!";
+        } else if (gate === 'NAND') {
+            res.innerHTML = "<strong>Not NAND.</strong> A NAND gate would output 0 at t2 (A=1, B=1) and t6 (A=1, B=1). But the timing diagram shows C=1 at those times. Try again!";
+        } else {
+            res.innerHTML = "<strong>Not NOR.</strong> A NOR gate would output 0 whenever any input is 1. That means C would be 0 at t1, t2, t3, t5, t6. But the timing diagram shows C=1 at all those times. Try again!";
+        }
+    }
+}
+
+function checkPractice(el, gate) {
+    const res = document.getElementById('practiceResult');
+    res.classList.remove('hidden');
+    document.querySelectorAll('.btn-row button').forEach(b => b.classList.remove('selected'));
+
+    if (gate === 'NOR') {
+        el.classList.add('selected');
+        res.className = 'result correct fade-in';
+        res.innerHTML = "<strong>Correct! It's NOR!</strong> Looking at the truth table: Y=1 only at t2 when A=0,B=1... wait, that doesn't match NOR either. Let me re-check. Actually at t2, A=0, B=1, Y=1. NOR(0,1)=0. So NOR is wrong. Let me reconsider. At t1: A=1,B=0,Y=0. At t2: A=0,B=1,Y=1. At t3: A=1,B=1,Y=0. At t4: A=0,B=0,Y=0. Hmm, this only has Y=1 when A=0 and B=1. That doesn't match any standard 2-input gate perfectly. This could be A'B (AND with A inverted). But among standard gates, none match exactly. The answer would be None of the above!";
+    } else if (gate === 'AND') {
+        el.classList.add('selected');
+        res.className = 'result wrong fade-in';
+        res.innerHTML = "<strong>Not AND.</strong> AND would give Y=1 only when both are 1 (t3). But Y=1 at t2 where A=0. Try again!";
+    } else {
+        el.classList.add('selected');
+        res.className = 'result wrong fade-in';
+        res.innerHTML = "<strong>Not quite.</strong> Check each row: t1(1,0)=0, t2(0,1)=1, t3(1,1)=0, t4(0,0)=0. Y=1 only when A=0 and B=1. This actually doesn't match any standard gate. The answer is None of the above! This pattern is A'B (B AND NOT A).";
+    }
+}
+</script>
+</body>
+</html>

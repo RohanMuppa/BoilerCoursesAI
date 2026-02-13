@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CMOS Compound Gate Builder</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#0f172a;color:#e2e8f0;padding:20px;line-height:1.7}
+.page{max-width:1000px;margin:0 auto}
+h1{color:#38bdf8;font-size:26px;text-align:center;margin-bottom:6px}
+.sub{text-align:center;color:#94a3b8;font-size:13px;margin-bottom:24px}
+.section{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin:20px 0}
+h2{color:#38bdf8;font-size:20px;margin-bottom:14px}
+p{font-size:14px;margin:6px 0}
+.expression-display{background:#0f172a;border:2px solid #7c3aed;border-radius:10px;padding:20px;text-align:center;margin:16px 0;font-size:28px;font-family:monospace;color:#c4b5fd;letter-spacing:2px}
+.expression-display .highlight{color:#fbbf24;font-weight:bold;text-decoration:underline;text-decoration-color:#fbbf24}
+
+/* Step-by-step walkthrough */
+.walkthrough{position:relative;margin:20px 0}
+.walk-controls{display:flex;align-items:center;justify-content:center;gap:12px;margin:16px 0}
+.walk-btn{background:#334155;color:#e2e8f0;border:2px solid #475569;padding:10px 24px;border-radius:8px;cursor:pointer;font-size:15px;font-weight:bold;transition:all 0.2s}
+.walk-btn:hover{background:#475569;border-color:#38bdf8}
+.walk-btn.active{background:#0ea5e9;color:#0f172a;border-color:#0ea5e9}
+.walk-btn:disabled{opacity:0.3;cursor:not-allowed}
+.step-indicator{color:#94a3b8;font-size:14px;min-width:80px;text-align:center}
+.walk-frame{background:#0f172a;border:2px solid #334155;border-radius:12px;padding:20px;min-height:420px;position:relative;overflow:hidden;transition:border-color 0.3s}
+.walk-narration{background:#1e3a5f;border-left:4px solid #38bdf8;padding:14px 18px;border-radius:0 8px 8px 0;margin-bottom:16px;font-size:15px;line-height:1.6;min-height:60px;transition:all 0.3s}
+.walk-narration .key{color:#fbbf24;font-weight:bold}
+.walk-narration .nmos{color:#22c55e;font-weight:bold}
+.walk-narration .pmos{color:#f97316;font-weight:bold}
+
+/* SVG Circuit Styles */
+.circuit-container{display:flex;justify-content:center;align-items:center;margin-top:10px}
+.transistor-series{stroke:#22c55e;fill:none;stroke-width:2}
+.transistor-parallel{stroke:#f97316;fill:none;stroke-width:2}
+.wire{stroke:#38bdf8;stroke-width:2;fill:none}
+.wire-dim{stroke:#334155;stroke-width:2;fill:none;stroke-dasharray:4,4}
+.label{fill:#e2e8f0;font-size:14px;font-weight:bold;text-anchor:middle}
+.label-small{fill:#94a3b8;font-size:11px;text-anchor:middle}
+.label-vdd{fill:#f97316;font-size:13px;font-weight:bold;text-anchor:middle}
+.label-gnd{fill:#22c55e;font-size:13px;font-weight:bold;text-anchor:middle}
+.nmos-box{fill:rgba(34,197,94,0.1);stroke:#22c55e;stroke-width:2;rx:6}
+.pmos-box{fill:rgba(249,115,22,0.1);stroke:#f97316;stroke-width:2;rx:6}
+.bubble{fill:#0f172a;stroke:#e2e8f0;stroke-width:2}
+.fade-in{animation:fadeIn 0.5s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.glow-green{filter:drop-shadow(0 0 6px rgba(34,197,94,0.6))}
+.glow-orange{filter:drop-shadow(0 0 6px rgba(249,115,22,0.6))}
+.glow-blue{filter:drop-shadow(0 0 6px rgba(56,189,248,0.6))}
+
+/* Example selector */
+.example-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.tab{background:#334155;color:#94a3b8;border:2px solid #475569;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:bold;transition:all 0.2s}
+.tab:hover{border-color:#38bdf8;color:#e2e8f0}
+.tab.active{background:#0ea5e9;color:#0f172a;border-color:#0ea5e9}
+
+/* Rule boxes */
+.rule{background:#14532d;border:1px solid #22c55e;color:#bbf7d0;padding:12px 16px;border-radius:8px;margin:10px 0;font-size:14px}
+.mapping-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin:12px 0;background:#334155;border-radius:8px;overflow:hidden}
+.mapping-cell{padding:12px;text-align:center;font-size:14px}
+.mapping-header{background:#1e3a5f;color:#38bdf8;font-weight:bold}
+.mapping-nmos{background:#0a1f0a}
+.mapping-pmos{background:#1a0a00}
+</style>
+</head>
+<body>
+<div class="page">
+
+<h1>CMOS Compound Gate Builder</h1>
+<p class="sub">Step by step visual walkthrough. From Fall 2023 Q15 and other exam CMOS questions.</p>
+
+<!-- THE RULES -->
+<div class="section">
+<h2>The Two Rules</h2>
+<div class="mapping-grid">
+<div class="mapping-cell mapping-header">In the Expression</div>
+<div class="mapping-cell mapping-header">NMOS Network</div>
+<div class="mapping-cell mapping-nmos">AND (multiply)</div>
+<div class="mapping-cell mapping-nmos" style="color:#22c55e;font-weight:bold">SERIES</div>
+<div class="mapping-cell mapping-nmos">OR (add)</div>
+<div class="mapping-cell mapping-nmos" style="color:#22c55e;font-weight:bold">PARALLEL</div>
+</div>
+<div class="rule">PMOS is always the OPPOSITE topology. Flip every series to parallel, every parallel to series.</div>
+<p style="margin-top:10px">CMOS always inverts the output. So you only build the expression INSIDE the complement bubble. The inversion is free.</p>
+</div>
+
+<!-- INTERACTIVE WALKTHROUGHS -->
+<div class="section">
+<h2>Visual Walkthrough</h2>
+<p>Click through each step. Watch the circuit get built piece by piece.</p>
+
+<div class="example-tabs">
+<div class="tab active" onclick="loadExample(0)">Z = (AB + C)'</div>
+<div class="tab" onclick="loadExample(1)">Z = (A + BC)'</div>
+<div class="tab" onclick="loadExample(2)">Z = ((A+B)C)'</div>
+<div class="tab" onclick="loadExample(3)">3 input NAND</div>
+<div class="tab" onclick="loadExample(4)">3 input NOR</div>
+</div>
+
+<div class="walkthrough">
+<div class="walk-frame" id="walkFrame">
+<div class="walk-narration" id="narration"></div>
+<div class="circuit-container" id="circuitArea"></div>
+</div>
+<div class="walk-controls">
+<button class="walk-btn" id="prevBtn" onclick="prevStep()">Back</button>
+<span class="step-indicator" id="stepLabel">Step 1 / 5</span>
+<button class="walk-btn" id="nextBtn" onclick="nextStep()">Next</button>
+</div>
+</div>
+</div>
+
+<!-- PRACTICE -->
+<div class="section">
+<h2>Now You Try</h2>
+<p>Click "Show Answer" after you think about it.</p>
+
+<div id="practice"></div>
+</div>
+
+</div>
+
+<script>
+const examples = [
+  {
+    name: 'Z = (AB + C)\'',
+    expr: '(AB + C)\'',
+    steps: [
+      {
+        narration: 'We need to build: <span class="key">Z = (AB + C)\'</span><br><br>Step 1: Strip the outer complement. The inner expression is <span class="key">AB + C</span>. This is what we build the NMOS network from.',
+        svg: `<svg width="500" height="300" viewBox="0 0 500 300">
+          <text x="250" y="40" class="label" font-size="24" fill="#c4b5fd" font-family="monospace">( A B + C )'</text>
+          <rect x="80" y="20" width="115" height="35" rx="6" fill="none" stroke="#fbbf24" stroke-width="2" stroke-dasharray="4,3"/>
+          <text x="137" y="75" class="label-small" fill="#fbbf24">AND</text>
+          <rect x="195" y="20" width="15" height="35" rx="4" fill="none" stroke="#38bdf8" stroke-width="2" stroke-dasharray="4,3"/>
+          <text x="202" y="75" class="label-small" fill="#38bdf8">OR</text>
+          <rect x="215" y="20" width="50" height="35" rx="6" fill="none" stroke="#fbbf24" stroke-width="2" stroke-dasharray="4,3"/>
+          <text x="250" y="120" class="label" font-size="16" fill="#94a3b8">The complement (') comes free from CMOS.</text>
+          <text x="250" y="145" class="label" font-size="16" fill="#94a3b8">We only need to implement AB + C</text>
+          <text x="250" y="200" class="label" font-size="14" fill="#7dd3fc">AND = series in NMOS</text>
+          <text x="250" y="225" class="label" font-size="14" fill="#7dd3fc">OR = parallel in NMOS</text>
+        </svg>`
+      },
+      {
+        narration: 'Step 2: Build the <span class="nmos">NMOS network</span> (bottom, connected to GND).<br><br><span class="key">AB</span> means A and B in <span class="nmos">SERIES</span>. Both transistors must be ON to create a path to GND.',
+        svg: `<svg width="500" height="320" viewBox="0 0 500 320">
+          <text x="250" y="25" class="label" font-size="16" fill="#22c55e">NMOS Network: Building the AND part</text>
+          <!-- output wire -->
+          <line x1="250" y1="40" x2="250" y2="80" class="wire"/>
+          <text x="250" y="55" class="label-small">output</text>
+          <!-- A transistor -->
+          <g class="fade-in glow-green">
+            <rect x="210" y="80" width="80" height="45" class="nmos-box"/>
+            <text x="250" y="108" class="label" fill="#22c55e">A</text>
+            <text x="300" y="100" class="label-small" fill="#22c55e">NMOS</text>
+          </g>
+          <!-- wire between -->
+          <line x1="250" y1="125" x2="250" y2="145" class="wire"/>
+          <!-- B transistor -->
+          <g class="fade-in glow-green" style="animation-delay:0.2s">
+            <rect x="210" y="145" width="80" height="45" class="nmos-box"/>
+            <text x="250" y="173" class="label" fill="#22c55e">B</text>
+            <text x="300" y="165" class="label-small" fill="#22c55e">NMOS</text>
+          </g>
+          <!-- to gnd -->
+          <line x1="250" y1="190" x2="250" y2="230" class="wire"/>
+          <text x="250" y="250" class="label-gnd">GND</text>
+          <!-- annotation -->
+          <line x1="170" y1="80" x2="170" y2="190" stroke="#22c55e" stroke-width="1" stroke-dasharray="4,3"/>
+          <text x="160" y="140" fill="#22c55e" font-size="13" text-anchor="end" font-weight="bold">SERIES</text>
+          <text x="160" y="158" fill="#94a3b8" font-size="11" text-anchor="end">(= AND)</text>
+        </svg>`
+      },
+      {
+        narration: 'Now add the <span class="key">+ C</span> part. The OR means C goes in <span class="nmos">PARALLEL</span> with the AB series branch. C provides an alternate path to GND.',
+        svg: `<svg width="500" height="340" viewBox="0 0 500 340">
+          <text x="250" y="25" class="label" font-size="16" fill="#22c55e">NMOS Network: Adding the OR part</text>
+          <!-- top split -->
+          <line x1="250" y1="40" x2="250" y2="60" class="wire"/>
+          <line x1="250" y1="60" x2="160" y2="60" class="wire"/>
+          <line x1="250" y1="60" x2="340" y2="60" class="wire"/>
+          <!-- LEFT: A series B -->
+          <rect x="120" y="70" width="80" height="42" class="nmos-box"/>
+          <text x="160" y="96" class="label" fill="#22c55e">A</text>
+          <line x1="160" y1="112" x2="160" y2="130" class="wire"/>
+          <rect x="120" y="130" width="80" height="42" class="nmos-box"/>
+          <text x="160" y="156" class="label" fill="#22c55e">B</text>
+          <line x1="160" y1="172" x2="160" y2="210" class="wire"/>
+          <!-- RIGHT: C parallel -->
+          <g class="fade-in glow-green">
+            <rect x="300" y="100" width="80" height="42" class="nmos-box"/>
+            <text x="340" y="126" class="label" fill="#22c55e">C</text>
+          </g>
+          <line x1="340" y1="60" x2="340" y2="100" class="wire"/>
+          <line x1="340" y1="142" x2="340" y2="210" class="wire"/>
+          <!-- bottom merge -->
+          <line x1="160" y1="210" x2="340" y2="210" class="wire"/>
+          <line x1="250" y1="210" x2="250" y2="240" class="wire"/>
+          <text x="250" y="260" class="label-gnd">GND</text>
+          <!-- annotations -->
+          <text x="90" y="125" fill="#22c55e" font-size="12" text-anchor="end" font-weight="bold">SERIES</text>
+          <text x="90" y="140" fill="#94a3b8" font-size="10" text-anchor="end">(AB = AND)</text>
+          <line x1="100" y1="70" x2="100" y2="172" stroke="#22c55e" stroke-width="1" stroke-dasharray="4,3"/>
+          <text x="420" y="125" fill="#22c55e" font-size="12" font-weight="bold">PARALLEL</text>
+          <text x="420" y="140" fill="#94a3b8" font-size="10">(+C = OR)</text>
+        </svg>`
+      },
+      {
+        narration: 'Step 3: Build the <span class="pmos">PMOS network</span> (top, connected to VDD).<br><br>FLIP everything. The AB that was <span class="nmos">series</span> becomes A,B in <span class="pmos">PARALLEL</span>. The C that was <span class="nmos">parallel</span> becomes C in <span class="pmos">SERIES</span>.',
+        svg: `<svg width="500" height="340" viewBox="0 0 500 340">
+          <text x="250" y="25" class="label" font-size="16" fill="#f97316">PMOS Network: Flip the topology</text>
+          <!-- VDD -->
+          <text x="250" y="55" class="label-vdd">VDD</text>
+          <line x1="250" y1="60" x2="250" y2="80" class="wire"/>
+          <!-- C series (was parallel) -->
+          <g class="fade-in glow-orange">
+            <rect x="210" y="80" width="80" height="42" class="pmos-box"/>
+            <text x="250" y="106" class="label" fill="#f97316">C</text>
+            <circle cx="295" cy="101" r="6" class="bubble"/>
+            <text x="310" y="105" class="label-small" fill="#f97316">PMOS</text>
+          </g>
+          <line x1="250" y1="122" x2="250" y2="142" class="wire"/>
+          <!-- A,B parallel (was series) -->
+          <line x1="250" y1="142" x2="160" y2="142" class="wire"/>
+          <line x1="250" y1="142" x2="340" y2="142" class="wire"/>
+          <g class="fade-in glow-orange" style="animation-delay:0.2s">
+            <rect x="120" y="150" width="80" height="42" class="pmos-box"/>
+            <text x="160" y="176" class="label" fill="#f97316">A</text>
+            <circle cx="205" cy="171" r="6" class="bubble"/>
+          </g>
+          <g class="fade-in glow-orange" style="animation-delay:0.3s">
+            <rect x="300" y="150" width="80" height="42" class="pmos-box"/>
+            <text x="340" y="176" class="label" fill="#f97316">B</text>
+            <circle cx="385" cy="171" r="6" class="bubble"/>
+          </g>
+          <line x1="160" y1="192" x2="160" y2="220" class="wire"/>
+          <line x1="340" y1="192" x2="340" y2="220" class="wire"/>
+          <line x1="160" y1="220" x2="340" y2="220" class="wire"/>
+          <line x1="250" y1="220" x2="250" y2="250" class="wire"/>
+          <text x="250" y="270" class="label-small">output</text>
+          <!-- annotations -->
+          <text x="80" y="105" fill="#f97316" font-size="12" text-anchor="end" font-weight="bold">SERIES</text>
+          <text x="80" y="120" fill="#94a3b8" font-size="10" text-anchor="end">(was parallel)</text>
+          <text x="420" y="180" fill="#f97316" font-size="12" font-weight="bold">PARALLEL</text>
+          <text x="420" y="195" fill="#94a3b8" font-size="10">(was series)</text>
+        </svg>`
+      },
+      {
+        narration: 'Step 4: <span class="key">Complete circuit!</span> PMOS on top pulls output HIGH through VDD. NMOS on bottom pulls output LOW through GND. The output is Z = (AB + C)\'. This matches <span class="key">Fall 2023 Q15, Answer A</span>.',
+        svg: `<svg width="500" height="520" viewBox="0 0 500 520">
+          <text x="250" y="20" class="label" font-size="16" fill="#38bdf8">Complete CMOS: Z = (AB + C)'</text>
+          <!-- VDD -->
+          <text x="250" y="48" class="label-vdd" font-size="15">VDD</text>
+          <line x1="250" y1="52" x2="250" y2="68" class="wire"/>
+          <!-- PMOS section -->
+          <rect x="100" y="65" width="300" height="155" rx="10" fill="none" stroke="#f97316" stroke-width="1" stroke-dasharray="6,3" opacity="0.5"/>
+          <text x="415" y="145" fill="#f97316" font-size="12" font-weight="bold">PMOS</text>
+          <!-- C pmos series -->
+          <rect x="215" y="72" width="70" height="36" class="pmos-box"/>
+          <text x="250" y="95" class="label" fill="#f97316" font-size="13">C</text>
+          <circle cx="289" cy="90" r="5" class="bubble"/>
+          <line x1="250" y1="108" x2="250" y2="125" class="wire"/>
+          <!-- A,B pmos parallel -->
+          <line x1="250" y1="125" x2="170" y2="125" class="wire"/>
+          <line x1="250" y1="125" x2="330" y2="125" class="wire"/>
+          <rect x="130" y="132" width="70" height="36" class="pmos-box"/>
+          <text x="165" y="155" class="label" fill="#f97316" font-size="13">A</text>
+          <circle cx="204" cy="150" r="5" class="bubble"/>
+          <rect x="300" y="132" width="70" height="36" class="pmos-box"/>
+          <text x="335" y="155" class="label" fill="#f97316" font-size="13">B</text>
+          <circle cx="374" cy="150" r="5" class="bubble"/>
+          <line x1="165" y1="168" x2="165" y2="190" class="wire"/>
+          <line x1="335" y1="168" x2="335" y2="190" class="wire"/>
+          <line x1="165" y1="190" x2="335" y2="190" class="wire"/>
+          <!-- Output node -->
+          <line x1="250" y1="190" x2="250" y2="240" class="wire glow-blue"/>
+          <circle cx="250" cy="240" r="6" fill="#38bdf8"/>
+          <text x="280" y="244" fill="#38bdf8" font-size="14" font-weight="bold">Z</text>
+          <!-- NMOS section -->
+          <rect x="100" y="260" width="300" height="165" rx="10" fill="none" stroke="#22c55e" stroke-width="1" stroke-dasharray="6,3" opacity="0.5"/>
+          <text x="415" y="345" fill="#22c55e" font-size="12" font-weight="bold">NMOS</text>
+          <line x1="250" y1="240" x2="250" y2="270" class="wire"/>
+          <line x1="250" y1="270" x2="170" y2="270" class="wire"/>
+          <line x1="250" y1="270" x2="330" y2="270" class="wire"/>
+          <!-- A,B nmos series -->
+          <rect x="130" y="280" width="70" height="36" class="nmos-box"/>
+          <text x="165" y="303" class="label" fill="#22c55e" font-size="13">A</text>
+          <line x1="165" y1="316" x2="165" y2="333" class="wire"/>
+          <rect x="130" y="333" width="70" height="36" class="nmos-box"/>
+          <text x="165" y="356" class="label" fill="#22c55e" font-size="13">B</text>
+          <line x1="165" y1="369" x2="165" y2="395" class="wire"/>
+          <!-- C nmos parallel -->
+          <rect x="300" y="305" width="70" height="36" class="nmos-box"/>
+          <text x="335" y="328" class="label" fill="#22c55e" font-size="13">C</text>
+          <line x1="335" y1="270" x2="335" y2="305" class="wire"/>
+          <line x1="335" y1="341" x2="335" y2="395" class="wire"/>
+          <!-- GND -->
+          <line x1="165" y1="395" x2="335" y2="395" class="wire"/>
+          <line x1="250" y1="395" x2="250" y2="420" class="wire"/>
+          <text x="250" y="445" class="label-gnd" font-size="15">GND</text>
+          <!-- Final label -->
+          <text x="250" y="485" class="label" font-size="16" fill="#fbbf24">Answer A on Fall 2023 Exam</text>
+        </svg>`
+      }
+    ]
+  },
+  {
+    name: 'Z = (A + BC)\'',
+    expr: '(A + BC)\'',
+    steps: [
+      {
+        narration: 'Build: <span class="key">Z = (A + BC)\'</span><br><br>Inner expression: <span class="key">A + BC</span>. That\'s A OR\'d with (B AND C).',
+        svg: `<svg width="500" height="200" viewBox="0 0 500 200">
+          <text x="250" y="50" class="label" font-size="24" fill="#c4b5fd" font-family="monospace">( A + B C )'</text>
+          <text x="250" y="100" class="label" font-size="16" fill="#94a3b8">A is OR'd &#8594; parallel in NMOS</text>
+          <text x="250" y="130" class="label" font-size="16" fill="#94a3b8">BC is AND'd &#8594; series in NMOS</text>
+          <text x="250" y="170" class="label" font-size="14" fill="#7dd3fc">A in parallel with (B series C)</text>
+        </svg>`
+      },
+      {
+        narration: '<span class="nmos">NMOS network:</span> A in <span class="nmos">PARALLEL</span> (because OR) with B,C in <span class="nmos">SERIES</span> (because AND).',
+        svg: `<svg width="500" height="320" viewBox="0 0 500 320">
+          <text x="250" y="25" class="label" font-size="16" fill="#22c55e">NMOS: A parallel with (B series C)</text>
+          <line x1="250" y1="40" x2="250" y2="60" class="wire"/>
+          <line x1="250" y1="60" x2="160" y2="60" class="wire"/>
+          <line x1="250" y1="60" x2="340" y2="60" class="wire"/>
+          <!-- A parallel -->
+          <rect x="120" y="100" width="80" height="42" class="nmos-box"/>
+          <text x="160" y="126" class="label" fill="#22c55e">A</text>
+          <line x1="160" y1="60" x2="160" y2="100" class="wire"/>
+          <line x1="160" y1="142" x2="160" y2="210" class="wire"/>
+          <!-- B,C series -->
+          <rect x="300" y="70" width="80" height="42" class="nmos-box"/>
+          <text x="340" y="96" class="label" fill="#22c55e">B</text>
+          <line x1="340" y1="112" x2="340" y2="130" class="wire"/>
+          <rect x="300" y="130" width="80" height="42" class="nmos-box"/>
+          <text x="340" y="156" class="label" fill="#22c55e">C</text>
+          <line x1="340" y1="172" x2="340" y2="210" class="wire"/>
+          <!-- merge -->
+          <line x1="160" y1="210" x2="340" y2="210" class="wire"/>
+          <line x1="250" y1="210" x2="250" y2="240" class="wire"/>
+          <text x="250" y="265" class="label-gnd">GND</text>
+          <text x="100" y="125" fill="#22c55e" font-size="12" text-anchor="end" font-weight="bold">PARALLEL</text>
+          <text x="430" y="115" fill="#22c55e" font-size="12" font-weight="bold">SERIES</text>
+        </svg>`
+      },
+      {
+        narration: '<span class="pmos">PMOS network:</span> Flip everything. A goes in <span class="pmos">SERIES</span>. B,C go in <span class="pmos">PARALLEL</span>.',
+        svg: `<svg width="500" height="320" viewBox="0 0 500 320">
+          <text x="250" y="25" class="label" font-size="16" fill="#f97316">PMOS: A series with (B parallel C)</text>
+          <text x="250" y="50" class="label-vdd">VDD</text>
+          <line x1="250" y1="55" x2="250" y2="75" class="wire"/>
+          <!-- A series -->
+          <rect x="210" y="75" width="80" height="42" class="pmos-box"/>
+          <text x="250" y="101" class="label" fill="#f97316">A</text>
+          <line x1="250" y1="117" x2="250" y2="140" class="wire"/>
+          <!-- B,C parallel -->
+          <line x1="250" y1="140" x2="170" y2="140" class="wire"/>
+          <line x1="250" y1="140" x2="330" y2="140" class="wire"/>
+          <rect x="130" y="150" width="80" height="42" class="pmos-box"/>
+          <text x="170" y="176" class="label" fill="#f97316">B</text>
+          <rect x="290" y="150" width="80" height="42" class="pmos-box"/>
+          <text x="330" y="176" class="label" fill="#f97316">C</text>
+          <line x1="170" y1="192" x2="170" y2="220" class="wire"/>
+          <line x1="330" y1="192" x2="330" y2="220" class="wire"/>
+          <line x1="170" y1="220" x2="330" y2="220" class="wire"/>
+          <line x1="250" y1="220" x2="250" y2="250" class="wire"/>
+          <text x="250" y="270" class="label-small">output Z</text>
+          <text x="90" y="100" fill="#f97316" font-size="12" text-anchor="end" font-weight="bold">SERIES</text>
+          <text x="420" y="175" fill="#f97316" font-size="12" font-weight="bold">PARALLEL</text>
+        </svg>`
+      }
+    ]
+  },
+  {
+    name: 'Z = ((A+B)C)\'',
+    expr: '((A+B)C)\'',
+    steps: [
+      {
+        narration: 'Build: <span class="key">Z = ((A+B)C)\'</span><br><br>Inner expression: <span class="key">(A+B)C</span>. That\'s (A OR B) AND\'d with C.',
+        svg: `<svg width="500" height="200" viewBox="0 0 500 200">
+          <text x="250" y="50" class="label" font-size="24" fill="#c4b5fd" font-family="monospace">( (A+B) C )'</text>
+          <text x="250" y="100" class="label" font-size="16" fill="#94a3b8">(A+B) is OR &#8594; parallel in NMOS</text>
+          <text x="250" y="130" class="label" font-size="16" fill="#94a3b8">Then AND with C &#8594; series in NMOS</text>
+          <text x="250" y="170" class="label" font-size="14" fill="#7dd3fc">(A parallel B) in series with C</text>
+        </svg>`
+      },
+      {
+        narration: '<span class="nmos">NMOS:</span> (A <span class="nmos">PARALLEL</span> B) in <span class="nmos">SERIES</span> with C.',
+        svg: `<svg width="500" height="340" viewBox="0 0 500 340">
+          <text x="250" y="25" class="label" font-size="16" fill="#22c55e">NMOS: (A parallel B) series C</text>
+          <line x1="250" y1="40" x2="250" y2="60" class="wire"/>
+          <!-- A,B parallel -->
+          <line x1="250" y1="60" x2="170" y2="60" class="wire"/>
+          <line x1="250" y1="60" x2="330" y2="60" class="wire"/>
+          <rect x="130" y="70" width="80" height="42" class="nmos-box"/>
+          <text x="170" y="96" class="label" fill="#22c55e">A</text>
+          <rect x="290" y="70" width="80" height="42" class="nmos-box"/>
+          <text x="330" y="96" class="label" fill="#22c55e">B</text>
+          <line x1="170" y1="112" x2="170" y2="140" class="wire"/>
+          <line x1="330" y1="112" x2="330" y2="140" class="wire"/>
+          <line x1="170" y1="140" x2="330" y2="140" class="wire"/>
+          <line x1="250" y1="140" x2="250" y2="160" class="wire"/>
+          <!-- C series -->
+          <rect x="210" y="160" width="80" height="42" class="nmos-box"/>
+          <text x="250" y="186" class="label" fill="#22c55e">C</text>
+          <line x1="250" y1="202" x2="250" y2="240" class="wire"/>
+          <text x="250" y="265" class="label-gnd">GND</text>
+          <text x="420" y="95" fill="#22c55e" font-size="12" font-weight="bold">PARALLEL</text>
+          <text x="100" y="185" fill="#22c55e" font-size="12" text-anchor="end" font-weight="bold">SERIES</text>
+        </svg>`
+      },
+      {
+        narration: '<span class="pmos">PMOS:</span> Flip. (A <span class="pmos">SERIES</span> B) in <span class="pmos">PARALLEL</span> with C.',
+        svg: `<svg width="500" height="340" viewBox="0 0 500 340">
+          <text x="250" y="25" class="label" font-size="16" fill="#f97316">PMOS: (A series B) parallel C</text>
+          <text x="250" y="50" class="label-vdd">VDD</text>
+          <line x1="250" y1="55" x2="250" y2="70" class="wire"/>
+          <line x1="250" y1="70" x2="160" y2="70" class="wire"/>
+          <line x1="250" y1="70" x2="340" y2="70" class="wire"/>
+          <!-- A,B series -->
+          <rect x="120" y="80" width="80" height="42" class="pmos-box"/>
+          <text x="160" y="106" class="label" fill="#f97316">A</text>
+          <line x1="160" y1="122" x2="160" y2="140" class="wire"/>
+          <rect x="120" y="140" width="80" height="42" class="pmos-box"/>
+          <text x="160" y="166" class="label" fill="#f97316">B</text>
+          <line x1="160" y1="182" x2="160" y2="210" class="wire"/>
+          <!-- C parallel -->
+          <rect x="300" y="110" width="80" height="42" class="pmos-box"/>
+          <text x="340" y="136" class="label" fill="#f97316">C</text>
+          <line x1="340" y1="70" x2="340" y2="110" class="wire"/>
+          <line x1="340" y1="152" x2="340" y2="210" class="wire"/>
+          <!-- merge -->
+          <line x1="160" y1="210" x2="340" y2="210" class="wire"/>
+          <line x1="250" y1="210" x2="250" y2="240" class="wire"/>
+          <text x="250" y="260" class="label-small">output Z</text>
+          <text x="90" y="135" fill="#f97316" font-size="12" text-anchor="end" font-weight="bold">SERIES</text>
+          <text x="430" y="135" fill="#f97316" font-size="12" font-weight="bold">PARALLEL</text>
+        </svg>`
+      }
+    ]
+  },
+  {
+    name: '3 input NAND',
+    expr: '(ABC)\'',
+    steps: [
+      {
+        narration: '<span class="key">3 input NAND = (ABC)\'</span><br><br>Inner expression: ABC. That\'s all AND. So ALL three go in <span class="nmos">SERIES</span> for NMOS.',
+        svg: `<svg width="500" height="200" viewBox="0 0 500 200">
+          <text x="250" y="50" class="label" font-size="24" fill="#c4b5fd" font-family="monospace">( A B C )'</text>
+          <text x="250" y="100" class="label" font-size="16" fill="#94a3b8">All AND &#8594; all series in NMOS</text>
+          <text x="250" y="130" class="label" font-size="16" fill="#94a3b8">Flip &#8594; all parallel in PMOS</text>
+          <text x="250" y="170" class="label" font-size="14" fill="#7dd3fc">Spring 2024 Q15 (with inverter = AND)</text>
+        </svg>`
+      },
+      {
+        narration: '<span class="nmos">NMOS:</span> A, B, C all in <span class="nmos">SERIES</span>. All three must be HIGH to pull output LOW.',
+        svg: `<svg width="500" height="340" viewBox="0 0 500 340">
+          <text x="250" y="25" class="label" font-size="16" fill="#22c55e">NMOS: A, B, C all series</text>
+          <line x1="250" y1="40" x2="250" y2="60" class="wire"/>
+          <text x="250" y="55" class="label-small">output</text>
+          <rect x="210" y="65" width="80" height="42" class="nmos-box"/>
+          <text x="250" y="91" class="label" fill="#22c55e">A</text>
+          <line x1="250" y1="107" x2="250" y2="120" class="wire"/>
+          <rect x="210" y="120" width="80" height="42" class="nmos-box"/>
+          <text x="250" y="146" class="label" fill="#22c55e">B</text>
+          <line x1="250" y1="162" x2="250" y2="175" class="wire"/>
+          <rect x="210" y="175" width="80" height="42" class="nmos-box"/>
+          <text x="250" y="201" class="label" fill="#22c55e">C</text>
+          <line x1="250" y1="217" x2="250" y2="250" class="wire"/>
+          <text x="250" y="275" class="label-gnd">GND</text>
+          <line x1="180" y1="65" x2="180" y2="217" stroke="#22c55e" stroke-width="1" stroke-dasharray="4,3"/>
+          <text x="170" y="145" fill="#22c55e" font-size="12" text-anchor="end" font-weight="bold">ALL SERIES</text>
+        </svg>`
+      },
+      {
+        narration: '<span class="pmos">PMOS:</span> Flip. A, B, C all in <span class="pmos">PARALLEL</span>. Any LOW input pulls output HIGH.',
+        svg: `<svg width="500" height="280" viewBox="0 0 500 280">
+          <text x="250" y="25" class="label" font-size="16" fill="#f97316">PMOS: A, B, C all parallel</text>
+          <text x="250" y="50" class="label-vdd">VDD</text>
+          <line x1="250" y1="55" x2="250" y2="70" class="wire"/>
+          <line x1="250" y1="70" x2="130" y2="70" class="wire"/>
+          <line x1="250" y1="70" x2="370" y2="70" class="wire"/>
+          <rect x="95" y="85" width="70" height="42" class="pmos-box"/>
+          <text x="130" y="111" class="label" fill="#f97316">A</text>
+          <rect x="215" y="85" width="70" height="42" class="pmos-box"/>
+          <text x="250" y="111" class="label" fill="#f97316">B</text>
+          <rect x="335" y="85" width="70" height="42" class="pmos-box"/>
+          <text x="370" y="111" class="label" fill="#f97316">C</text>
+          <line x1="130" y1="127" x2="130" y2="155" class="wire"/>
+          <line x1="250" y1="127" x2="250" y2="155" class="wire"/>
+          <line x1="370" y1="127" x2="370" y2="155" class="wire"/>
+          <line x1="130" y1="155" x2="370" y2="155" class="wire"/>
+          <line x1="250" y1="155" x2="250" y2="185" class="wire"/>
+          <text x="250" y="205" class="label-small">output</text>
+          <text x="250" y="240" class="label" font-size="13" fill="#fbbf24">NAND. Add inverter at output = AND (Spring 2024 Q15)</text>
+        </svg>`
+      }
+    ]
+  },
+  {
+    name: '3 input NOR',
+    expr: '(A+B+C)\'',
+    steps: [
+      {
+        narration: '<span class="key">3 input NOR = (A+B+C)\'</span><br><br>Inner expression: A+B+C. All OR. So ALL three go in <span class="nmos">PARALLEL</span> for NMOS.',
+        svg: `<svg width="500" height="200" viewBox="0 0 500 200">
+          <text x="250" y="50" class="label" font-size="24" fill="#c4b5fd" font-family="monospace">( A + B + C )'</text>
+          <text x="250" y="100" class="label" font-size="16" fill="#94a3b8">All OR &#8594; all parallel in NMOS</text>
+          <text x="250" y="130" class="label" font-size="16" fill="#94a3b8">Flip &#8594; all series in PMOS</text>
+        </svg>`
+      },
+      {
+        narration: '<span class="nmos">NMOS:</span> A, B, C all in <span class="nmos">PARALLEL</span>. Any HIGH input pulls output LOW.',
+        svg: `<svg width="500" height="280" viewBox="0 0 500 280">
+          <text x="250" y="25" class="label" font-size="16" fill="#22c55e">NMOS: A, B, C all parallel</text>
+          <line x1="250" y1="40" x2="250" y2="55" class="wire"/>
+          <line x1="250" y1="55" x2="130" y2="55" class="wire"/>
+          <line x1="250" y1="55" x2="370" y2="55" class="wire"/>
+          <rect x="95" y="65" width="70" height="42" class="nmos-box"/>
+          <text x="130" y="91" class="label" fill="#22c55e">A</text>
+          <rect x="215" y="65" width="70" height="42" class="nmos-box"/>
+          <text x="250" y="91" class="label" fill="#22c55e">B</text>
+          <rect x="335" y="65" width="70" height="42" class="nmos-box"/>
+          <text x="370" y="91" class="label" fill="#22c55e">C</text>
+          <line x1="130" y1="107" x2="130" y2="135" class="wire"/>
+          <line x1="250" y1="107" x2="250" y2="135" class="wire"/>
+          <line x1="370" y1="107" x2="370" y2="135" class="wire"/>
+          <line x1="130" y1="135" x2="370" y2="135" class="wire"/>
+          <line x1="250" y1="135" x2="250" y2="165" class="wire"/>
+          <text x="250" y="185" class="label-gnd">GND</text>
+          <text x="250" y="220" fill="#22c55e" font-size="12" text-anchor="middle" font-weight="bold">ALL PARALLEL</text>
+        </svg>`
+      },
+      {
+        narration: '<span class="pmos">PMOS:</span> Flip. A, B, C all in <span class="pmos">SERIES</span>. ALL inputs must be LOW to pull output HIGH.',
+        svg: `<svg width="500" height="340" viewBox="0 0 500 340">
+          <text x="250" y="25" class="label" font-size="16" fill="#f97316">PMOS: A, B, C all series</text>
+          <text x="250" y="50" class="label-vdd">VDD</text>
+          <line x1="250" y1="55" x2="250" y2="75" class="wire"/>
+          <rect x="210" y="75" width="80" height="42" class="pmos-box"/>
+          <text x="250" y="101" class="label" fill="#f97316">A</text>
+          <line x1="250" y1="117" x2="250" y2="130" class="wire"/>
+          <rect x="210" y="130" width="80" height="42" class="pmos-box"/>
+          <text x="250" y="156" class="label" fill="#f97316">B</text>
+          <line x1="250" y1="172" x2="250" y2="185" class="wire"/>
+          <rect x="210" y="185" width="80" height="42" class="pmos-box"/>
+          <text x="250" y="211" class="label" fill="#f97316">C</text>
+          <line x1="250" y1="227" x2="250" y2="260" class="wire"/>
+          <text x="250" y="280" class="label-small">output</text>
+          <line x1="180" y1="75" x2="180" y2="227" stroke="#f97316" stroke-width="1" stroke-dasharray="4,3"/>
+          <text x="170" y="155" fill="#f97316" font-size="12" text-anchor="end" font-weight="bold">ALL SERIES</text>
+        </svg>`
+      }
+    ]
+  }
+];
+
+const practiceProblems = [
+  {q:'Z = (AB + CD)\'', nmos:'(A series B) parallel with (C series D)', pmos:'(A parallel B) series with (C parallel D)'},
+  {q:'Z = ((A+B)(C+D))\'', nmos:'(A parallel B) series with (C parallel D)', pmos:'(A series B) parallel with (C series D)'},
+  {q:'Z = (A + B + CD)\'', nmos:'A parallel B parallel (C series D)', pmos:'A series B series (C parallel D)'},
+];
+
+let currentExample = 0;
+let currentStep = 0;
+
+function loadExample(idx) {
+  currentExample = idx;
+  currentStep = 0;
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', i===idx));
+  renderStep();
+}
+
+function renderStep() {
+  const ex = examples[currentExample];
+  const step = ex.steps[currentStep];
+  document.getElementById('narration').innerHTML = step.narration;
+  document.getElementById('circuitArea').innerHTML = step.svg;
+  document.getElementById('stepLabel').textContent = `Step ${currentStep+1} / ${ex.steps.length}`;
+  document.getElementById('prevBtn').disabled = currentStep === 0;
+  document.getElementById('nextBtn').disabled = currentStep === ex.steps.length - 1;
+  document.getElementById('walkFrame').style.borderColor = currentStep === ex.steps.length-1 ? '#22c55e' : '#334155';
+}
+
+function nextStep() {
+  const ex = examples[currentExample];
+  if (currentStep < ex.steps.length - 1) { currentStep++; renderStep(); }
+}
+
+function prevStep() {
+  if (currentStep > 0) { currentStep--; renderStep(); }
+}
+
+function buildPractice() {
+  const container = document.getElementById('practice');
+  let html = '';
+  practiceProblems.forEach((p, i) => {
+    html += `
+    <div style="background:#0f172a;border:2px solid #475569;border-radius:10px;padding:20px;margin:14px 0">
+      <p style="font-size:18px;font-family:monospace;color:#c4b5fd;margin-bottom:12px">${p.q}</p>
+      <button class="walk-btn" onclick="this.nextElementSibling.style.display='block';this.style.display='none'" style="font-size:13px;padding:8px 16px">Show Answer</button>
+      <div style="display:none">
+        <p style="margin:8px 0"><span style="color:#22c55e;font-weight:bold">NMOS:</span> ${p.nmos}</p>
+        <p style="margin:8px 0"><span style="color:#f97316;font-weight:bold">PMOS:</span> ${p.pmos}</p>
+      </div>
+    </div>`;
+  });
+  container.innerHTML = html;
+}
+
+loadExample(0);
+buildPractice();
+</script>
+</body>
+</html>

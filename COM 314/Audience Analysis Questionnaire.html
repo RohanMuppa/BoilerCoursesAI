@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title></title>
+<style>
+  @page {
+    size: letter;
+    margin: 0.6in 0.7in;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-size: 10.5pt;
+    line-height: 1.35;
+    color: #1a1a1a;
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 6px;
+  }
+  .title-block { text-align: center; flex: 1; }
+  .title { font-size: 15pt; font-weight: bold; margin-bottom: 2px; }
+  .subtitle { font-size: 10pt; color: #444; }
+  .speaker-num {
+    font-size: 28pt;
+    font-weight: bold;
+    line-height: 1;
+    min-width: 50px;
+    text-align: right;
+  }
+  .intro {
+    font-size: 9pt;
+    color: #555;
+    font-style: italic;
+    text-align: center;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1.5px solid #333;
+  }
+  .topic {
+    font-size: 10.5pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 12px;
+    margin-bottom: 6px;
+    padding: 3px 8px;
+    background: #f0f0f0;
+    border-left: 3px solid #333;
+  }
+  .question {
+    margin-top: 8px;
+    margin-bottom: 4px;
+    page-break-inside: avoid;
+  }
+  .q-text {
+    font-weight: bold;
+    font-size: 10.5pt;
+    margin-bottom: 3px;
+  }
+  .q-num { font-weight: bold; }
+  .options {
+    padding-left: 20px;
+    margin-top: 2px;
+  }
+  .option {
+    margin: 1px 0;
+    font-size: 10pt;
+  }
+  .option::before {
+    content: "\25CB";
+    margin-right: 6px;
+    font-size: 9pt;
+  }
+  .scale-row {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding-left: 20px;
+    margin-top: 3px;
+    font-size: 10pt;
+  }
+  .scale-label-left {
+    font-size: 9pt;
+    color: #555;
+    width: 95px;
+    text-align: right;
+    padding-right: 8px;
+  }
+  .scale-label-right {
+    font-size: 9pt;
+    color: #555;
+    width: 95px;
+    padding-left: 8px;
+  }
+  .scale-circles {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+  }
+  .scale-circles span {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 9pt;
+    color: #333;
+  }
+  .scale-circles span::after {
+    content: "\25CB";
+    font-size: 13pt;
+    margin-top: 1px;
+  }
+  .blank-line {
+    border-bottom: 1px solid #aaa;
+    height: 22px;
+    margin: 3px 20px 0 20px;
+  }
+  .thanks {
+    text-align: center;
+    font-style: italic;
+    font-size: 10pt;
+    margin-top: 14px;
+    color: #555;
+  }
+  .circle-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 24px;
+    padding-left: 20px;
+    margin-top: 2px;
+  }
+  .circle-option {
+    font-size: 10pt;
+  }
+  .circle-option::before {
+    content: "\25CB";
+    margin-right: 5px;
+    font-size: 9pt;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div style="min-width:50px;"></div>
+  <div class="title-block">
+    <div class="title">Audience Analysis Questionnaire</div>
+    <div class="subtitle">COM 314/315</div>
+  </div>
+  <div class="speaker-num">#9</div>
+</div>
+
+<!-- TOPIC 1 -->
+<div class="topic">Topic 1 &mdash; AI, Automation, and Future Careers</div>
+
+<div class="question">
+  <div class="q-text">1. What is your major or intended field of study?</div>
+  <div class="blank-line"></div>
+</div>
+
+<div class="question">
+  <div class="q-text">2. How much do you know about how AI and automation are expected to change the job market for college graduates?</div>
+  <div class="options">
+    <div class="option">I know a lot about this topic</div>
+    <div class="option">I know a little about this topic</div>
+    <div class="option">I have heard of it but do not know much</div>
+    <div class="option">I have never heard of this topic</div>
+  </div>
+</div>
+
+<div class="question">
+  <div class="q-text">3. How concerned are you about AI or automation affecting your own future career?</div>
+  <div class="scale-row">
+    <div class="scale-label-left">Not concerned</div>
+    <div class="scale-circles">
+      <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+    </div>
+    <div class="scale-label-right">Very concerned</div>
+  </div>
+</div>
+
+<div class="question">
+  <div class="q-text">4. Have you ever reconsidered your career plans because of advancements in AI?</div>
+  <div class="circle-options">
+    <div class="circle-option">Yes</div>
+    <div class="circle-option">No</div>
+    <div class="circle-option">Unsure</div>
+  </div>
+</div>
+
+<!-- TOPIC 2 -->
+<div class="topic">Topic 2 &mdash; AGI and the Future of Ownership, Work, and Autonomy</div>
+
+<div class="question">
+  <div class="q-text">5. Have you heard of the concept of Artificial General Intelligence (AGI)?</div>
+  <div class="options">
+    <div class="option">Yes, I understand what it means</div>
+    <div class="option">I have heard of it but am not sure what it means</div>
+    <div class="option">No, I have never heard of it</div>
+  </div>
+</div>
+
+<div class="question">
+  <div class="q-text">6. Are you familiar with the phrase "you will own nothing and be happy"?</div>
+  <div class="circle-options">
+    <div class="circle-option">Yes</div>
+    <div class="circle-option">No</div>
+  </div>
+</div>
+
+<div class="question">
+  <div class="q-text">7. How interested would you be in learning about how AGI could reshape ownership, work, and personal freedom?</div>
+  <div class="scale-row">
+    <div class="scale-label-left">Not interested</div>
+    <div class="scale-circles">
+      <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+    </div>
+    <div class="scale-label-right">Very interested</div>
+  </div>
+</div>
+
+<div class="question">
+  <div class="q-text">8. How much do you agree: "Technology companies have too much control over people's daily lives."</div>
+  <div class="scale-row">
+    <div class="scale-label-left">Strongly disagree</div>
+    <div class="scale-circles">
+      <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+    </div>
+    <div class="scale-label-right">Strongly agree</div>
+  </div>
+</div>
+
+<!-- TOPIC 3 -->
+<div class="topic">Topic 3 &mdash; Personal AI Agents and Tools for Students</div>
+
+<div class="question">
+  <div class="q-text">9. Do you currently use any AI tools (ChatGPT, Copilot, Grammarly, etc.) in your daily life or schoolwork?</div>
+  <div class="options">
+    <div class="option">Yes, regularly</div>
+    <div class="option">Yes, occasionally</div>
+    <div class="option">No, but I have tried them</div>
+    <div class="option">No, I have never used them</div>
+  </div>
+</div>
+
+<div class="question">
+  <div class="q-text">10. How comfortable are you with the idea of using AI agents to manage tasks like scheduling, studying, or organizing your life?</div>
+  <div class="scale-row">
+    <div class="scale-label-left">Not comfortable</div>
+    <div class="scale-circles">
+      <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+    </div>
+    <div class="scale-label-right">Very comfortable</div>
+  </div>
+</div>
+
+<div class="question">
+  <div class="q-text">11. Do you think college students should learn to build or customize their own AI tools?</div>
+  <div class="options">
+    <div class="option">Yes, it is an important skill for the future</div>
+    <div class="option">Maybe, depending on the field of study</div>
+    <div class="option">No, it is not necessary</div>
+  </div>
+</div>
+
+<div class="question">
+  <div class="q-text">12. What AI tools or features would you find most useful as a student?</div>
+  <div class="blank-line"></div>
+  <div class="blank-line"></div>
+</div>
+
+<!-- TOPIC 4 -->
+<div class="topic">Topic 4 &mdash; Philosophy of Education and the College Experience</div>
+
+<div class="question">
+  <div class="q-text">13. How often do you reflect on what you want to get out of college beyond earning a degree?</div>
+  <div class="circle-options">
+    <div class="circle-option">Often</div>
+    <div class="circle-option">Sometimes</div>
+    <div class="circle-option">Rarely</div>
+    <div class="circle-option">Never</div>
+  </div>
+</div>
+
+<div class="question">
+  <div class="q-text">14. How interested would you be in a presentation exploring philosophical ideas about what education should really be for?</div>
+  <div class="scale-row">
+    <div class="scale-label-left">Not interested</div>
+    <div class="scale-circles">
+      <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+    </div>
+    <div class="scale-label-right">Very interested</div>
+  </div>
+</div>
+
+<div class="question">
+  <div class="q-text">15. How much do you agree: "College is more about personal growth than career preparation."</div>
+  <div class="scale-row">
+    <div class="scale-label-left">Strongly disagree</div>
+    <div class="scale-circles">
+      <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+    </div>
+    <div class="scale-label-right">Strongly agree</div>
+  </div>
+</div>
+
+<div class="question">
+  <div class="q-text">16. What do you hope to gain from your college experience beyond a degree?</div>
+  <div class="blank-line"></div>
+  <div class="blank-line"></div>
+</div>
+
+<!-- FINAL -->
+<div class="question" style="margin-top: 12px; padding-top: 8px; border-top: 1px solid #ccc;">
+  <div class="q-text">17. Of these four topics, which would you most want to hear a presentation about? (Circle one)</div>
+  <div class="options">
+    <div class="option">How AI and automation are changing future careers</div>
+    <div class="option">How AGI could reshape ownership, work, and personal freedom</div>
+    <div class="option">How college students can use personal AI agents in daily life</div>
+    <div class="option">Philosophical perspectives on education and personal growth</div>
+  </div>
+</div>
+
+<div class="thanks">Thank you for your responses.</div>
+
+</body>
+</html>

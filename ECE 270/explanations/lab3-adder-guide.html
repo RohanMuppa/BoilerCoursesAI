@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lab 3: Building the 2-Bit Adder, Step by Step</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0a0a0f; color: #e0e0e0; line-height: 1.7; }
+
+  .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+
+  h1 { font-size: 2em; color: #7ecfff; margin: 30px 0 10px; text-align: center; }
+  h2 { font-size: 1.5em; color: #ffb347; margin: 30px 0 15px; border-bottom: 2px solid #ffb34733; padding-bottom: 8px; }
+  h3 { font-size: 1.2em; color: #98fb98; margin: 20px 0 10px; }
+
+  p { margin: 10px 0; font-size: 1.05em; }
+
+  .step-nav { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin: 20px 0; position: sticky; top: 0; background: #0a0a0f; padding: 12px 0; z-index: 10; border-bottom: 1px solid #333; }
+  .step-btn { padding: 8px 16px; border: 2px solid #555; background: #1a1a2e; color: #ccc; border-radius: 8px; cursor: pointer; font-size: 0.9em; transition: all 0.3s; }
+  .step-btn:hover { border-color: #7ecfff; color: #7ecfff; }
+  .step-btn.active { background: #7ecfff22; border-color: #7ecfff; color: #7ecfff; font-weight: bold; }
+
+  .step-content { display: none; animation: fadeIn 0.4s; }
+  .step-content.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .circuit-box { background: #12121f; border: 2px solid #333; border-radius: 12px; padding: 20px; margin: 15px 0; }
+  .circuit-box svg { width: 100%; height: auto; }
+
+  .info-box { background: #1a1a3a; border-left: 4px solid #7ecfff; padding: 15px 20px; border-radius: 0 8px 8px 0; margin: 15px 0; }
+  .warn-box { background: #3a2a1a; border-left: 4px solid #ffb347; padding: 15px 20px; border-radius: 0 8px 8px 0; margin: 15px 0; }
+  .success-box { background: #1a3a1a; border-left: 4px solid #98fb98; padding: 15px 20px; border-radius: 0 8px 8px 0; margin: 15px 0; }
+
+  table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+  th { background: #1a1a3a; color: #7ecfff; padding: 10px; text-align: center; }
+  td { padding: 10px; text-align: center; border: 1px solid #333; }
+  tr:nth-child(even) { background: #12121f; }
+
+  .gate-label { font-family: monospace; background: #222; padding: 2px 6px; border-radius: 4px; color: #ffb347; }
+
+  .chip-diagram { display: flex; justify-content: center; margin: 15px 0; }
+  .chip { background: #1a1a2e; border: 2px solid #7ecfff; border-radius: 8px; padding: 15px; display: inline-block; }
+  .chip-title { text-align: center; color: #7ecfff; font-weight: bold; margin-bottom: 10px; }
+  .pin-row { display: flex; justify-content: space-between; gap: 40px; font-family: monospace; font-size: 0.95em; }
+  .pin { padding: 3px 0; }
+  .pin-left { color: #98fb98; }
+  .pin-right { color: #ffb347; text-align: right; }
+
+  .interactive-truth { cursor: pointer; }
+  .interactive-truth tr:hover { background: #7ecfff15; }
+  .highlight-row { background: #7ecfff22 !important; }
+
+  .wiring-step { background: #12121f; border: 1px solid #444; border-radius: 8px; padding: 15px; margin: 10px 0; display: flex; gap: 15px; align-items: flex-start; }
+  .wiring-num { background: #7ecfff; color: #000; font-weight: bold; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.9em; }
+  .wiring-text { flex: 1; }
+
+  .test-card { background: #12121f; border: 2px solid #444; border-radius: 10px; padding: 15px; margin: 10px 0; transition: border-color 0.3s; }
+  .test-card:hover { border-color: #98fb98; }
+  .test-inputs { font-family: monospace; color: #ffb347; font-size: 1.1em; }
+  .test-expect { font-family: monospace; color: #98fb98; font-size: 1.1em; }
+
+  .nav-buttons { display: flex; justify-content: space-between; margin: 30px 0; }
+  .nav-btn { padding: 10px 24px; border: 2px solid #7ecfff; background: transparent; color: #7ecfff; border-radius: 8px; cursor: pointer; font-size: 1em; transition: all 0.3s; }
+  .nav-btn:hover { background: #7ecfff22; }
+  .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Lab 3: Building the 2-Bit Adder</h1>
+  <p style="text-align:center; color:#999;">A visual step-by-step guide</p>
+
+  <div class="step-nav" id="stepNav">
+    <button class="step-btn active" onclick="showStep(0)">Big Picture</button>
+    <button class="step-btn" onclick="showStep(1)">Full Adder</button>
+    <button class="step-btn" onclick="showStep(2)">NAND Trick</button>
+    <button class="step-btn" onclick="showStep(3)">Your Chips</button>
+    <button class="step-btn" onclick="showStep(4)">Wire Adder 0</button>
+    <button class="step-btn" onclick="showStep(5)">Test Adder 0</button>
+    <button class="step-btn" onclick="showStep(6)">Wire Adder 1</button>
+    <button class="step-btn" onclick="showStep(7)">Chain + Test</button>
+  </div>
+
+  <!-- STEP 0: BIG PICTURE -->
+  <div class="step-content active" id="step0">
+    <h2>What are you building?</h2>
+    <p>You're building a circuit that <strong>adds two 2-bit binary numbers</strong>.</p>
+    <p>Think of it like a tiny calculator. You give it two numbers (0 to 3 each), and it gives you the sum (0 to 7).</p>
+
+    <div class="circuit-box">
+      <svg viewBox="0 0 600 250" xmlns="http://www.w3.org/2000/svg">
+        <!-- Input boxes -->
+        <rect x="30" y="40" width="120" height="70" rx="10" fill="#1a1a3a" stroke="#ffb347" stroke-width="2"/>
+        <text x="90" y="65" text-anchor="middle" fill="#ffb347" font-size="14" font-weight="bold">Input A</text>
+        <text x="90" y="90" text-anchor="middle" fill="#ccc" font-size="12">A1, A0</text>
+        <text x="90" y="105" text-anchor="middle" fill="#888" font-size="11">(0 to 3)</text>
+
+        <rect x="30" y="140" width="120" height="70" rx="10" fill="#1a1a3a" stroke="#ffb347" stroke-width="2"/>
+        <text x="90" y="165" text-anchor="middle" fill="#ffb347" font-size="14" font-weight="bold">Input B</text>
+        <text x="90" y="190" text-anchor="middle" fill="#ccc" font-size="12">B1, B0</text>
+        <text x="90" y="205" text-anchor="middle" fill="#888" font-size="11">(0 to 3)</text>
+
+        <!-- Adder box -->
+        <rect x="220" y="60" width="180" height="130" rx="15" fill="#12121f" stroke="#7ecfff" stroke-width="3"/>
+        <text x="310" y="110" text-anchor="middle" fill="#7ecfff" font-size="18" font-weight="bold">2-BIT</text>
+        <text x="310" y="135" text-anchor="middle" fill="#7ecfff" font-size="18" font-weight="bold">ADDER</text>
+        <text x="310" y="160" text-anchor="middle" fill="#666" font-size="11">10 gates total</text>
+
+        <!-- Output box -->
+        <rect x="470" y="70" width="120" height="110" rx="10" fill="#1a1a3a" stroke="#98fb98" stroke-width="2"/>
+        <text x="530" y="100" text-anchor="middle" fill="#98fb98" font-size="14" font-weight="bold">Output</text>
+        <text x="530" y="125" text-anchor="middle" fill="#ccc" font-size="12">S2, S1, S0</text>
+        <text x="530" y="145" text-anchor="middle" fill="#888" font-size="11">(0 to 7)</text>
+        <text x="530" y="165" text-anchor="middle" fill="#888" font-size="11">+ Cout0</text>
+
+        <!-- Arrows -->
+        <line x1="150" y1="75" x2="220" y2="105" stroke="#ffb347" stroke-width="2" marker-end="url(#arrow-o)"/>
+        <line x1="150" y1="175" x2="220" y2="145" stroke="#ffb347" stroke-width="2" marker-end="url(#arrow-o)"/>
+        <line x1="400" y1="125" x2="470" y2="125" stroke="#98fb98" stroke-width="2" marker-end="url(#arrow-g)"/>
+
+        <defs>
+          <marker id="arrow-o" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#ffb347"/></marker>
+          <marker id="arrow-g" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#98fb98"/></marker>
+        </defs>
+      </svg>
+    </div>
+
+    <p>For example, if A = 3 (binary 11) and B = 2 (binary 10), the output is 5 (binary 101).</p>
+
+    <div class="info-box">
+      <strong>The 2-bit adder is made of TWO identical "full adders" chained together.</strong> Each full adder handles one bit position (ones place and twos place), just like how you do addition by hand, column by column, carrying as needed.
+    </div>
+
+    <div class="nav-buttons">
+      <button class="nav-btn" disabled>Previous</button>
+      <button class="nav-btn" onclick="showStep(1)">Next: What's a Full Adder?</button>
+    </div>
+  </div>
+
+  <!-- STEP 1: FULL ADDER -->
+  <div class="step-content" id="step1">
+    <h2>What is a Full Adder?</h2>
+    <p>A full adder adds <strong>three single bits</strong> together: A, B, and a carry-in (Cin). It produces two outputs: S (sum) and Cout (carry-out).</p>
+
+    <div class="circuit-box">
+      <svg viewBox="0 0 500 200" xmlns="http://www.w3.org/2000/svg">
+        <rect x="150" y="30" width="200" height="140" rx="15" fill="#12121f" stroke="#7ecfff" stroke-width="2"/>
+        <text x="250" y="90" text-anchor="middle" fill="#7ecfff" font-size="20" font-weight="bold">FULL</text>
+        <text x="250" y="115" text-anchor="middle" fill="#7ecfff" font-size="20" font-weight="bold">ADDER</text>
+
+        <text x="60" y="65" text-anchor="middle" fill="#ffb347" font-size="16" font-weight="bold">A</text>
+        <line x1="80" y1="60" x2="150" y2="60" stroke="#ffb347" stroke-width="2"/>
+
+        <text x="60" y="105" text-anchor="middle" fill="#ffb347" font-size="16" font-weight="bold">B</text>
+        <line x1="80" y1="100" x2="150" y2="100" stroke="#ffb347" stroke-width="2"/>
+
+        <text x="50" y="145" text-anchor="middle" fill="#ffb347" font-size="16" font-weight="bold">Cin</text>
+        <line x1="80" y1="140" x2="150" y2="140" stroke="#ffb347" stroke-width="2"/>
+
+        <text x="440" y="75" text-anchor="middle" fill="#98fb98" font-size="16" font-weight="bold">Cout</text>
+        <line x1="350" y1="70" x2="410" y2="70" stroke="#98fb98" stroke-width="2"/>
+
+        <text x="425" y="135" text-anchor="middle" fill="#98fb98" font-size="16" font-weight="bold">S</text>
+        <line x1="350" y1="130" x2="410" y2="130" stroke="#98fb98" stroke-width="2"/>
+      </svg>
+    </div>
+
+    <h3>Truth Table (click rows to highlight)</h3>
+    <table class="interactive-truth" id="truthTable">
+      <tr><th>A</th><th>B</th><th>Cin</th><th>Decimal Sum</th><th>Cout</th><th>S</th></tr>
+      <tr onclick="this.classList.toggle('highlight-row')"><td>0</td><td>0</td><td>0</td><td>0</td><td style="color:#98fb98">0</td><td style="color:#98fb98">0</td></tr>
+      <tr onclick="this.classList.toggle('highlight-row')"><td>0</td><td>0</td><td>1</td><td>1</td><td style="color:#98fb98">0</td><td style="color:#98fb98">1</td></tr>
+      <tr onclick="this.classList.toggle('highlight-row')"><td>0</td><td>1</td><td>0</td><td>1</td><td style="color:#98fb98">0</td><td style="color:#98fb98">1</td></tr>
+      <tr onclick="this.classList.toggle('highlight-row')"><td>0</td><td>1</td><td>1</td><td>2</td><td style="color:#98fb98">1</td><td style="color:#98fb98">0</td></tr>
+      <tr onclick="this.classList.toggle('highlight-row')"><td>1</td><td>0</td><td>0</td><td>1</td><td style="color:#98fb98">0</td><td style="color:#98fb98">1</td></tr>
+      <tr onclick="this.classList.toggle('highlight-row')"><td>1</td><td>0</td><td>1</td><td>2</td><td style="color:#98fb98">1</td><td style="color:#98fb98">0</td></tr>
+      <tr onclick="this.classList.toggle('highlight-row')"><td>1</td><td>1</td><td>0</td><td>2</td><td style="color:#98fb98">1</td><td style="color:#98fb98">0</td></tr>
+      <tr onclick="this.classList.toggle('highlight-row')"><td>1</td><td>1</td><td>1</td><td>3</td><td style="color:#98fb98">1</td><td style="color:#98fb98">1</td></tr>
+    </table>
+
+    <div class="info-box">
+      <strong>Think of it like adding single digits.</strong> If A=1, B=1, Cin=1, the total is 3. In binary, 3 is "11". The left digit is Cout (1), the right digit is S (1).
+    </div>
+
+    <h3>Inside the Full Adder: 5 Gates</h3>
+    <p>Each full adder uses exactly 5 gates:</p>
+
+    <div class="circuit-box">
+      <svg viewBox="0 0 650 320" xmlns="http://www.w3.org/2000/svg">
+        <!-- XOR 1 -->
+        <rect x="140" y="20" width="90" height="50" rx="8" fill="#2a2a4a" stroke="#7ecfff" stroke-width="2"/>
+        <text x="185" y="50" text-anchor="middle" fill="#7ecfff" font-size="14" font-weight="bold">XOR</text>
+        <text x="185" y="15" text-anchor="middle" fill="#888" font-size="10">gate 1</text>
+
+        <!-- NAND 1 -->
+        <rect x="140" y="100" width="90" height="50" rx="8" fill="#2a2a4a" stroke="#ff6b6b" stroke-width="2"/>
+        <text x="185" y="130" text-anchor="middle" fill="#ff6b6b" font-size="14" font-weight="bold">NAND</text>
+        <text x="185" y="95" text-anchor="middle" fill="#888" font-size="10">gate 2</text>
+
+        <!-- XOR 2 -->
+        <rect x="330" y="50" width="90" height="50" rx="8" fill="#2a2a4a" stroke="#7ecfff" stroke-width="2"/>
+        <text x="375" y="80" text-anchor="middle" fill="#7ecfff" font-size="14" font-weight="bold">XOR</text>
+        <text x="375" y="45" text-anchor="middle" fill="#888" font-size="10">gate 3</text>
+
+        <!-- NAND 2 -->
+        <rect x="330" y="150" width="90" height="50" rx="8" fill="#2a2a4a" stroke="#ff6b6b" stroke-width="2"/>
+        <text x="375" y="180" text-anchor="middle" fill="#ff6b6b" font-size="14" font-weight="bold">NAND</text>
+        <text x="375" y="145" text-anchor="middle" fill="#888" font-size="10">gate 4</text>
+
+        <!-- NAND 3 (final) -->
+        <rect x="500" y="110" width="90" height="50" rx="8" fill="#2a2a4a" stroke="#ff6b6b" stroke-width="2"/>
+        <text x="545" y="140" text-anchor="middle" fill="#ff6b6b" font-size="14" font-weight="bold">NAND</text>
+        <text x="545" y="105" text-anchor="middle" fill="#888" font-size="10">gate 5</text>
+
+        <!-- Input labels -->
+        <text x="20" y="35" fill="#ffb347" font-size="16" font-weight="bold">A</text>
+        <text x="20" y="60" fill="#ffb347" font-size="16" font-weight="bold">B</text>
+        <text x="20" y="190" fill="#ffb347" font-size="16" font-weight="bold">Cin</text>
+
+        <!-- A to XOR1 and NAND1 -->
+        <line x1="40" y1="32" x2="140" y2="32" stroke="#ffb347" stroke-width="1.5"/>
+        <line x1="80" y1="32" x2="80" y2="112" stroke="#ffb347" stroke-width="1.5"/>
+        <line x1="80" y1="112" x2="140" y2="112" stroke="#ffb347" stroke-width="1.5"/>
+        <circle cx="80" cy="32" r="3" fill="#ffb347"/>
+
+        <!-- B to XOR1 and NAND1 -->
+        <line x1="40" y1="57" x2="100" y2="57" stroke="#ffb347" stroke-width="1.5"/>
+        <line x1="100" y1="57" x2="140" y2="57" stroke="#ffb347" stroke-width="1.5"/>
+        <line x1="100" y1="57" x2="100" y2="138" stroke="#ffb347" stroke-width="1.5"/>
+        <line x1="100" y1="138" x2="140" y2="138" stroke="#ffb347" stroke-width="1.5"/>
+        <circle cx="100" cy="57" r="3" fill="#ffb347"/>
+
+        <!-- XOR1 output to XOR2 and NAND2 -->
+        <line x1="230" y1="45" x2="280" y2="45" stroke="#aaa" stroke-width="1.5"/>
+        <line x1="280" y1="45" x2="280" y2="62" stroke="#aaa" stroke-width="1.5"/>
+        <line x1="280" y1="62" x2="330" y2="62" stroke="#aaa" stroke-width="1.5"/>
+        <line x1="280" y1="62" x2="280" y2="162" stroke="#aaa" stroke-width="1.5"/>
+        <line x1="280" y1="162" x2="330" y2="162" stroke="#aaa" stroke-width="1.5"/>
+        <circle cx="280" cy="62" r="3" fill="#aaa"/>
+        <text x="270" y="42" fill="#aaa" font-size="9">A xor B</text>
+
+        <!-- Cin to XOR2 and NAND2 -->
+        <line x1="40" y1="187" x2="300" y2="187" stroke="#ffb347" stroke-width="1.5"/>
+        <line x1="300" y1="187" x2="300" y2="87" stroke="#ffb347" stroke-width="1.5"/>
+        <line x1="300" y1="87" x2="330" y2="87" stroke="#ffb347" stroke-width="1.5"/>
+        <line x1="300" y1="187" x2="330" y2="187" stroke="#ffb347" stroke-width="1.5"/>
+        <circle cx="300" cy="187" r="3" fill="#ffb347"/>
+
+        <!-- NAND1 output to NAND3 -->
+        <line x1="230" y1="125" x2="260" y2="125" stroke="#aaa" stroke-width="1.5"/>
+        <line x1="260" y1="125" x2="460" y2="125" stroke="#aaa" stroke-width="1.5" stroke-dasharray="4"/>
+        <line x1="460" y1="125" x2="500" y2="125" stroke="#aaa" stroke-width="1.5"/>
+
+        <!-- NAND2 output to NAND3 -->
+        <line x1="420" y1="175" x2="460" y2="175" stroke="#aaa" stroke-width="1.5"/>
+        <line x1="460" y1="175" x2="460" y2="147" stroke="#aaa" stroke-width="1.5"/>
+        <line x1="460" y1="147" x2="500" y2="147" stroke="#aaa" stroke-width="1.5"/>
+
+        <!-- Outputs -->
+        <line x1="420" y1="75" x2="620" y2="75" stroke="#98fb98" stroke-width="2"/>
+        <text x="610" y="72" fill="#98fb98" font-size="16" font-weight="bold">S</text>
+
+        <line x1="590" y1="135" x2="620" y2="135" stroke="#98fb98" stroke-width="2"/>
+        <text x="635" y="138" fill="#98fb98" font-size="14" font-weight="bold">Cout</text>
+
+        <!-- Legend -->
+        <rect x="10" y="250" width="630" height="55" rx="8" fill="#1a1a2e" stroke="#444" stroke-width="1"/>
+        <text x="30" y="272" fill="#7ecfff" font-size="12" font-weight="bold">XOR gates</text>
+        <text x="30" y="292" fill="#888" font-size="11">from 74HC86 chip</text>
+        <text x="200" y="272" fill="#ff6b6b" font-size="12" font-weight="bold">NAND gates</text>
+        <text x="200" y="292" fill="#888" font-size="11">from 74HC00 chip(s)</text>
+        <text x="420" y="272" fill="#888" font-size="12">Each full adder = 2 XOR + 3 NAND</text>
+        <text x="420" y="292" fill="#888" font-size="11">Total for 2-bit adder = 4 XOR + 6 NAND</text>
+      </svg>
+    </div>
+
+    <div class="info-box">
+      <strong>Key connections to understand:</strong><br><br>
+      A and B each go to TWO gates (the first XOR and the first NAND). This is why the lab says to use "white wires" to connect A and B across both gates.<br><br>
+      The output of the first XOR (which is A xor B) also goes to TWO gates (the second XOR and the second NAND).<br><br>
+      Cin also goes to TWO gates (the second XOR and the second NAND).
+    </div>
+
+    <div class="nav-buttons">
+      <button class="nav-btn" onclick="showStep(0)">Previous</button>
+      <button class="nav-btn" onclick="showStep(2)">Next: The NAND Trick</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: NAND TRICK -->
+  <div class="step-content" id="step2">
+    <h2>Why NAND Instead of AND/OR?</h2>
+    <p>The original full adder design uses AND gates and an OR gate for the carry-out. But your kit doesn't have an OR gate chip. The fix? DeMorgan's Law lets you replace the AND+OR with NAND+NAND.</p>
+
+    <div class="circuit-box">
+      <svg viewBox="0 0 600 180" xmlns="http://www.w3.org/2000/svg">
+        <!-- Original -->
+        <rect x="10" y="10" width="180" height="160" rx="10" fill="#1a1a2e" stroke="#444" stroke-width="1"/>
+        <text x="100" y="35" text-anchor="middle" fill="#888" font-size="13">Original Design</text>
+        <rect x="30" y="50" width="60" height="30" rx="5" fill="#2a2a4a" stroke="#ffb347" stroke-width="1.5"/>
+        <text x="60" y="70" text-anchor="middle" fill="#ffb347" font-size="11">AND</text>
+        <rect x="30" y="95" width="60" height="30" rx="5" fill="#2a2a4a" stroke="#ffb347" stroke-width="1.5"/>
+        <text x="60" y="115" text-anchor="middle" fill="#ffb347" font-size="11">AND</text>
+        <rect x="120" y="72" width="50" height="30" rx="5" fill="#2a2a4a" stroke="#ff6b6b" stroke-width="1.5"/>
+        <text x="145" y="92" text-anchor="middle" fill="#ff6b6b" font-size="11">OR</text>
+        <line x1="90" y1="65" x2="120" y2="82" stroke="#aaa" stroke-width="1"/>
+        <line x1="90" y1="110" x2="120" y2="92" stroke="#aaa" stroke-width="1"/>
+        <text x="100" y="155" text-anchor="middle" fill="#ff6b6b" font-size="11">No OR chip!</text>
+
+        <!-- Arrow -->
+        <text x="300" y="95" text-anchor="middle" fill="#7ecfff" font-size="30">===></text>
+        <text x="300" y="115" text-anchor="middle" fill="#7ecfff" font-size="11">DeMorgan's</text>
+
+        <!-- Replacement -->
+        <rect x="410" y="10" width="180" height="160" rx="10" fill="#1a1a2e" stroke="#444" stroke-width="1"/>
+        <text x="500" y="35" text-anchor="middle" fill="#98fb98" font-size="13">Your Build</text>
+        <rect x="430" y="50" width="60" height="30" rx="5" fill="#2a2a4a" stroke="#98fb98" stroke-width="1.5"/>
+        <text x="460" y="70" text-anchor="middle" fill="#98fb98" font-size="11">NAND</text>
+        <rect x="430" y="95" width="60" height="30" rx="5" fill="#2a2a4a" stroke="#98fb98" stroke-width="1.5"/>
+        <text x="460" y="115" text-anchor="middle" fill="#98fb98" font-size="11">NAND</text>
+        <rect x="520" y="72" width="55" height="30" rx="5" fill="#2a2a4a" stroke="#98fb98" stroke-width="1.5"/>
+        <text x="547" y="92" text-anchor="middle" fill="#98fb98" font-size="11">NAND</text>
+        <line x1="490" y1="65" x2="520" y2="82" stroke="#aaa" stroke-width="1"/>
+        <line x1="490" y1="110" x2="520" y2="92" stroke="#aaa" stroke-width="1"/>
+        <text x="500" y="155" text-anchor="middle" fill="#98fb98" font-size="11">All from 74HC00!</text>
+      </svg>
+    </div>
+
+    <div class="success-box">
+      <strong>Bottom line:</strong> AND+OR = NAND+NAND. Same function, different gates. Your 74HC00 chip has 4 NAND gates, and you need 3 per full adder (6 total). So you need two 74HC00 chips (or one 74HC00 and some creative use of other gates).
+    </div>
+
+    <div class="nav-buttons">
+      <button class="nav-btn" onclick="showStep(1)">Previous</button>
+      <button class="nav-btn" onclick="showStep(3)">Next: Your Chips</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: YOUR CHIPS -->
+  <div class="step-content" id="step3">
+    <h2>Know Your Chips</h2>
+    <p>You're using three types of chips. Each chip has 14 pins. Pin 7 is always GND, pin 14 is always VCC (4.5V). Each chip has 4 identical gates inside.</p>
+
+    <h3>74HC86 (XOR gates, 1 chip needed)</h3>
+    <div class="chip-diagram">
+      <div class="chip">
+        <div class="chip-title">74HC86 (Quad XOR)</div>
+        <div class="pin-row">
+          <div>
+            <div class="pin pin-left">Pin 1: 1A (input)</div>
+            <div class="pin pin-left">Pin 2: 1B (input)</div>
+            <div class="pin pin-left">Pin 3: 1Y (output)</div>
+            <div class="pin pin-left">Pin 4: 2A (input)</div>
+            <div class="pin pin-left">Pin 5: 2B (input)</div>
+            <div class="pin pin-left">Pin 6: 2Y (output)</div>
+            <div class="pin pin-left" style="color:#ff6b6b">Pin 7: GND</div>
+          </div>
+          <div>
+            <div class="pin pin-right" style="color:#ff6b6b">Pin 14: VCC</div>
+            <div class="pin pin-right">Pin 13: 4B (input)</div>
+            <div class="pin pin-right">Pin 12: 4A (input)</div>
+            <div class="pin pin-right">Pin 11: 4Y (output)</div>
+            <div class="pin pin-right">Pin 10: 3B (input)</div>
+            <div class="pin pin-right">Pin 9: 3A (input)</div>
+            <div class="pin pin-right">Pin 8: 3Y (output)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p style="text-align:center; color:#888;">You need 4 XOR gates total (2 per adder). One chip gives you exactly 4.</p>
+
+    <h3>74HC00 (NAND gates, 2 chips needed)</h3>
+    <div class="chip-diagram">
+      <div class="chip">
+        <div class="chip-title">74HC00 (Quad NAND) &mdash; same pinout pattern</div>
+        <div class="pin-row">
+          <div>
+            <div class="pin pin-left">Pin 1: 1A (input)</div>
+            <div class="pin pin-left">Pin 2: 1B (input)</div>
+            <div class="pin pin-left">Pin 3: 1Y (output)</div>
+            <div class="pin pin-left">Pin 4: 2A (input)</div>
+            <div class="pin pin-left">Pin 5: 2B (input)</div>
+            <div class="pin pin-left">Pin 6: 2Y (output)</div>
+            <div class="pin pin-left" style="color:#ff6b6b">Pin 7: GND</div>
+          </div>
+          <div>
+            <div class="pin pin-right" style="color:#ff6b6b">Pin 14: VCC</div>
+            <div class="pin pin-right">Pin 13: 4B (input)</div>
+            <div class="pin pin-right">Pin 12: 4A (input)</div>
+            <div class="pin pin-right">Pin 11: 4Y (output)</div>
+            <div class="pin pin-right">Pin 10: 3B (input)</div>
+            <div class="pin pin-right">Pin 9: 3A (input)</div>
+            <div class="pin pin-right">Pin 8: 3Y (output)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p style="text-align:center; color:#888;">You need 6 NAND gates total (3 per adder). Two chips give you 8 (2 spare).</p>
+
+    <div class="warn-box">
+      <strong>Critical:</strong> Every chip needs power! Connect pin 14 to VCC (4.5V power bus) and pin 7 to GND (ground bus) on EVERY chip. Forgetting this is the most common wiring mistake.
+    </div>
+
+    <div class="info-box">
+      <strong>The gates on each chip:</strong><br><br>
+      Pins 1,2,3 = Gate 1 (bottom side of chip)<br>
+      Pins 4,5,6 = Gate 2 (bottom side of chip)<br>
+      Pins 9,10,8 = Gate 3 (top side of chip, note pin 8 is output)<br>
+      Pins 12,13,11 = Gate 4 (top side of chip, note pin 11 is output)<br><br>
+      "Bottom side" gates (1,2) are used for adder 0. "Top side" gates (3,4) are used for adder 1.
+    </div>
+
+    <div class="nav-buttons">
+      <button class="nav-btn" onclick="showStep(2)">Previous</button>
+      <button class="nav-btn" onclick="showStep(4)">Next: Wire Adder 0</button>
+    </div>
+  </div>
+
+  <!-- STEP 4: WIRE ADDER 0 -->
+  <div class="step-content" id="step4">
+    <h2>Wiring Full Adder 0 (Step by Step)</h2>
+    <p>Adder 0 handles the <strong>ones place</strong>. It takes A0, B0, and Cin0 as inputs and produces S0 and Cout0.</p>
+
+    <div class="warn-box">
+      <strong>Before wiring gates:</strong> Make sure ALL chips are placed on the breadboard and ALL chips have VCC (pin 14) and GND (pin 7) connected. Place push buttons with 10K pull-down resistors too.
+    </div>
+
+    <h3>The 5 connections you need to make:</h3>
+
+    <div class="wiring-step">
+      <div class="wiring-num">1</div>
+      <div class="wiring-text">
+        <strong style="color:#ffb347">Connect A0 and B0 to the first XOR gate (74HC86)</strong><br>
+        Wire button A0 to pin 1 (1A) of the XOR chip. Wire button B0 to pin 2 (1B) of the XOR chip. The output at pin 3 (1Y) is now A0 XOR B0.
+      </div>
+    </div>
+
+    <div class="wiring-step">
+      <div class="wiring-num">2</div>
+      <div class="wiring-text">
+        <strong style="color:#ffb347">Connect A0 and B0 to the first NAND gate (74HC00)</strong><br>
+        Wire the SAME A0 signal to pin 1 (1A) of the NAND chip. Wire the SAME B0 signal to pin 2 (1B) of the NAND chip. Output at pin 3 (1Y) is NAND(A0,B0). <em>This is why the lab says use "white wires" to bridge A and B across both chips.</em>
+      </div>
+    </div>
+
+    <div class="wiring-step">
+      <div class="wiring-num">3</div>
+      <div class="wiring-text">
+        <strong style="color:#7ecfff">Connect XOR output and Cin0 to the second XOR gate</strong><br>
+        Wire pin 3 of XOR chip (A0 xor B0) to pin 4 (2A) of the same XOR chip. Wire the Cin0 signal (through the 10K pull-down) to pin 5 (2B). Output at pin 6 (2Y) is your <strong style="color:#98fb98">S0</strong>.
+      </div>
+    </div>
+
+    <div class="wiring-step">
+      <div class="wiring-num">4</div>
+      <div class="wiring-text">
+        <strong style="color:#7ecfff">Connect XOR output and Cin0 to the second NAND gate</strong><br>
+        Wire the SAME (A0 xor B0) signal to pin 4 (2A) of the NAND chip. Wire the SAME Cin0 to pin 5 (2B). Output at pin 6 (2Y) is NAND of those two.
+      </div>
+    </div>
+
+    <div class="wiring-step">
+      <div class="wiring-num">5</div>
+      <div class="wiring-text">
+        <strong style="color:#ff6b6b">Connect the two NAND outputs to the third NAND gate</strong><br>
+        Wire pin 3 of NAND chip (from step 2) to one input of a third NAND gate. Wire pin 6 of NAND chip (from step 4) to the other input. The output of this third NAND is your <strong style="color:#98fb98">Cout0</strong>.
+      </div>
+    </div>
+
+    <h3>Add LEDs</h3>
+    <div class="wiring-step">
+      <div class="wiring-num">6</div>
+      <div class="wiring-text">
+        <strong style="color:#98fb98">Green LED</strong> with 150 ohm resistor from <strong>S0</strong> to VCC (or ground, depending on your LED orientation).<br>
+        <strong style="color:#ffb347">Yellow LED</strong> with 150 ohm resistor from <strong>Cout0</strong>.
+      </div>
+    </div>
+
+    <div class="success-box">
+      <strong>That's it for adder 0!</strong> Five gate connections plus two LEDs. The pattern is: each input pair goes to both an XOR and a NAND, then the two NAND outputs feed a final NAND for the carry.
+    </div>
+
+    <div class="nav-buttons">
+      <button class="nav-btn" onclick="showStep(3)">Previous</button>
+      <button class="nav-btn" onclick="showStep(5)">Next: Test Adder 0</button>
+    </div>
+  </div>
+
+  <!-- STEP 5: TEST ADDER 0 -->
+  <div class="step-content" id="step5">
+    <h2>Testing Full Adder 0</h2>
+    <p>Before wiring adder 1, test adder 0 first! Set supply to 4.5V.</p>
+
+    <div class="test-card">
+      <div class="test-inputs">A0 = 0, B0 = 0, Cin0 = 0 (no buttons pressed)</div>
+      <div class="test-expect">Expected: No LEDs lit (sum = 0)</div>
+    </div>
+
+    <div class="test-card">
+      <div class="test-inputs">A0 = 1 OR B0 = 1 (press one button)</div>
+      <div class="test-expect">Expected: Green LED (S0) ON (sum = 1)</div>
+    </div>
+
+    <div class="test-card">
+      <div class="test-inputs">A0 = 1 AND B0 = 1 (press both buttons)</div>
+      <div class="test-expect">Expected: Yellow LED (Cout0) ON, Green OFF (sum = 2 = binary 10)</div>
+    </div>
+
+    <div class="test-card">
+      <div class="test-inputs">A0 = 1, B0 = 1, Cin0 = 1 (both buttons + temporarily connect Cin to VCC)</div>
+      <div class="test-expect">Expected: BOTH LEDs ON (sum = 3 = binary 11)</div>
+    </div>
+
+    <div class="warn-box">
+      <strong>If something doesn't work:</strong><br><br>
+      Check power: is VCC and GND connected to every chip?<br>
+      Check inputs: use WaveForms StaticIO to verify button signals.<br>
+      Check wires: are you using the right pins? Double check the datasheet.<br>
+      Check LEDs: are they oriented correctly? Try swapping polarity.
+    </div>
+
+    <div class="nav-buttons">
+      <button class="nav-btn" onclick="showStep(4)">Previous</button>
+      <button class="nav-btn" onclick="showStep(6)">Next: Wire Adder 1</button>
+    </div>
+  </div>
+
+  <!-- STEP 6: WIRE ADDER 1 -->
+  <div class="step-content" id="step6">
+    <h2>Wiring Full Adder 1</h2>
+    <p>Adder 1 is <strong>identical to adder 0</strong> but handles the <strong>twos place</strong>. It uses the "top side" gates (gates 3 and 4) on each chip.</p>
+
+    <div class="info-box">
+      <strong>Same 5 connections, different pins:</strong><br><br>
+      Instead of using gates 1 and 2 (pins 1-6), you now use gates 3 and 4 (pins 8-13) on each chip.<br><br>
+      Instead of A0/B0, you use A1/B1.<br><br>
+      Instead of Cin0 with a pull-down resistor, you use Cout0 from adder 0 as the carry-in.
+    </div>
+
+    <div class="wiring-step">
+      <div class="wiring-num">1</div>
+      <div class="wiring-text">
+        <strong>A1 and B1</strong> go to XOR gate 3 (pins 9, 10) on the 74HC86. Output at pin 8.
+      </div>
+    </div>
+
+    <div class="wiring-step">
+      <div class="wiring-num">2</div>
+      <div class="wiring-text">
+        <strong>A1 and B1</strong> also go to NAND gate 3 (pins 9, 10) on a 74HC00. Output at pin 8.
+      </div>
+    </div>
+
+    <div class="wiring-step">
+      <div class="wiring-num">3</div>
+      <div class="wiring-text">
+        <strong>XOR output (pin 8)</strong> and <strong>Cout0</strong> go to XOR gate 4 (pins 12, 13). Output at pin 11 is <strong style="color:#98fb98">S1</strong>.
+      </div>
+    </div>
+
+    <div class="wiring-step">
+      <div class="wiring-num">4</div>
+      <div class="wiring-text">
+        <strong>XOR output (pin 8)</strong> and <strong>Cout0</strong> also go to NAND gate 4 (pins 12, 13). Output at pin 11.
+      </div>
+    </div>
+
+    <div class="wiring-step">
+      <div class="wiring-num">5</div>
+      <div class="wiring-text">
+        The two NAND outputs feed a <strong>third NAND gate</strong> (on the second 74HC00 chip). Output is <strong style="color:#98fb98">S2 (Cout1)</strong>.
+      </div>
+    </div>
+
+    <div class="wiring-step">
+      <div class="wiring-num">6</div>
+      <div class="wiring-text">
+        Add <strong style="color:#98fb98">green LEDs</strong> with 150 ohm resistors for S1 and S2.
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="nav-btn" onclick="showStep(5)">Previous</button>
+      <button class="nav-btn" onclick="showStep(7)">Next: Chain + Final Test</button>
+    </div>
+  </div>
+
+  <!-- STEP 7: CHAIN AND TEST -->
+  <div class="step-content" id="step7">
+    <h2>Chain the Adders and Final Test</h2>
+
+    <h3>The Chain</h3>
+    <p>The Cout0 output from adder 0 connects directly to the Cin1 input of adder 1. No pull-down resistor here, just a wire.</p>
+
+    <div class="circuit-box">
+      <svg viewBox="0 0 600 160" xmlns="http://www.w3.org/2000/svg">
+        <rect x="30" y="30" width="200" height="100" rx="12" fill="#12121f" stroke="#7ecfff" stroke-width="2"/>
+        <text x="130" y="70" text-anchor="middle" fill="#7ecfff" font-size="16" font-weight="bold">Full Adder 0</text>
+        <text x="130" y="95" text-anchor="middle" fill="#888" font-size="12">A0, B0, Cin0</text>
+        <text x="130" y="115" text-anchor="middle" fill="#98fb98" font-size="12">S0, Cout0</text>
+
+        <rect x="370" y="30" width="200" height="100" rx="12" fill="#12121f" stroke="#7ecfff" stroke-width="2"/>
+        <text x="470" y="70" text-anchor="middle" fill="#7ecfff" font-size="16" font-weight="bold">Full Adder 1</text>
+        <text x="470" y="95" text-anchor="middle" fill="#888" font-size="12">A1, B1, Cin1</text>
+        <text x="470" y="115" text-anchor="middle" fill="#98fb98" font-size="12">S1, S2</text>
+
+        <line x1="230" y1="80" x2="370" y2="80" stroke="#ffb347" stroke-width="3"/>
+        <text x="300" y="73" text-anchor="middle" fill="#ffb347" font-size="12" font-weight="bold">Cout0 = Cin1</text>
+        <polygon points="365,75 365,85 375,80" fill="#ffb347"/>
+      </svg>
+    </div>
+
+    <h3>Final Test Cases</h3>
+    <p>Your LEDs from left to right should be: Cout0 (yellow), S2, S1, S0 (green). Read S2, S1, S0 as a 3-bit binary number.</p>
+
+    <div class="test-card">
+      <div class="test-inputs">A=0 (00), B=0 (00): no buttons</div>
+      <div class="test-expect">LEDs: all off. Sum = 0.</div>
+    </div>
+    <div class="test-card">
+      <div class="test-inputs">A=1 (01), B=1 (01): press A0 + B0</div>
+      <div class="test-expect">LEDs: S1 on. Sum = 2 (binary 010).</div>
+    </div>
+    <div class="test-card">
+      <div class="test-inputs">A=2 (10), B=1 (01): press A1 + B0</div>
+      <div class="test-expect">LEDs: S1 and S0 on. Sum = 3 (binary 011).</div>
+    </div>
+    <div class="test-card">
+      <div class="test-inputs">A=3 (11), B=3 (11): press all 4 buttons</div>
+      <div class="test-expect">LEDs: S2 and S1 on. Sum = 6 (binary 110).</div>
+    </div>
+    <div class="test-card">
+      <div class="test-inputs">A=3, B=3, Cin=1: all buttons + Cin0 to VCC</div>
+      <div class="test-expect">LEDs: S2, S1, S0 all on. Sum = 7 (binary 111).</div>
+    </div>
+
+    <div class="success-box">
+      <strong>Once all tests pass, you're done with construction!</strong> Connect the AD2 DIO pins as specified in the lab document, verify with StaticIO, then run AutoLab to get your completion code.
+    </div>
+
+    <div class="nav-buttons">
+      <button class="nav-btn" onclick="showStep(6)">Previous</button>
+      <button class="nav-btn" disabled>Done!</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showStep(n) {
+  document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.step-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('step' + n).classList.add('active');
+  document.querySelectorAll('.step-btn')[n].classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

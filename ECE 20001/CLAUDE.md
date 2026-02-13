@@ -1,5 +1,9 @@
 # ECE 20001 Rules
 
+## KCL Convention
+
+Always use the "all leaving = 0" convention for KCL equations. For every branch connected to a node, write the current as (V_thisnode minus V_othernode) divided by R. Sum all such terms and set equal to zero. Never use the "in = out" convention. This keeps signs consistent and avoids having to guess current directions.
+
 ## Model Configuration
 
 Main orchestrating agent runs on Opus for superior reasoning and synthesis.

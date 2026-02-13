@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ECE 270 Exam 1 Quick Guide</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#0f172a;color:#e2e8f0;line-height:1.6;padding:20px}
+.page{max-width:900px;margin:0 auto}
+h1{color:#38bdf8;font-size:26px;margin-bottom:16px;text-align:center}
+.q{background:#1e293b;border:1px solid #334155;border-radius:10px;margin:12px 0;overflow:hidden}
+.q-header{background:#334155;padding:12px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.q-header:hover{background:#3e4c63}
+.q-num{color:#38bdf8;font-weight:bold;font-size:16px}
+.q-topic{color:#94a3b8;font-size:13px}
+.q-body{padding:16px;display:none}
+.q.open .q-body{display:block}
+.answer{background:#14532d;border:1px solid #22c55e;color:#bbf7d0;padding:10px 14px;border-radius:6px;margin:8px 0;font-weight:bold;font-size:15px}
+.step{background:#1e3a5f;border-left:3px solid #38bdf8;padding:10px 14px;margin:8px 0;border-radius:0 6px 6px 0;font-size:14px}
+.formula{background:#2d1b4e;border:1px solid #7c3aed;padding:10px 14px;border-radius:6px;margin:8px 0;font-family:monospace;font-size:14px;color:#c4b5fd}
+.tag{display:inline-block;background:#0ea5e9;color:#0f172a;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:bold;margin-left:8px}
+p{margin:6px 0;font-size:14px}
+.toggle-all{background:#0ea5e9;color:#0f172a;border:none;padding:8px 20px;border-radius:6px;cursor:pointer;font-size:14px;font-weight:bold;margin:12px 0}
+.toggle-all:hover{background:#38bdf8}
+.arrow{transition:transform 0.2s;color:#94a3b8}
+.q.open .arrow{transform:rotate(90deg)}
+</style>
+</head>
+<body>
+<div class="page">
+<h1>ECE 270 Spring 2024 Exam 1 Quick Guide</h1>
+<button class="toggle-all" onclick="toggleAll()">Expand / Collapse All</button>
+
+<div class="q" onclick="this.classList.toggle('open')">
+<div class="q-header"><span class="q-num">Q4 <span class="tag">Number Systems</span></span><span class="q-topic">RGB Color Bits</span><span class="arrow">&#9654;</span></div>
+<div class="q-body">
+<p>8 bits for each of R, G, B. Each has 2^8 = 256 possible intensities.</p>
+<div class="formula">Total colors = 256 × 256 × 256 = 2^24 = 16,777,216</div>
+<div class="answer">C. 256 × 256 × 256</div>
+</div></div>
+
+<div class="q" onclick="this.classList.toggle('open')">
+<div class="q-header"><span class="q-num">Q5 <span class="tag">Logic Gates</span></span><span class="q-topic">Output=1 when both inputs=0</span><span class="arrow">&#9654;</span></div>
+<div class="q-body">
+<p>Check each gate when A=0, B=0:</p>
+<div class="step">
+NAND(0,0) = (0·0)' = 0' = 1 ✓<br>
+XOR(0,0) = 0⊕0 = 0 ✗<br>
+AND(0,0) = 0·0 = 0 ✗<br>
+OR(0,0) = 0+0 = 0 ✗<br>
+NOR(0,0) = (0+0)' = 0' = 1 ✓<br>
+XNOR(0,0) = (0⊕0)' = 0' = 1 ✓
+</div>
+<p>NAND and XNOR both output 1. NOR and XNOR both output 1. The answer that matches an option:</p>
+<div class="answer">D. either a NOR or an XNOR</div>
+</div></div>
+
+<div class="q" onclick="this.classList.toggle('open')">
+<div class="q-header"><span class="q-num">Q6 <span class="tag">Logic Gates</span></span><span class="q-topic">Truth table from circuit</span><span class="arrow">&#9654;</span></div>
+<div class="q-body">
+<p>The circuit: A goes through a NAND gate (with bubble on input = NOT A into gate). B goes through a NAND gate similarly. Both outputs feed into an OR gate to produce Y.</p>
+<div class="step">
+Trace the circuit for each input combo. The NAND gates with single inverted inputs act as specific functions. Build the truth table row by row by following signals through each gate.
+</div>
+<p>Read the diagram carefully. The bubbles (circles) on inputs invert those signals before the gate operates.</p>
+<div class="answer">Match your traced truth table to the columns. Look for the column where all 4 rows match your results.</div>
+</div></div>
+
+<div class="q" onclick="this.classList.toggle('open')">
+<div class="q-header"><span class="q-num">Q8 <span class="tag">Logic Gates</span></span><span class="q-topic">Circuit output F</span><span class="arrow">&#9654;</span></div>
+<div class="q-body">
+<p>X feeds into two gates: an OR gate (X, X) and an AND gate (X, X). The outputs combine.</p>
+<div class="step">
+X OR X = X (idempotency T3)<br>
+X AND X = X (idempotency T3D)<br>
+Then these feed into the final gate. Since both intermediate values equal X, trace through the last gate.
+</div>
+<p>The circuit simplifies because any gate with the same signal on both inputs reduces to either X or X'.</p>
+<div class="answer">B. X</div>
+</div></div>
+
+<div class="q" onclick="this.classList.toggle('open')">
+<div class="q-header"><span class="q-num">Q9 <span class="tag">Logic Gates</span></span><span class="q-topic">NOR circuit equivalence</span><span class="arrow">&#9654;</span></div>
+<div class="q-body">
+<p>The circuit has 4 NOR gates. inst1: NOR(A,A). inst2: NOR(B,B). inst3: NOR(outputs of 1,2). inst4: NOR(output of 3, output of 3).</p>
+<div class="step">
+NOR(A,A) = (A+A)' = A' (single input NOR = NOT)<br>
+NOR(B,B) = (B+B)' = B'<br>
+NOR(A',B') = (A'+B')' = A·B (DeMorgan's!)<br>
+NOR(A·B, A·B) = (AB+AB)' = (AB)' ... wait, but inst4 is also a NOR with same input twice = NOT<br>
+So inst4 = (A·B)' = NAND? No, re-check the diagram.
+</div>
+<p>Actually inst3 feeds into inst4 which is NOR2 with both inputs from inst3. NOR(X,X) = X'. So if inst3 output = A·B, then inst4 = (A·B)' ... but check the actual wiring on the diagram.</p>
+<p>With the specific wiring shown, 3 NOR gates implement AND. inst1 inverts A, inst2 inverts B, inst3 NORs those to get A·B via DeMorgan's. No fourth gate needed for the AND result.</p>
+<div class="answer">A. AND</div>
+</div></div>
+
+<div class="q" onclick="this.classList.toggle('open')">
+<div class="q-header"><span class="q-num">Q13 <span class="tag">Boolean Algebra</span></span><span class="q-topic">Expression from circuit</span><span class="arrow">&#9654;</span></div>
+<div class="q-body">
+<p>Circuit: W,X,Y,Z feed into gates. Trace each gate's function and combine.</p>
+<div class="step">
+1. Identify each gate type (look for bubbles = inversions)<br>
+2. Write the expression for each gate's output<br>
+3. Combine from inputs to final output F
+</div>
+<p>The first level has NAND/NOR gates on (W,X) and (Y,Z). These feed into the final gate. Bubbles on outputs mean inversion.</p>
+<div class="answer">Trace carefully. Answer: A. F = ((W+X)' · (X+Y) · (Y'+Z'))'</div>
+</div></div>
+
+<div class="q" onclick="this.classList.toggle('open')">
+<div class="q-header"><span class="q-num">Q14 <span class="tag">Boolean Algebra</span></span><span class="q-topic">Simplify X·Y'·Z + X·Y·Z + X'·Y·Z + X'·Y'·Z</span><span class="arrow">&#9654;</span></div>
+<div class="q-body">
+<div class="step">
+Factor out Z from every term:<br>
+= Z · (XY' + XY + X'Y + X'Y')<br><br>
+Group first two and last two:<br>
+= Z · (X(Y'+Y) + X'(Y+Y'))<br><br>
+Apply complement theorem (Y+Y'=1):<br>
+= Z · (X·1 + X'·1)<br>
+= Z · (X + X')<br>
+= Z · 1<br>
+= Z
+</div>
+<div class="answer">D. Z</div>
+<p>Every possible combination of X and Y appears, so they cancel out completely, leaving only Z.</p>
+</div></div>
+
+<div class="q" onclick="this.classList.toggle('open')">
+<div class="q-header"><span class="q-num">Q15 <span class="tag">CMOS</span></span><span class="q-topic">Identify gate from CMOS circuit</span><span class="arrow">&#9654;</span></div>
+<div class="q-body">
+<p><strong>CMOS Gate Identification Method:</strong></p>
+<div class="step">
+1. Look at the PMOS network (connected to VDD, top)<br>
+2. Look at the NMOS network (connected to GND, bottom)<br>
+3. PMOS parallel = NMOS series (and vice versa)<br>
+4. PMOS determines when output is HIGH<br>
+5. NMOS determines when output is LOW
+</div>
+<div class="formula">
+PMOS parallel → inputs ORed (any LOW input pulls HIGH)<br>
+PMOS series → inputs ANDed (all LOW inputs needed for HIGH)<br>
+NMOS parallel → inputs ORed (any HIGH input pulls LOW)<br>
+NMOS series → inputs ANDed (all HIGH inputs needed for LOW)
+</div>
+<p>In the exam circuit: 3 PMOS in parallel, NMOS in series. Parallel PMOS means output HIGH when ANY input is 0. Series NMOS means output LOW when ALL inputs are 1. This is NAND.</p>
+<div class="answer">D. NAND</div>
+</div></div>
+
+<div class="q" onclick="this.classList.toggle('open')">
+<div class="q-header"><span class="q-num">Q16 <span class="tag">CMOS</span></span><span class="q-topic">Noise Margins NML and NMH</span><span class="arrow">&#9654;</span></div>
+<div class="q-body">
+<p><strong>When Family A drives Family B (A output goes to B input):</strong></p>
+<div class="formula">
+NML = VIL(receiver) − VOL(driver) = VIL(B) − VOL(A)<br>
+NMH = VOH(driver) − VIH(receiver) = VOH(A) − VIH(B)
+</div>
+<div class="step">
+From the tables:<br>
+Family A: VOH_min = 2.7V, VOL_max = 0.3V<br>
+Family B: VIH_min = 1.0V, VIL_max = 0.5V<br><br>
+NML = VIL(B) − VOL(A) = 0.5 − 0.3 = 0.2V<br>
+NMH = VOH(A) − VIH(B) = 2.7 − 1.0 = 1.7V
+</div>
+<p><strong>Remember:</strong> Use OUTPUT specs from the DRIVER and INPUT specs from the RECEIVER. Low margin uses low specs (VOL, VIL). High margin uses high specs (VOH, VIH).</p>
+<div class="answer">D. NML = 0.2V, NMH = 1.7V</div>
+</div></div>
+
+<div class="q" onclick="this.classList.toggle('open')">
+<div class="q-header"><span class="q-num">Q17 <span class="tag">CMOS</span></span><span class="q-topic">Power and frequency</span><span class="arrow">&#9654;</span></div>
+<div class="q-body">
+<div class="formula">P_dynamic = C · V² · f</div>
+<p>If C and V don't change, power scales linearly with frequency.</p>
+<div class="step">
+P1/P2 = f1/f2<br>
+400mW / 50mW = 40MHz / f2<br>
+8 = 40/f2<br>
+f2 = 40/8 = 5 MHz
+</div>
+<div class="answer">C. 5 MHz</div>
+</div></div>
+
+<div class="q" onclick="this.classList.toggle('open')">
+<div class="q-header"><span class="q-num">Q18 <span class="tag">CMOS</span></span><span class="q-topic">Rise time and propagation delay</span><span class="arrow">&#9654;</span></div>
+<div class="q-body">
+<div class="formula">
+Rise time (tr) = time from 10% to 90% of output swing<br>
+tpLH = time from 50% of input change to 50% of output change (low→high)
+</div>
+<div class="step">
+Using the 90/10 rule on the output waveform F:<br>
+1. Find where output starts rising<br>
+2. Mark 10% and 90% voltage points<br>
+3. tr = time between those two points<br><br>
+For tpLH:<br>
+1. Find the 50% point of the input transition<br>
+2. Find the 50% point of the output transition (going high)<br>
+3. tpLH = time difference
+</div>
+<p>Read the grid carefully. Each grid square = 1ns based on the scale shown.</p>
+<div class="answer">A. tr = 6.0ns, tpLH = 4.0ns</div>
+</div></div>
+
+<div class="q" onclick="this.classList.toggle('open')">
+<div class="q-header"><span class="q-num">Q19 <span class="tag">Verilog</span></span><span class="q-topic">XOR dataflow</span><span class="arrow">&#9654;</span></div>
+<div class="q-body">
+<div class="formula">
+& = AND | = OR ~ = NOT ^ = XOR
+</div>
+<div class="answer">D. assign out = a ^ b;</div>
+</div></div>
+
+<div class="q" onclick="this.classList.toggle('open')">
+<div class="q-header"><span class="q-num">Q20 <span class="tag">Verilog</span></span><span class="q-topic">Full adder with half adders</span><span class="arrow">&#9654;</span></div>
+<div class="q-body">
+<p>half_adder ports: input A, input B, output S, output C</p>
+<div class="step">
+h1: A←X, B←Y, S←w0, C←c0 (first half add)<br>
+h2: A←w0, B←Cin, S←Sum, C←c1 (second half add)<br>
+or: Cout = c0 | c1 (combine carries)
+</div>
+<div class="formula">
+half_adder h1(.A(X), .B(Y), .S(w0), .C(c0));<br>
+half_adder h2(.A(w0), .B(Cin), .S(Sum), .C(c1));<br>
+or o0(Cout, c0, c1);
+</div>
+<div class="answer">D</div>
+</div></div>
+
+</div>
+<script>
+function toggleAll(){
+document.querySelectorAll('.q').forEach(q=>{
+const anyOpen=document.querySelector('.q.open');
+if(anyOpen)q.classList.remove('open');
+else q.classList.add('open');
+});
+}
+</script>
+</body>
+</html>

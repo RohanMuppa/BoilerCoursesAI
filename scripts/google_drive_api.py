@@ -28,6 +28,8 @@ SCOPES = [
     "https://www.googleapis.com/auth/drive.file",
 ]
 
+os.environ["OAUTHLIB_RELAX_TOKEN_SCOPE"] = "1"
+
 TOKEN_FILE = "token.json"
 TOKEN_ENV_VAR = "GOOGLE_DRIVE_TOKEN"
 CREDENTIALS_FILE = "credentials.json"
@@ -97,9 +99,15 @@ class GoogleDriveAPI:
 
         # Refresh or get new token if needed
         if not self.creds or not self.creds.valid:
+            refreshed = False
             if self.creds and self.creds.expired and self.creds.refresh_token:
-                self.creds.refresh(Request())
-            else:
+                try:
+                    self.creds.refresh(Request())
+                    refreshed = True
+                except Exception:
+                    print("Token refresh failed. Re-authenticating via browser...")
+                    self.creds = None
+            if not refreshed:
                 # Try loading credentials from env var
                 creds_data = None
                 if self.use_env_vars:

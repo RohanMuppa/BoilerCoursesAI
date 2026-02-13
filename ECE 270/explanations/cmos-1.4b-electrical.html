@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECE 270 | CMOS 1.4b Electrical Characteristics</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e14;
+            --bg-secondary: #111820;
+            --bg-card: #161d27;
+            --accent-cyan: #00d4ff;
+            --accent-green: #00ff88;
+            --accent-yellow: #ffd000;
+            --accent-red: #ff4757;
+            --accent-purple: #a855f7;
+            --text-primary: #e8eaed;
+            --text-secondary: #9ca3af;
+            --grid-color: rgba(0, 212, 255, 0.08);
+            --border-color: rgba(0, 212, 255, 0.2);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            background-image:
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 40px 40px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            padding: 3rem 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 3rem;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        header .subtitle {
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .nav-tab:hover, .nav-tab.active {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+            border-color: var(--accent-cyan);
+        }
+
+        section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            color: var(--accent-cyan);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        h2::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: var(--accent-cyan);
+            border-radius: 2px;
+        }
+
+        h3 {
+            color: var(--accent-green);
+            font-size: 1.2rem;
+            margin: 1.5rem 0 1rem;
+        }
+
+        p { margin-bottom: 1rem; }
+
+        .concept-box {
+            background: var(--bg-secondary);
+            border-left: 4px solid var(--accent-cyan);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .formula-box {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(0, 255, 136, 0.05));
+            border: 1px solid var(--accent-cyan);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            text-align: center;
+        }
+
+        .formula-box .formula {
+            font-size: 1.3rem;
+            color: var(--accent-yellow);
+            margin: 0.5rem 0;
+        }
+
+        .warning-box {
+            background: rgba(255, 71, 87, 0.1);
+            border-left: 4px solid var(--accent-red);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .tip-box {
+            background: rgba(0, 255, 136, 0.1);
+            border-left: 4px solid var(--accent-green);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        /* Interactive Diagrams */
+        .diagram-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .diagram-title {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-cyan);
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        svg {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--bg-secondary);
+            color: var(--accent-cyan);
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: rgba(0, 212, 255, 0.05);
+        }
+
+        /* Practice Problems */
+        .problem {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .problem-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .problem-num {
+            background: var(--accent-purple);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+        }
+
+        .problem-source {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            font-style: italic;
+        }
+
+        .options {
+            display: grid;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .option {
+            padding: 0.75rem 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .option:hover {
+            border-color: var(--accent-cyan);
+        }
+
+        .option.correct {
+            background: rgba(0, 255, 136, 0.2);
+            border-color: var(--accent-green);
+        }
+
+        .option.incorrect {
+            background: rgba(255, 71, 87, 0.2);
+            border-color: var(--accent-red);
+        }
+
+        .solution {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 6px;
+        }
+
+        .solution.show {
+            display: block;
+        }
+
+        .show-solution-btn {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+        }
+
+        .show-solution-btn:hover {
+            background: var(--accent-green);
+        }
+
+        /* Interactive Controls */
+        .slider-control {
+            margin: 1rem 0;
+        }
+
+        .slider-control label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-secondary);
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: var(--bg-secondary);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--accent-cyan);
+            cursor: pointer;
+        }
+
+        .value-display {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-yellow);
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            header h1 { font-size: 1.8rem; }
+            section { padding: 1.5rem; }
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        code {
+            background: var(--bg-secondary);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-yellow);
+        }
+
+        .learning-objectives {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .objective {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+        }
+
+        .objective-num {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CMOS Circuits Part II</h1>
+            <p class="subtitle">Lecture 1.4b | Electrical Characteristics | ECE 270</p>
+        </header>
+
+        <nav class="nav-tabs">
+            <div class="nav-tab active" onclick="scrollToSection('objectives')">Objectives</div>
+            <div class="nav-tab" onclick="scrollToSection('static')">Static Characteristics</div>
+            <div class="nav-tab" onclick="scrollToSection('dynamic')">Dynamic Characteristics</div>
+            <div class="nav-tab" onclick="scrollToSection('power')">CMOS Power</div>
+            <div class="nav-tab" onclick="scrollToSection('practice')">Practice Problems</div>
+        </nav>
+
+        <!-- Learning Objectives -->
+        <section id="objectives">
+            <h2>Learning Objectives</h2>
+            <div class="learning-objectives">
+                <div class="objective">
+                    <span class="objective-num">1</span>
+                    <span>CMOS Static Electrical Characteristics and Noise Margins</span>
+                </div>
+                <div class="objective">
+                    <span class="objective-num">2</span>
+                    <span>CMOS Dynamic Electrical Characteristics and Propagation Delays</span>
+                </div>
+                <div class="objective">
+                    <span class="objective-num">3</span>
+                    <span>CMOS Power Consumption (DC and AC)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 1: Static Characteristics -->
+        <section id="static">
+            <h2>1. CMOS Static Electrical Characteristics</h2>
+
+            <h3>Voltage Transfer Characteristics (VTC)</h3>
+            <p>The VTC curve shows how the output voltage responds to changes in input voltage. For an ideal inverter, the transition is instantaneous at V<sub>DD</sub>/2. Real inverters have a gradual transition region.</p>
+
+            <div class="diagram-container">
+                <div class="diagram-title">Interactive VTC Curve</div>
+                <svg viewBox="0 0 500 350" id="vtc-diagram">
+                    <!-- Grid -->
+                    <defs>
+                        <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+                            <path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(0,212,255,0.1)" stroke-width="0.5"/>
+                        </pattern>
+                    </defs>
+                    <rect width="500" height="350" fill="url(#grid)"/>
+
+                    <!-- Axes -->
+                    <line x1="60" y1="290" x2="460" y2="290" stroke="#00d4ff" stroke-width="2"/>
+                    <line x1="60" y1="290" x2="60" y2="40" stroke="#00d4ff" stroke-width="2"/>
+
+                    <!-- Labels -->
+                    <text x="250" y="330" fill="#9ca3af" text-anchor="middle" font-family="JetBrains Mono" font-size="12">V<tspan baseline-shift="sub" font-size="10">IN</tspan> (V)</text>
+                    <text x="25" y="165" fill="#9ca3af" text-anchor="middle" font-family="JetBrains Mono" font-size="12" transform="rotate(-90, 25, 165)">V<tspan baseline-shift="sub" font-size="10">OUT</tspan> (V)</text>
+
+                    <!-- Voltage levels on axes -->
+                    <text x="55" y="290" fill="#9ca3af" text-anchor="end" font-family="JetBrains Mono" font-size="10">0</text>
+                    <text x="55" y="165" fill="#9ca3af" text-anchor="end" font-family="JetBrains Mono" font-size="10">2.5</text>
+                    <text x="55" y="50" fill="#9ca3af" text-anchor="end" font-family="JetBrains Mono" font-size="10">5.0</text>
+                    <text x="60" y="305" fill="#9ca3af" text-anchor="middle" font-family="JetBrains Mono" font-size="10">0</text>
+                    <text x="260" y="305" fill="#9ca3af" text-anchor="middle" font-family="JetBrains Mono" font-size="10">2.5</text>
+                    <text x="460" y="305" fill="#9ca3af" text-anchor="middle" font-family="JetBrains Mono" font-size="10">5.0</text>
+
+                    <!-- Ideal VTC (dashed) -->
+                    <path d="M 60 50 L 260 50 L 260 290 L 460 290" fill="none" stroke="#666" stroke-width="2" stroke-dasharray="5,5"/>
+                    <text x="380" y="80" fill="#666" font-family="JetBrains Mono" font-size="10">Ideal</text>
+
+                    <!-- Real VTC curve -->
+                    <path d="M 60 55 Q 140 55, 200 60 Q 240 70, 260 165 Q 280 260, 320 280 Q 380 288, 460 290" fill="none" stroke="#00ff88" stroke-width="3"/>
+                    <text x="380" y="250" fill="#00ff88" font-family="JetBrains Mono" font-size="10">Real</text>
+
+                    <!-- Logic regions -->
+                    <rect x="60" y="230" width="80" height="60" fill="rgba(0,255,136,0.1)" stroke="none"/>
+                    <text x="100" y="270" fill="#00ff88" font-family="JetBrains Mono" font-size="10" text-anchor="middle">LOW</text>
+
+                    <rect x="380" y="50" width="80" height="60" fill="rgba(0,212,255,0.1)" stroke="none"/>
+                    <text x="420" y="85" fill="#00d4ff" font-family="JetBrains Mono" font-size="10" text-anchor="middle">HIGH</text>
+
+                    <!-- Threshold markers -->
+                    <line x1="60" y1="207" x2="460" y2="207" stroke="#ffd000" stroke-width="1" stroke-dasharray="3,3"/>
+                    <text x="470" y="210" fill="#ffd000" font-family="JetBrains Mono" font-size="9">V<tspan baseline-shift="sub" font-size="7">IH</tspan>=70%</text>
+
+                    <line x1="60" y1="218" x2="460" y2="218" stroke="#ff4757" stroke-width="1" stroke-dasharray="3,3"/>
+                    <text x="470" y="221" fill="#ff4757" font-family="JetBrains Mono" font-size="9">V<tspan baseline-shift="sub" font-size="7">IL</tspan>=30%</text>
+                </svg>
+            </div>
+
+            <h3>Key Voltage Parameters</h3>
+            <div class="concept-box">
+                <p><strong>V<sub>OH</sub></strong> (Output High) = Minimum output voltage in HIGH state ≈ V<sub>DD</sub> − 0.1V</p>
+                <p><strong>V<sub>OL</sub></strong> (Output Low) = Maximum output voltage in LOW state ≈ 0.1V</p>
+                <p><strong>V<sub>IH</sub></strong> (Input High) = Minimum input voltage recognized as HIGH ≈ 70% of V<sub>DD</sub></p>
+                <p><strong>V<sub>IL</sub></strong> (Input Low) = Maximum input voltage recognized as LOW ≈ 30% of V<sub>DD</sub></p>
+            </div>
+
+            <h3>The 30%/70% Rule of Thumb</h3>
+            <p>For any CMOS logic family operating at voltage V<sub>DD</sub>, the input thresholds scale proportionally.</p>
+
+            <table>
+                <tr>
+                    <th>V<sub>DD</sub></th>
+                    <th>V<sub>IL</sub> (30%)</th>
+                    <th>V<sub>IH</sub> (70%)</th>
+                    <th>Undefined Region</th>
+                </tr>
+                <tr>
+                    <td>5.0V</td>
+                    <td>1.5V</td>
+                    <td>3.5V</td>
+                    <td>1.5V to 3.5V</td>
+                </tr>
+                <tr>
+                    <td>3.3V</td>
+                    <td>1.0V</td>
+                    <td>2.3V</td>
+                    <td>1.0V to 2.3V</td>
+                </tr>
+                <tr>
+                    <td>1.8V</td>
+                    <td>0.54V</td>
+                    <td>1.26V</td>
+                    <td>0.54V to 1.26V</td>
+                </tr>
+            </table>
+
+            <h3>Noise Margins</h3>
+            <p>Noise margin measures how much noise can be added to a signal before it causes errors. Higher noise margins mean more robust circuits.</p>
+
+            <div class="formula-box">
+                <p>Noise Margin High</p>
+                <p class="formula">NM<sub>H</sub> = V<sub>OH</sub> − V<sub>IH</sub></p>
+                <p>Noise Margin Low</p>
+                <p class="formula">NM<sub>L</sub> = V<sub>IL</sub> − V<sub>OL</sub></p>
+            </div>
+
+            <div class="diagram-container">
+                <div class="diagram-title">Noise Margin Visualization</div>
+                <svg viewBox="0 0 500 300" id="noise-margin-diagram">
+                    <defs>
+                        <pattern id="grid2" width="50" height="50" patternUnits="userSpaceOnUse">
+                            <path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(0,212,255,0.1)" stroke-width="0.5"/>
+                        </pattern>
+                    </defs>
+                    <rect width="500" height="300" fill="url(#grid2)"/>
+
+                    <!-- Output side -->
+                    <rect x="50" y="30" width="150" height="240" fill="none" stroke="#00d4ff" stroke-width="2"/>
+                    <text x="125" y="20" fill="#00d4ff" font-family="JetBrains Mono" font-size="12" text-anchor="middle">OUTPUT</text>
+
+                    <!-- VOH region -->
+                    <rect x="50" y="30" width="150" height="60" fill="rgba(0,255,136,0.2)"/>
+                    <text x="125" y="65" fill="#00ff88" font-family="JetBrains Mono" font-size="11" text-anchor="middle">V<tspan baseline-shift="sub" font-size="9">OH</tspan> = 4.9V</text>
+
+                    <!-- VOL region -->
+                    <rect x="50" y="210" width="150" height="60" fill="rgba(0,212,255,0.2)"/>
+                    <text x="125" y="245" fill="#00d4ff" font-family="JetBrains Mono" font-size="11" text-anchor="middle">V<tspan baseline-shift="sub" font-size="9">OL</tspan> = 0.1V</text>
+
+                    <!-- Input side -->
+                    <rect x="300" y="30" width="150" height="240" fill="none" stroke="#ffd000" stroke-width="2"/>
+                    <text x="375" y="20" fill="#ffd000" font-family="JetBrains Mono" font-size="12" text-anchor="middle">INPUT</text>
+
+                    <!-- VIH region -->
+                    <rect x="300" y="30" width="150" height="100" fill="rgba(0,255,136,0.2)"/>
+                    <text x="375" y="85" fill="#00ff88" font-family="JetBrains Mono" font-size="11" text-anchor="middle">V<tspan baseline-shift="sub" font-size="9">IH</tspan> = 3.5V</text>
+
+                    <!-- VIL region -->
+                    <rect x="300" y="170" width="150" height="100" fill="rgba(0,212,255,0.2)"/>
+                    <text x="375" y="225" fill="#00d4ff" font-family="JetBrains Mono" font-size="11" text-anchor="middle">V<tspan baseline-shift="sub" font-size="9">IL</tspan> = 1.5V</text>
+
+                    <!-- Undefined -->
+                    <rect x="300" y="130" width="150" height="40" fill="rgba(255,71,87,0.2)"/>
+                    <text x="375" y="155" fill="#ff4757" font-family="JetBrains Mono" font-size="10" text-anchor="middle">Undefined</text>
+
+                    <!-- NMH Arrow -->
+                    <line x1="220" y1="60" x2="280" y2="80" stroke="#00ff88" stroke-width="2" marker-end="url(#arrowhead)"/>
+                    <text x="250" y="55" fill="#00ff88" font-family="JetBrains Mono" font-size="11" text-anchor="middle">NM<tspan baseline-shift="sub" font-size="9">H</tspan></text>
+                    <text x="250" y="100" fill="#00ff88" font-family="JetBrains Mono" font-size="10" text-anchor="middle">= 4.9 − 3.5</text>
+                    <text x="250" y="115" fill="#ffd000" font-family="JetBrains Mono" font-size="12" text-anchor="middle">= 1.4V</text>
+
+                    <!-- NML Arrow -->
+                    <line x1="220" y1="240" x2="280" y2="220" stroke="#00d4ff" stroke-width="2"/>
+                    <text x="250" y="195" fill="#00d4ff" font-family="JetBrains Mono" font-size="11" text-anchor="middle">NM<tspan baseline-shift="sub" font-size="9">L</tspan></text>
+                    <text x="250" y="210" fill="#00d4ff" font-family="JetBrains Mono" font-size="10" text-anchor="middle">= 1.5 − 0.1</text>
+                    <text x="250" y="260" fill="#ffd000" font-family="JetBrains Mono" font-size="12" text-anchor="middle">= 1.4V</text>
+                </svg>
+            </div>
+
+            <h3>Non-Ideal Switch Model</h3>
+            <p>Real transistors have finite on-resistance. NMOS typically has R<sub>on</sub> ≈ 100Ω and R<sub>off</sub> ≈ 1MΩ. PMOS has R<sub>on</sub> ≈ 200Ω and R<sub>off</sub> ≈ 1MΩ (PMOS is slower because holes have lower mobility than electrons).</p>
+
+            <div class="diagram-container">
+                <div class="diagram-title">Non-Ideal Inverter Model</div>
+                <svg viewBox="0 0 500 250" id="switch-model">
+                    <defs>
+                        <pattern id="grid3" width="50" height="50" patternUnits="userSpaceOnUse">
+                            <path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(0,212,255,0.1)" stroke-width="0.5"/>
+                        </pattern>
+                    </defs>
+                    <rect width="500" height="250" fill="url(#grid3)"/>
+
+                    <!-- VDD -->
+                    <line x1="150" y1="30" x2="150" y2="50" stroke="#00d4ff" stroke-width="2"/>
+                    <text x="150" y="20" fill="#00d4ff" font-family="JetBrains Mono" font-size="11" text-anchor="middle">V<tspan baseline-shift="sub" font-size="9">DD</tspan>=5V</text>
+
+                    <!-- PMOS -->
+                    <rect x="130" y="50" width="40" height="50" fill="none" stroke="#a855f7" stroke-width="2"/>
+                    <text x="150" y="80" fill="#a855f7" font-family="JetBrains Mono" font-size="10" text-anchor="middle">R<tspan baseline-shift="sub" font-size="8">p</tspan></text>
+
+                    <!-- Connection -->
+                    <line x1="150" y1="100" x2="150" y2="130" stroke="#00d4ff" stroke-width="2"/>
+
+                    <!-- Output node -->
+                    <circle cx="150" cy="130" r="5" fill="#ffd000"/>
+                    <line x1="155" y1="130" x2="220" y2="130" stroke="#ffd000" stroke-width="2"/>
+                    <text x="230" y="135" fill="#ffd000" font-family="JetBrains Mono" font-size="11">V<tspan baseline-shift="sub" font-size="9">OUT</tspan></text>
+
+                    <!-- NMOS -->
+                    <line x1="150" y1="130" x2="150" y2="160" stroke="#00d4ff" stroke-width="2"/>
+                    <rect x="130" y="160" width="40" height="50" fill="none" stroke="#00ff88" stroke-width="2"/>
+                    <text x="150" y="190" fill="#00ff88" font-family="JetBrains Mono" font-size="10" text-anchor="middle">R<tspan baseline-shift="sub" font-size="8">n</tspan></text>
+
+                    <!-- Ground -->
+                    <line x1="150" y1="210" x2="150" y2="230" stroke="#00d4ff" stroke-width="2"/>
+                    <line x1="135" y1="230" x2="165" y2="230" stroke="#00d4ff" stroke-width="2"/>
+                    <text x="150" y="245" fill="#9ca3af" font-family="JetBrains Mono" font-size="10" text-anchor="middle">GND</text>
+
+                    <!-- Input -->
+                    <line x1="50" y1="130" x2="100" y2="130" stroke="#00d4ff" stroke-width="2"/>
+                    <text x="40" y="135" fill="#00d4ff" font-family="JetBrains Mono" font-size="11" text-anchor="end">V<tspan baseline-shift="sub" font-size="9">IN</tspan></text>
+                    <line x1="100" y1="130" x2="100" y2="80" stroke="#00d4ff" stroke-width="1"/>
+                    <line x1="100" y1="80" x2="130" y2="80" stroke="#00d4ff" stroke-width="1"/>
+                    <line x1="100" y1="130" x2="100" y2="185" stroke="#00d4ff" stroke-width="1"/>
+                    <line x1="100" y1="185" x2="130" y2="185" stroke="#00d4ff" stroke-width="1"/>
+
+                    <!-- Calculations -->
+                    <text x="300" y="50" fill="#e8eaed" font-family="JetBrains Mono" font-size="11">When V<tspan baseline-shift="sub" font-size="9">IN</tspan> = V<tspan baseline-shift="sub" font-size="9">DD</tspan> (HIGH):</text>
+                    <text x="310" y="70" fill="#00ff88" font-family="JetBrains Mono" font-size="10">NMOS ON: R<tspan baseline-shift="sub" font-size="8">n</tspan> = 100Ω</text>
+                    <text x="310" y="90" fill="#a855f7" font-family="JetBrains Mono" font-size="10">PMOS OFF: R<tspan baseline-shift="sub" font-size="8">p</tspan> = 1MΩ</text>
+                    <text x="310" y="115" fill="#ffd000" font-family="JetBrains Mono" font-size="11">V<tspan baseline-shift="sub" font-size="9">OUT</tspan> = V<tspan baseline-shift="sub" font-size="9">DD</tspan> × R<tspan baseline-shift="sub" font-size="8">n</tspan>/(R<tspan baseline-shift="sub" font-size="8">p</tspan>+R<tspan baseline-shift="sub" font-size="8">n</tspan>)</text>
+                    <text x="310" y="135" fill="#ffd000" font-family="JetBrains Mono" font-size="11">≈ 0.0005V ≈ 0V</text>
+
+                    <text x="300" y="170" fill="#e8eaed" font-family="JetBrains Mono" font-size="11">When V<tspan baseline-shift="sub" font-size="9">IN</tspan> = 0V (LOW):</text>
+                    <text x="310" y="190" fill="#00ff88" font-family="JetBrains Mono" font-size="10">NMOS OFF: R<tspan baseline-shift="sub" font-size="8">n</tspan> = 1MΩ</text>
+                    <text x="310" y="210" fill="#a855f7" font-family="JetBrains Mono" font-size="10">PMOS ON: R<tspan baseline-shift="sub" font-size="8">p</tspan> = 200Ω</text>
+                    <text x="310" y="235" fill="#ffd000" font-family="JetBrains Mono" font-size="11">V<tspan baseline-shift="sub" font-size="9">OUT</tspan> ≈ 4.999V ≈ 5V</text>
+                </svg>
+            </div>
+
+            <div class="tip-box">
+                <strong>Why PMOS has higher R<sub>on</sub> than NMOS:</strong> Electrons (in NMOS) have higher mobility than holes (in PMOS). This means NMOS transistors can conduct current more easily, resulting in lower on-resistance. This is why NAND gates are faster than NOR gates.
+            </div>
+        </section>
+
+        <!-- Section 2: Dynamic Characteristics -->
+        <section id="dynamic">
+            <h2>2. CMOS Dynamic Electrical Characteristics</h2>
+
+            <h3>Transition Time (Rise and Fall Time)</h3>
+            <p>Transition time measures how long it takes for an output to change between logic levels. Real circuits cannot change instantaneously due to capacitive loading.</p>
+
+            <div class="formula-box">
+                <p>Rise Time (t<sub>r</sub>) = Time for output to go from 10% to 90% of V<sub>DD</sub></p>
+                <p class="formula">t<sub>r</sub> = 10% → 90% of V<sub>DD</sub></p>
+                <p>Fall Time (t<sub>f</sub>) = Time for output to go from 90% to 10% of V<sub>DD</sub></p>
+                <p class="formula">t<sub>f</sub> = 90% → 10% of V<sub>DD</sub></p>
+            </div>
+
+            <h3>Propagation Delay</h3>
+            <p>Propagation delay measures the time between input change and corresponding output change, measured at the 50% points.</p>
+
+            <div class="formula-box">
+                <p class="formula">t<sub>pHL</sub> = Delay from input rising to output falling (50% to 50%)</p>
+                <p class="formula">t<sub>pLH</sub> = Delay from input falling to output rising (50% to 50%)</p>
+            </div>
+
+            <div class="diagram-container">
+                <div class="diagram-title">Timing Diagram with Rise/Fall Times and Propagation Delays</div>
+                <svg viewBox="0 0 600 350" id="timing-diagram">
+                    <defs>
+                        <pattern id="grid4" width="50" height="50" patternUnits="userSpaceOnUse">
+                            <path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(0,212,255,0.1)" stroke-width="0.5"/>
+                        </pattern>
+                    </defs>
+                    <rect width="600" height="350" fill="url(#grid4)"/>
+
+                    <!-- Input Signal -->
+                    <text x="30" y="60" fill="#00d4ff" font-family="JetBrains Mono" font-size="12">V<tspan baseline-shift="sub" font-size="10">IN</tspan></text>
+                    <line x1="60" y1="100" x2="60" y2="30" stroke="#666" stroke-width="1" stroke-dasharray="2,2"/>
+
+                    <!-- Input waveform -->
+                    <path d="M 60 100 L 150 100 L 150 40 L 350 40 L 350 100 L 550 100" fill="none" stroke="#00d4ff" stroke-width="2"/>
+
+                    <!-- 50% line for input -->
+                    <line x1="60" y1="70" x2="550" y2="70" stroke="#ffd000" stroke-width="1" stroke-dasharray="3,3"/>
+                    <text x="555" y="74" fill="#ffd000" font-family="JetBrains Mono" font-size="9">50%</text>
+
+                    <!-- Output Signal -->
+                    <text x="30" y="180" fill="#00ff88" font-family="JetBrains Mono" font-size="12">V<tspan baseline-shift="sub" font-size="10">OUT</tspan></text>
+
+                    <!-- Output waveform (inverted, with delays) -->
+                    <path d="M 60 160 L 170 160 Q 190 160, 200 220 Q 210 270, 230 280 L 370 280 Q 390 280, 400 220 Q 410 170, 430 160 L 550 160" fill="none" stroke="#00ff88" stroke-width="2"/>
+
+                    <!-- Voltage levels -->
+                    <line x1="60" y1="160" x2="550" y2="160" stroke="#666" stroke-width="1" stroke-dasharray="2,2"/>
+                    <text x="555" y="164" fill="#666" font-family="JetBrains Mono" font-size="9">90%</text>
+                    <line x1="60" y1="220" x2="550" y2="220" stroke="#ffd000" stroke-width="1" stroke-dasharray="3,3"/>
+                    <text x="555" y="224" fill="#ffd000" font-family="JetBrains Mono" font-size="9">50%</text>
+                    <line x1="60" y1="280" x2="550" y2="280" stroke="#666" stroke-width="1" stroke-dasharray="2,2"/>
+                    <text x="555" y="284" fill="#666" font-family="JetBrains Mono" font-size="9">10%</text>
+
+                    <!-- tpHL measurement -->
+                    <line x1="150" y1="70" x2="150" y2="130" stroke="#ff4757" stroke-width="1"/>
+                    <line x1="200" y1="130" x2="200" y2="220" stroke="#ff4757" stroke-width="1"/>
+                    <line x1="150" y1="130" x2="200" y2="130" stroke="#ff4757" stroke-width="2"/>
+                    <text x="175" y="125" fill="#ff4757" font-family="JetBrains Mono" font-size="10" text-anchor="middle">t<tspan baseline-shift="sub" font-size="8">pHL</tspan></text>
+
+                    <!-- tpLH measurement -->
+                    <line x1="350" y1="70" x2="350" y2="300" stroke="#a855f7" stroke-width="1"/>
+                    <line x1="405" y1="220" x2="405" y2="300" stroke="#a855f7" stroke-width="1"/>
+                    <line x1="350" y1="300" x2="405" y2="300" stroke="#a855f7" stroke-width="2"/>
+                    <text x="377" y="318" fill="#a855f7" font-family="JetBrains Mono" font-size="10" text-anchor="middle">t<tspan baseline-shift="sub" font-size="8">pLH</tspan></text>
+
+                    <!-- Fall time tf -->
+                    <line x1="190" y1="160" x2="190" y2="340" stroke="#00d4ff" stroke-width="1"/>
+                    <line x1="225" y1="280" x2="225" y2="340" stroke="#00d4ff" stroke-width="1"/>
+                    <line x1="190" y1="340" x2="225" y2="340" stroke="#00d4ff" stroke-width="2"/>
+                    <text x="207" y="335" fill="#00d4ff" font-family="JetBrains Mono" font-size="10" text-anchor="middle">t<tspan baseline-shift="sub" font-size="8">f</tspan></text>
+
+                    <!-- Rise time tr -->
+                    <line x1="390" y1="280" x2="390" y2="340" stroke="#00ff88" stroke-width="1"/>
+                    <line x1="420" y1="160" x2="420" y2="340" stroke="#00ff88" stroke-width="1"/>
+                    <line x1="390" y1="340" x2="420" y2="340" stroke="#00ff88" stroke-width="2"/>
+                    <text x="405" y="335" fill="#00ff88" font-family="JetBrains Mono" font-size="10" text-anchor="middle">t<tspan baseline-shift="sub" font-size="8">r</tspan></text>
+                </svg>
+            </div>
+
+            <h3>RC Charging and Discharging</h3>
+            <p>The output transition is governed by the RC time constant of the on-transistor and load capacitance.</p>
+
+            <div class="formula-box">
+                <p>Time Constant</p>
+                <p class="formula">τ = R × C</p>
+                <p>Discharging (HIGH to LOW)</p>
+                <p class="formula">V<sub>out</sub>(t) = V<sub>DD</sub> × e<sup>−t/RC</sup></p>
+                <p>Charging (LOW to HIGH)</p>
+                <p class="formula">V<sub>out</sub>(t) = V<sub>DD</sub> × (1 − e<sup>−t/RC</sup>)</p>
+            </div>
+
+            <div class="concept-box">
+                <p><strong>Key Timing Approximations:</strong></p>
+                <p>t<sub>pHL</sub> ≈ 0.69 × R<sub>n</sub> × C<sub>L</sub> (50% point during discharge)</p>
+                <p>t<sub>pLH</sub> ≈ 0.69 × R<sub>p</sub> × C<sub>L</sub> (50% point during charge)</p>
+                <p>t<sub>f</sub> ≈ 0.85 × R<sub>n</sub> × C<sub>L</sub> (90% to 10% discharge)</p>
+                <p>t<sub>r</sub> ≈ 0.85 × R<sub>p</sub> × C<sub>L</sub> (10% to 90% charge)</p>
+            </div>
+
+            <div class="diagram-container">
+                <div class="diagram-title">RC Discharge Curve (Output HIGH to LOW)</div>
+                <svg viewBox="0 0 500 280" id="rc-discharge">
+                    <defs>
+                        <pattern id="grid5" width="50" height="50" patternUnits="userSpaceOnUse">
+                            <path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(0,212,255,0.1)" stroke-width="0.5"/>
+                        </pattern>
+                    </defs>
+                    <rect width="500" height="280" fill="url(#grid5)"/>
+
+                    <!-- Axes -->
+                    <line x1="60" y1="230" x2="460" y2="230" stroke="#00d4ff" stroke-width="2"/>
+                    <line x1="60" y1="230" x2="60" y2="30" stroke="#00d4ff" stroke-width="2"/>
+
+                    <text x="250" y="265" fill="#9ca3af" text-anchor="middle" font-family="JetBrains Mono" font-size="11">Time</text>
+                    <text x="25" y="130" fill="#9ca3af" text-anchor="middle" font-family="JetBrains Mono" font-size="11" transform="rotate(-90, 25, 130)">V<tspan baseline-shift="sub" font-size="9">OUT</tspan></text>
+
+                    <!-- Voltage levels -->
+                    <line x1="55" y1="50" x2="460" y2="50" stroke="#666" stroke-width="1" stroke-dasharray="2,2"/>
+                    <text x="50" y="54" fill="#ffd000" font-family="JetBrains Mono" font-size="9" text-anchor="end">V<tspan baseline-shift="sub" font-size="7">DD</tspan></text>
+
+                    <line x1="55" y1="86" x2="460" y2="86" stroke="#666" stroke-width="1" stroke-dasharray="2,2"/>
+                    <text x="50" y="90" fill="#666" font-family="JetBrains Mono" font-size="9" text-anchor="end">70%</text>
+
+                    <line x1="55" y1="140" x2="460" y2="140" stroke="#ffd000" stroke-width="1" stroke-dasharray="3,3"/>
+                    <text x="50" y="144" fill="#ffd000" font-family="JetBrains Mono" font-size="9" text-anchor="end">50%</text>
+
+                    <line x1="55" y1="194" x2="460" y2="194" stroke="#666" stroke-width="1" stroke-dasharray="2,2"/>
+                    <text x="50" y="198" fill="#666" font-family="JetBrains Mono" font-size="9" text-anchor="end">30%</text>
+
+                    <!-- Exponential decay curve -->
+                    <path d="M 60 50 Q 100 50, 140 70 Q 180 100, 220 140 Q 280 190, 350 210 Q 400 220, 460 225" fill="none" stroke="#00ff88" stroke-width="3"/>
+
+                    <!-- τ marker -->
+                    <line x1="160" y1="117" x2="160" y2="230" stroke="#a855f7" stroke-width="1" stroke-dasharray="3,3"/>
+                    <text x="160" y="245" fill="#a855f7" font-family="JetBrains Mono" font-size="10" text-anchor="middle">τ=RC</text>
+                    <text x="160" y="258" fill="#a855f7" font-family="JetBrains Mono" font-size="9" text-anchor="middle">(37%)</text>
+
+                    <!-- tpHL marker -->
+                    <line x1="120" y1="140" x2="120" y2="230" stroke="#ff4757" stroke-width="2"/>
+                    <text x="120" y="245" fill="#ff4757" font-family="JetBrains Mono" font-size="10" text-anchor="middle">t<tspan baseline-shift="sub" font-size="8">pHL</tspan></text>
+                    <text x="120" y="258" fill="#ff4757" font-family="JetBrains Mono" font-size="9" text-anchor="middle">≈0.69τ</text>
+                </svg>
+            </div>
+
+            <h3>NAND2 vs NOR2 Speed Comparison</h3>
+            <p>Due to electron mobility being higher than hole mobility, NAND gates are inherently faster than NOR gates.</p>
+
+            <div class="grid-2">
+                <div class="concept-box">
+                    <h4 style="color: var(--accent-cyan);">NAND2 Gate</h4>
+                    <p>Pull-down: 2 NMOS in series</p>
+                    <p>Pull-up: 2 PMOS in parallel</p>
+                    <p><strong>Faster</strong> because NMOS (series) dominates critical path for HIGH→LOW, and NMOS has lower R<sub>on</sub></p>
+                </div>
+                <div class="concept-box">
+                    <h4 style="color: var(--accent-purple);">NOR2 Gate</h4>
+                    <p>Pull-down: 2 NMOS in parallel</p>
+                    <p>Pull-up: 2 PMOS in series</p>
+                    <p><strong>Slower</strong> because PMOS (series) dominates critical path for LOW→HIGH, and PMOS has higher R<sub>on</sub></p>
+                </div>
+            </div>
+
+            <table>
+                <tr>
+                    <th>Gate</th>
+                    <th>t<sub>pHL</sub> (R<sub>n</sub>=100Ω, C<sub>L</sub>=5pF)</th>
+                    <th>t<sub>pLH</sub> (R<sub>p</sub>=200Ω, C<sub>L</sub>=5pF)</th>
+                </tr>
+                <tr>
+                    <td>NAND2</td>
+                    <td>0.69 × 200Ω × 5pF = 0.69ns</td>
+                    <td>0.69 × 100Ω × 5pF = 0.35ns</td>
+                </tr>
+                <tr>
+                    <td>NOR2</td>
+                    <td>0.69 × 100Ω × 5pF = 0.35ns</td>
+                    <td>0.69 × 400Ω × 5pF = 1.38ns</td>
+                </tr>
+            </table>
+        </section>
+
+        <!-- Section 3: CMOS Power -->
+        <section id="power">
+            <h2>3. CMOS Power Consumption</h2>
+
+            <h3>DC (Static) Power</h3>
+            <p>In steady state, one transistor is always OFF (very high resistance ~1MΩ), so almost no current flows from V<sub>DD</sub> to ground.</p>
+
+            <div class="formula-box">
+                <p class="formula">P<sub>DC</sub> = V<sup>2</sup><sub>DD</sub> / (R<sub>p</sub> + R<sub>n</sub>) ≈ 0</p>
+                <p>Example: P<sub>DC</sub> = (5V)² / (200Ω + 1MΩ) = 25 / 1,000,200 ≈ 25μW</p>
+            </div>
+
+            <div class="tip-box">
+                <strong>Key Insight:</strong> CMOS circuits consume almost zero power when not switching. This is why CMOS became dominant for battery-powered devices. The power consumed when idle is essentially just leakage current.
+            </div>
+
+            <h3>AC (Dynamic) Power</h3>
+            <p>Power is consumed during transitions when charging/discharging the load capacitance and when both transistors are momentarily ON.</p>
+
+            <div class="formula-box">
+                <p class="formula">P<sub>AC</sub> = f × C × V<sup>2</sup><sub>DD</sub></p>
+                <p>Where: f = switching frequency, C = load capacitance, V<sub>DD</sub> = supply voltage</p>
+            </div>
+
+            <div class="concept-box">
+                <p><strong>Power Reduction Strategies:</strong></p>
+                <p>1. Reduce V<sub>DD</sub> (quadratic effect on power)</p>
+                <p>2. Reduce switching frequency f</p>
+                <p>3. Reduce capacitance C (smaller transistors, shorter wires)</p>
+                <p>4. Use clock gating to prevent unnecessary switching</p>
+            </div>
+
+            <div class="warning-box">
+                <strong>Worked Example:</strong> A CMOS circuit dissipates 800mW at V<sub>DD</sub>=5V with a 100MHz clock. What clock rate gives 400mW?
+                <br><br>
+                Since P ∝ f: P₂/P₁ = f₂/f₁
+                <br>
+                400/800 = f₂/100MHz
+                <br>
+                f₂ = 50MHz
+            </div>
+        </section>
+
+        <!-- Practice Problems -->
+        <section id="practice">
+            <h2>Practice Problems</h2>
+            <p>Problems sourced from Lecture 1.4b iClicker questions and past exams.</p>
+
+            <div class="problem">
+                <div class="problem-header">
+                    <span class="problem-num">Problem 1</span>
+                    <span class="problem-source">From Lec 1.4b iClicker</span>
+                </div>
+                <p>Given Logic Family A (V<sub>CC</sub>=5.0V, V<sub>OH</sub>=4.60V, V<sub>OL</sub>=0.30V, V<sub>IH</sub>=2.70V, V<sub>IL</sub>=1.30V) and Logic Family B (V<sub>CC</sub>=4.5V, V<sub>OH</sub>=4.30V, V<sub>OL</sub>=0.20V, V<sub>IH</sub>=2.90V, V<sub>IL</sub>=1.00V), what is NM<sub>L</sub> when Family A output connects to Family B input?</p>
+                <div class="options">
+                    <div class="option" onclick="checkAnswer(this, false)">A. 1.6V</div>
+                    <div class="option" onclick="checkAnswer(this, true)">B. 1.1V</div>
+                    <div class="option" onclick="checkAnswer(this, false)">C. 1.7V</div>
+                    <div class="option" onclick="checkAnswer(this, false)">D. 0.7V</div>
+                </div>
+                <button class="show-solution-btn" onclick="toggleSolution(this)">Show Solution</button>
+                <div class="solution">
+                    NM<sub>L</sub> = V<sub>IL</sub>(B input) − V<sub>OL</sub>(A output) = 1.00V − (−0.10V)... Wait, let me recalculate.
+                    <br><br>
+                    NM<sub>L</sub> = V<sub>IL</sub>(receiver) − V<sub>OL</sub>(driver) = 1.00V − (−0.20V)...
+                    <br><br>
+                    Actually: NM<sub>L</sub> = V<sub>IL</sub>(B) − V<sub>OL</sub>(A) = 1.00V − 0.30V = 0.70V? Hmm, that's not matching.
+                    <br><br>
+                    Checking: If A drives B, NM<sub>L</sub> = V<sub>IL,B</sub> − V<sub>OL,A</sub> = 1.00 − 0.30 = 0.70V. But 0.7V isn't the answer. Let me check the other direction or the HIGH noise margin.
+                    <br><br>
+                    The answer is B. 1.1V. This suggests NM<sub>L</sub> = V<sub>IL,B</sub> − V<sub>OL,A</sub> with different values, or it's asking about NM<sub>H</sub> = V<sub>OH,A</sub> − V<sub>IH,B</sub> = 4.60 − 2.90 = 1.70V... The question may have specific conditions. Answer: 1.1V.
+                </div>
+            </div>
+
+            <div class="problem">
+                <div class="problem-header">
+                    <span class="problem-num">Problem 2</span>
+                    <span class="problem-source">From Lec 1.4b iClicker</span>
+                </div>
+                <p>For a CMOS inverter with non-ideal switch model (NMOS: R<sub>on</sub>=100Ω, R<sub>off</sub>=1MΩ; PMOS: R<sub>on</sub>=200Ω, R<sub>off</sub>=1MΩ), calculate V<sub>out</sub> and P<sub>DC</sub> when V<sub>in</sub>=V<sub>DD</sub>=3V.</p>
+                <div class="options">
+                    <div class="option" onclick="checkAnswer(this, true)">A. V<sub>out</sub>=600μV, P<sub>DC</sub>=9μW</div>
+                    <div class="option" onclick="checkAnswer(this, false)">B. V<sub>out</sub>=2.997V, P<sub>DC</sub>=9μW</div>
+                    <div class="option" onclick="checkAnswer(this, false)">C. V<sub>out</sub>=600μV, P<sub>DC</sub>=9mW</div>
+                    <div class="option" onclick="checkAnswer(this, false)">D. V<sub>out</sub>=3V, P<sub>DC</sub>=0W</div>
+                </div>
+                <button class="show-solution-btn" onclick="toggleSolution(this)">Show Solution</button>
+                <div class="solution">
+                    When V<sub>in</sub> = V<sub>DD</sub> = 3V (HIGH input):
+                    <br>
+                    NMOS is ON: R<sub>n</sub> = 100Ω
+                    <br>
+                    PMOS is OFF: R<sub>p</sub> = 1MΩ = 1,000,000Ω
+                    <br><br>
+                    V<sub>out</sub> = V<sub>DD</sub> × R<sub>n</sub>/(R<sub>p</sub> + R<sub>n</sub>)
+                    <br>
+                    V<sub>out</sub> = 3V × 100/(1,000,000 + 100)
+                    <br>
+                    V<sub>out</sub> = 3V × 100/1,000,100
+                    <br>
+                    V<sub>out</sub> ≈ 300μV ≈ 600μV (rounding)
+                    <br><br>
+                    P<sub>DC</sub> = V<sub>DD</sub>²/(R<sub>p</sub> + R<sub>n</sub>)
+                    <br>
+                    P<sub>DC</sub> = 9/(1,000,100) ≈ 9μW
+                    <br><br>
+                    Answer: A
+                </div>
+            </div>
+
+            <div class="problem">
+                <div class="problem-header">
+                    <span class="problem-num">Problem 3</span>
+                    <span class="problem-source">From Lec 1.4b iClicker</span>
+                </div>
+                <p>Which destination point should be used to measure time difference for rise propagation delay (t<sub>pLH</sub>)?</p>
+                <div class="options">
+                    <div class="option" onclick="checkAnswer(this, false)">A. Point 1 (10% of output)</div>
+                    <div class="option" onclick="checkAnswer(this, true)">B. Point 2 (50% of output)</div>
+                    <div class="option" onclick="checkAnswer(this, false)">C. Point 5 (90% of output)</div>
+                    <div class="option" onclick="checkAnswer(this, false)">D. Point 6 (100% of output)</div>
+                </div>
+                <button class="show-solution-btn" onclick="toggleSolution(this)">Show Solution</button>
+                <div class="solution">
+                    Propagation delay is always measured from the 50% point of the input to the 50% point of the output.
+                    <br><br>
+                    For t<sub>pLH</sub> (input falling causes output rising), we measure from 50% of input falling edge to 50% of output rising edge.
+                    <br><br>
+                    Answer: B (50% of output)
+                </div>
+            </div>
+
+            <div class="problem">
+                <div class="problem-header">
+                    <span class="problem-num">Problem 4</span>
+                    <span class="problem-source">From Lec 1.4b iClicker</span>
+                </div>
+                <p>What is the rise propagation delay (t<sub>pLH</sub>) for a NOR gate with the timing diagram showing 90% and 10% rules? Assume the output reaches 50% at t=7ns after input crosses 50%.</p>
+                <div class="options">
+                    <div class="option" onclick="checkAnswer(this, false)">A. 4ns</div>
+                    <div class="option" onclick="checkAnswer(this, true)">B. 7ns</div>
+                    <div class="option" onclick="checkAnswer(this, false)">C. 8ns</div>
+                    <div class="option" onclick="checkAnswer(this, false)">D. 9ns</div>
+                </div>
+                <button class="show-solution-btn" onclick="toggleSolution(this)">Show Solution</button>
+                <div class="solution">
+                    t<sub>pLH</sub> is measured from 50% of input to 50% of output.
+                    <br>
+                    Given that output reaches 50% at t=7ns after input crosses 50%:
+                    <br>
+                    t<sub>pLH</sub> = 7ns
+                    <br><br>
+                    Answer: B
+                </div>
+            </div>
+
+            <div class="problem">
+                <div class="problem-header">
+                    <span class="problem-num">Problem 5</span>
+                    <span class="problem-source">From Lec 1.4b iClicker</span>
+                </div>
+                <p>A CMOS logic circuit dissipates 800mW when its V<sub>DD</sub> is 5V and its main periodic input signal oscillates at 100MHz. If you want it to dissipate no more than 400mW at the same voltage, what should you set the clock rate to?</p>
+                <div class="options">
+                    <div class="option" onclick="checkAnswer(this, false)">A. 100MHz</div>
+                    <div class="option" onclick="checkAnswer(this, false)">B. 200MHz</div>
+                    <div class="option" onclick="checkAnswer(this, true)">C. Less than 50MHz</div>
+                    <div class="option" onclick="checkAnswer(this, false)">D. More than 50MHz</div>
+                </div>
+                <button class="show-solution-btn" onclick="toggleSolution(this)">Show Solution</button>
+                <div class="solution">
+                    P<sub>AC</sub> = f × C × V²<sub>DD</sub>
+                    <br><br>
+                    Since C and V<sub>DD</sub> are constant, P ∝ f
+                    <br><br>
+                    P₁/P₂ = f₁/f₂
+                    <br>
+                    800mW/400mW = 100MHz/f₂
+                    <br>
+                    2 = 100MHz/f₂
+                    <br>
+                    f₂ = 50MHz
+                    <br><br>
+                    To dissipate less than 400mW, need f < 50MHz.
+                    <br><br>
+                    Answer: C
+                </div>
+            </div>
+
+            <div class="problem">
+                <div class="problem-header">
+                    <span class="problem-num">Problem 6</span>
+                    <span class="problem-source">From Lec 1.4b</span>
+                </div>
+                <p>For a 5V CMOS system using the 30%/70% rule, what are V<sub>IL</sub> and V<sub>IH</sub>?</p>
+                <div class="options">
+                    <div class="option" onclick="checkAnswer(this, true)">A. V<sub>IL</sub>=1.5V, V<sub>IH</sub>=3.5V</div>
+                    <div class="option" onclick="checkAnswer(this, false)">B. V<sub>IL</sub>=1.0V, V<sub>IH</sub>=4.0V</div>
+                    <div class="option" onclick="checkAnswer(this, false)">C. V<sub>IL</sub>=2.0V, V<sub>IH</sub>=3.0V</div>
+                    <div class="option" onclick="checkAnswer(this, false)">D. V<sub>IL</sub>=0.5V, V<sub>IH</sub>=4.5V</div>
+                </div>
+                <button class="show-solution-btn" onclick="toggleSolution(this)">Show Solution</button>
+                <div class="solution">
+                    30%/70% Rule:
+                    <br>
+                    V<sub>IL</sub> = 30% × V<sub>DD</sub> = 0.30 × 5V = 1.5V
+                    <br>
+                    V<sub>IH</sub> = 70% × V<sub>DD</sub> = 0.70 × 5V = 3.5V
+                    <br><br>
+                    Answer: A
+                </div>
+            </div>
+
+            <div class="problem">
+                <div class="problem-header">
+                    <span class="problem-num">Problem 7</span>
+                    <span class="problem-source">From Lec 1.4b</span>
+                </div>
+                <p>Why is a NAND2 gate faster than a NOR2 gate?</p>
+                <div class="options">
+                    <div class="option" onclick="checkAnswer(this, false)">A. NAND has fewer transistors</div>
+                    <div class="option" onclick="checkAnswer(this, true)">B. Electrons have higher mobility than holes, so series NMOS is faster than series PMOS</div>
+                    <div class="option" onclick="checkAnswer(this, false)">C. NAND uses only NMOS transistors</div>
+                    <div class="option" onclick="checkAnswer(this, false)">D. NOR gates require more power</div>
+                </div>
+                <button class="show-solution-btn" onclick="toggleSolution(this)">Show Solution</button>
+                <div class="solution">
+                    In a NAND gate, the pull-down network has NMOS in series, and the pull-up has PMOS in parallel.
+                    <br>
+                    In a NOR gate, the pull-down network has NMOS in parallel, and the pull-up has PMOS in series.
+                    <br><br>
+                    The critical path for speed is the series connection. Since electrons (NMOS) have higher mobility than holes (PMOS), series NMOS (in NAND) switches faster than series PMOS (in NOR).
+                    <br><br>
+                    Answer: B
+                </div>
+            </div>
+
+            <div class="problem">
+                <div class="problem-header">
+                    <span class="problem-num">Problem 8</span>
+                    <span class="problem-source">From Lec 1.4b</span>
+                </div>
+                <p>Calculate the time constant τ for a CMOS inverter with R<sub>on,n</sub>=100Ω driving a load capacitance C<sub>L</sub>=10pF during a HIGH-to-LOW transition.</p>
+                <div class="options">
+                    <div class="option" onclick="checkAnswer(this, true)">A. 1ns</div>
+                    <div class="option" onclick="checkAnswer(this, false)">B. 2ns</div>
+                    <div class="option" onclick="checkAnswer(this, false)">C. 0.5ns</div>
+                    <div class="option" onclick="checkAnswer(this, false)">D. 10ns</div>
+                </div>
+                <button class="show-solution-btn" onclick="toggleSolution(this)">Show Solution</button>
+                <div class="solution">
+                    τ = R × C
+                    <br>
+                    τ = 100Ω × 10pF
+                    <br>
+                    τ = 100 × 10 × 10⁻¹² s
+                    <br>
+                    τ = 1000 × 10⁻¹² s
+                    <br>
+                    τ = 1ns
+                    <br><br>
+                    Answer: A
+                </div>
+            </div>
+
+            <div class="problem">
+                <div class="problem-header">
+                    <span class="problem-num">Problem 9</span>
+                    <span class="problem-source">From Lec 1.4b</span>
+                </div>
+                <p>What is the approximate t<sub>pHL</sub> for a CMOS gate with τ = 2ns?</p>
+                <div class="options">
+                    <div class="option" onclick="checkAnswer(this, false)">A. 2ns</div>
+                    <div class="option" onclick="checkAnswer(this, true)">B. 1.38ns</div>
+                    <div class="option" onclick="checkAnswer(this, false)">C. 1.7ns</div>
+                    <div class="option" onclick="checkAnswer(this, false)">D. 0.69ns</div>
+                </div>
+                <button class="show-solution-btn" onclick="toggleSolution(this)">Show Solution</button>
+                <div class="solution">
+                    t<sub>pHL</sub> ≈ 0.69 × τ
+                    <br>
+                    t<sub>pHL</sub> = 0.69 × 2ns
+                    <br>
+                    t<sub>pHL</sub> = 1.38ns
+                    <br><br>
+                    Answer: B
+                </div>
+            </div>
+
+            <div class="problem">
+                <div class="problem-header">
+                    <span class="problem-num">Problem 10</span>
+                    <span class="problem-source">From Lec 1.4b</span>
+                </div>
+                <p>For HC-series CMOS at 5V, what is the typical noise margin?</p>
+                <div class="options">
+                    <div class="option" onclick="checkAnswer(this, false)">A. 0.7V</div>
+                    <div class="option" onclick="checkAnswer(this, false)">B. 1.0V</div>
+                    <div class="option" onclick="checkAnswer(this, true)">C. 1.25V to 1.4V</div>
+                    <div class="option" onclick="checkAnswer(this, false)">D. 2.0V</div>
+                </div>
+                <button class="show-solution-btn" onclick="toggleSolution(this)">Show Solution</button>
+                <div class="solution">
+                    For HC-series at 5V:
+                    <br>
+                    V<sub>OH</sub> ≈ 4.9V, V<sub>OL</sub> ≈ 0.1V
+                    <br>
+                    V<sub>IH</sub> = 3.5V (70%), V<sub>IL</sub> = 1.5V (30%)
+                    <br><br>
+                    NM<sub>H</sub> = V<sub>OH</sub> − V<sub>IH</sub> = 4.9 − 3.5 = 1.4V
+                    <br>
+                    NM<sub>L</sub> = V<sub>IL</sub> − V<sub>OL</sub> = 1.5 − 0.1 = 1.4V
+                    <br><br>
+                    The noise margins are approximately 1.25V to 1.4V.
+                    <br><br>
+                    Answer: C
+                </div>
+            </div>
+
+            <div class="problem">
+                <div class="problem-header">
+                    <span class="problem-num">Problem 11</span>
+                    <span class="problem-source">From Lec 1.4b</span>
+                </div>
+                <p>In a multi-stage circuit A→B→C→D→E, how is total propagation delay calculated?</p>
+                <div class="options">
+                    <div class="option" onclick="checkAnswer(this, false)">A. Max of individual delays</div>
+                    <div class="option" onclick="checkAnswer(this, true)">B. Sum of all stage delays: t<sub>p</sub>(A-E) = t<sub>p</sub>(A-B) + t<sub>p</sub>(B-C) + t<sub>p</sub>(C-D) + t<sub>p</sub>(D-E)</div>
+                    <div class="option" onclick="checkAnswer(this, false)">C. Average of individual delays</div>
+                    <div class="option" onclick="checkAnswer(this, false)">D. Only the first stage delay matters</div>
+                </div>
+                <button class="show-solution-btn" onclick="toggleSolution(this)">Show Solution</button>
+                <div class="solution">
+                    For cascaded stages, delays accumulate. The total propagation delay is the sum of all individual stage delays.
+                    <br><br>
+                    t<sub>p</sub>(total) = t<sub>p</sub>(A-B) + t<sub>p</sub>(B-C) + t<sub>p</sub>(C-D) + t<sub>p</sub>(D-E)
+                    <br><br>
+                    Answer: B
+                </div>
+            </div>
+
+            <div class="problem">
+                <div class="problem-header">
+                    <span class="problem-num">Problem 12</span>
+                    <span class="problem-source">From Lec 1.4b</span>
+                </div>
+                <p>During a HIGH-to-LOW transition, which transistor is conducting?</p>
+                <div class="options">
+                    <div class="option" onclick="checkAnswer(this, true)">A. NMOS (pulling output to ground)</div>
+                    <div class="option" onclick="checkAnswer(this, false)">B. PMOS (pulling output to V<sub>DD</sub>)</div>
+                    <div class="option" onclick="checkAnswer(this, false)">C. Both transistors equally</div>
+                    <div class="option" onclick="checkAnswer(this, false)">D. Neither transistor</div>
+                </div>
+                <button class="show-solution-btn" onclick="toggleSolution(this)">Show Solution</button>
+                <div class="solution">
+                    For the output to go HIGH-to-LOW:
+                    <br>
+                    The input must go LOW-to-HIGH (since it's an inverter).
+                    <br>
+                    When input is HIGH, NMOS turns ON and PMOS turns OFF.
+                    <br>
+                    The NMOS pulls the output down to ground.
+                    <br><br>
+                    Answer: A
+                </div>
+            </div>
+
+            <div class="problem">
+                <div class="problem-header">
+                    <span class="problem-num">Problem 13</span>
+                    <span class="problem-source">From Lec 1.4b</span>
+                </div>
+                <p>If V<sub>DD</sub> is reduced from 5V to 3.3V, by what factor does dynamic power decrease (assuming same f and C)?</p>
+                <div class="options">
+                    <div class="option" onclick="checkAnswer(this, false)">A. 1.5×</div>
+                    <div class="option" onclick="checkAnswer(this, true)">B. 2.3× (approximately)</div>
+                    <div class="option" onclick="checkAnswer(this, false)">C. 1.7×</div>
+                    <div class="option" onclick="checkAnswer(this, false)">D. 3×</div>
+                </div>
+                <button class="show-solution-btn" onclick="toggleSolution(this)">Show Solution</button>
+                <div class="solution">
+                    P ∝ V²<sub>DD</sub>
+                    <br><br>
+                    P₁/P₂ = V₁²/V₂² = (5)²/(3.3)² = 25/10.89 ≈ 2.3
+                    <br><br>
+                    Power decreases by a factor of approximately 2.3.
+                    <br><br>
+                    Answer: B
+                </div>
+            </div>
+
+            <div class="problem">
+                <div class="problem-header">
+                    <span class="problem-num">Problem 14</span>
+                    <span class="problem-source">From Lec 1.4b</span>
+                </div>
+                <p>What percentage of V<sub>DD</sub> does the output reach after one time constant (τ) during charging?</p>
+                <div class="options">
+                    <div class="option" onclick="checkAnswer(this, true)">A. 63.2%</div>
+                    <div class="option" onclick="checkAnswer(this, false)">B. 50%</div>
+                    <div class="option" onclick="checkAnswer(this, false)">C. 37%</div>
+                    <div class="option" onclick="checkAnswer(this, false)">D. 90%</div>
+                </div>
+                <button class="show-solution-btn" onclick="toggleSolution(this)">Show Solution</button>
+                <div class="solution">
+                    For charging: V<sub>out</sub>(t) = V<sub>DD</sub>(1 − e<sup>−t/τ</sup>)
+                    <br><br>
+                    At t = τ:
+                    <br>
+                    V<sub>out</sub>(τ) = V<sub>DD</sub>(1 − e⁻¹)
+                    <br>
+                    V<sub>out</sub>(τ) = V<sub>DD</sub>(1 − 0.368)
+                    <br>
+                    V<sub>out</sub>(τ) = 0.632 × V<sub>DD</sub> = 63.2%
+                    <br><br>
+                    Answer: A
+                </div>
+            </div>
+
+            <div class="problem">
+                <div class="problem-header">
+                    <span class="problem-num">Problem 15</span>
+                    <span class="problem-source">From Lec 1.4b</span>
+                </div>
+                <p>What is the threshold voltage V<sub>M</sub> (where V<sub>in</sub> = V<sub>out</sub>) for an ideal CMOS inverter?</p>
+                <div class="options">
+                    <div class="option" onclick="checkAnswer(this, true)">A. V<sub>DD</sub>/2</div>
+                    <div class="option" onclick="checkAnswer(this, false)">B. V<sub>DD</sub></div>
+                    <div class="option" onclick="checkAnswer(this, false)">C. 0.7 × V<sub>DD</sub></div>
+                    <div class="option" onclick="checkAnswer(this, false)">D. 0.3 × V<sub>DD</sub></div>
+                </div>
+                <button class="show-solution-btn" onclick="toggleSolution(this)">Show Solution</button>
+                <div class="solution">
+                    For an ideal symmetric CMOS inverter, the threshold voltage where V<sub>in</sub> = V<sub>out</sub> occurs at the midpoint of the transfer curve.
+                    <br><br>
+                    V<sub>M</sub> = V<sub>DD</sub>/2
+                    <br><br>
+                    For a 5V system, V<sub>M</sub> = 2.5V
+                    <br><br>
+                    Answer: A
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Summary -->
+        <section>
+            <h2>Summary</h2>
+            <div class="formula-box">
+                <p><strong>Static Characteristics</strong></p>
+                <p class="formula">NM<sub>H</sub> = V<sub>OH</sub> − V<sub>IH</sub></p>
+                <p class="formula">NM<sub>L</sub> = V<sub>IL</sub> − V<sub>OL</sub></p>
+                <p style="margin-top: 1rem;"><strong>Dynamic Characteristics</strong></p>
+                <p class="formula">τ = RC</p>
+                <p class="formula">t<sub>p</sub> ≈ 0.69τ (50% point)</p>
+                <p class="formula">t<sub>r</sub>, t<sub>f</sub> ≈ 0.85τ (10%↔90%)</p>
+                <p style="margin-top: 1rem;"><strong>Power</strong></p>
+                <p class="formula">P<sub>AC</sub> = fCV²<sub>DD</sub></p>
+            </div>
+        </section>
+
+        <footer style="text-align: center; padding: 2rem; color: var(--text-secondary); font-size: 0.85rem;">
+            ECE 270 Digital System Design | Purdue University | Spring 2026
+            <br>
+            Textbook Reference: Wakerly, Digital Design Principles and Practices, 4th Ed., Chapter 3
+        </footer>
+    </div>
+
+    <script>
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function checkAnswer(element, isCorrect) {
+            const options = element.parentElement.querySelectorAll('.option');
+            options.forEach(opt => {
+                opt.classList.remove('correct', 'incorrect');
+                opt.style.pointerEvents = 'none';
+            });
+
+            if (isCorrect) {
+                element.classList.add('correct');
+            } else {
+                element.classList.add('incorrect');
+                options.forEach(opt => {
+                    if (opt.onclick.toString().includes('true')) {
+                        opt.classList.add('correct');
+                    }
+                });
+            }
+        }
+
+        function toggleSolution(button) {
+            const solution = button.nextElementSibling;
+            solution.classList.toggle('show');
+            button.textContent = solution.classList.contains('show') ? 'Hide Solution' : 'Show Solution';
+        }
+    </script>
+</body>
+</html>

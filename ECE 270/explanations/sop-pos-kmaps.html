@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECE 270 Lecture 2.1: SoP, PoS, and K-Maps</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1a1a2e;
+            color: #e0e0e0;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #00d4ff;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            border-bottom: 3px solid #00d4ff;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            color: #ff6b6b;
+            font-size: 1.8em;
+            margin-top: 40px;
+            margin-bottom: 15px;
+            border-left: 5px solid #ff6b6b;
+            padding-left: 15px;
+        }
+
+        h3 {
+            color: #4ecdc4;
+            font-size: 1.4em;
+            margin-top: 30px;
+            margin-bottom: 12px;
+        }
+
+        h4 {
+            color: #95e1d3;
+            font-size: 1.2em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        code, .mono {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #0f0f1e;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: #ffd93d;
+        }
+
+        .definition-box {
+            background-color: #16213e;
+            border-left: 4px solid #00d4ff;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .example-box {
+            background-color: #1e3a5f;
+            border-left: 4px solid #4ecdc4;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .important-box {
+            background-color: #3d1e1e;
+            border-left: 4px solid #ff6b6b;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .list-container {
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+
+        .list-item {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 15px;
+        }
+
+        .list-item::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #00d4ff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: #0f0f1e;
+        }
+
+        th, td {
+            border: 1px solid #333;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #16213e;
+            color: #00d4ff;
+        }
+
+        .interactive-section {
+            background-color: #16213e;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 8px;
+            border: 2px solid #4ecdc4;
+        }
+
+        .kmap-container {
+            display: inline-block;
+            margin: 20px 0;
+        }
+
+        .kmap-grid {
+            display: grid;
+            gap: 2px;
+            background-color: #333;
+            border: 2px solid #00d4ff;
+            padding: 2px;
+        }
+
+        .kmap-cell {
+            background-color: #0f0f1e;
+            border: 1px solid #444;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+
+        .kmap-cell:hover {
+            background-color: #1e3a5f;
+        }
+
+        .kmap-cell.one {
+            background-color: #2d5016;
+            color: #a8ff60;
+        }
+
+        .kmap-cell.zero {
+            background-color: #0f0f1e;
+            color: #666;
+        }
+
+        .kmap-cell.dontcare {
+            background-color: #3d3d1e;
+            color: #ffd93d;
+        }
+
+        .kmap-label {
+            background-color: #1a1a2e;
+            border: none;
+            font-weight: bold;
+            color: #00d4ff;
+            cursor: default;
+        }
+
+        .kmap-label:hover {
+            background-color: #1a1a2e;
+        }
+
+        .controls {
+            margin: 20px 0;
+        }
+
+        button {
+            background-color: #00d4ff;
+            color: #0f0f1e;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #00a8cc;
+        }
+
+        button.secondary {
+            background-color: #4ecdc4;
+        }
+
+        button.secondary:hover {
+            background-color: #3ab8ad;
+        }
+
+        .output-display {
+            background-color: #0f0f1e;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            border: 1px solid #333;
+            font-family: 'Courier New', Courier, monospace;
+            color: #ffd93d;
+        }
+
+        .converter-input {
+            background-color: #0f0f1e;
+            color: #e0e0e0;
+            border: 1px solid #444;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 1em;
+            margin: 5px;
+        }
+
+        .practice-problem {
+            background-color: #1e3a5f;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            border-left: 4px solid #ff6b6b;
+        }
+
+        .answer {
+            display: none;
+            background-color: #0f0f1e;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: 1px solid #4ecdc4;
+        }
+
+        .answer.show {
+            display: block;
+        }
+
+        .truth-table-small {
+            width: auto;
+            display: inline-table;
+            margin: 10px 20px;
+        }
+
+        .super {
+            vertical-align: super;
+            font-size: 0.7em;
+        }
+
+        .prime {
+            position: relative;
+        }
+
+        .prime::after {
+            content: "'";
+            position: absolute;
+            top: -5px;
+            right: -8px;
+        }
+
+        .grid-2x2 {
+            grid-template-columns: 50px 50px 50px;
+            grid-template-rows: 50px 50px 50px;
+        }
+
+        .grid-2x4 {
+            grid-template-columns: 50px 50px 50px 50px 50px;
+            grid-template-rows: 50px 50px 50px;
+        }
+
+        .grid-4x4 {
+            grid-template-columns: 50px 50px 50px 50px 50px;
+            grid-template-rows: 50px 50px 50px 50px 50px;
+        }
+
+        .radio-group {
+            margin: 10px 0;
+        }
+
+        .radio-group label {
+            margin-right: 15px;
+        }
+
+        input[type="radio"] {
+            margin-right: 5px;
+        }
+
+        .section-nav {
+            position: sticky;
+            top: 20px;
+            background-color: #16213e;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+
+        .section-nav a {
+            color: #00d4ff;
+            text-decoration: none;
+            margin-right: 15px;
+        }
+
+        .section-nav a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>ECE 270 Lecture 2.1: Sum-of-Products, Product-of-Sums, and Karnaugh Maps</h1>
+
+    <div class="section-nav">
+        <a href="#definitions">Definitions</a>
+        <a href="#circuits">Circuits</a>
+        <a href="#minterms">Minterms</a>
+        <a href="#maxterms">Maxterms</a>
+        <a href="#canonical">Canonical Forms</a>
+        <a href="#kmaps">K-Maps</a>
+        <a href="#simplification">Simplification</a>
+        <a href="#dontcares">Don't Cares</a>
+        <a href="#tools">Interactive Tools</a>
+    </div>
+
+    <h2 id="definitions">1. Fundamental Definitions</h2>
+
+    <p>Understanding Boolean expressions requires precise terminology. For a function F(x, y, z, w), we define the following terms.</p>
+
+    <div class="definition-box">
+        <h3>Literal</h3>
+        <p>A variable or the complement of a variable.</p>
+        <p><strong>Examples:</strong> <code>W</code>, <code>X</code>, <code>Y'</code></p>
+    </div>
+
+    <div class="definition-box">
+        <h3>Product Term</h3>
+        <p>A single literal or a logical product (AND) of two or more literals.</p>
+        <p><strong>Examples:</strong> <code>X</code>, <code>X'·Y'</code>, <code>X·Z·W'</code>, <code>W·X'·Y·Z</code></p>
+    </div>
+
+    <div class="definition-box">
+        <h3>Sum-of-Products (SoP)</h3>
+        <p>A logical sum (OR) of product terms. This is an AND-OR structure.</p>
+        <p><strong>Example:</strong> <code>F = X + X'Y' + XZW' + WX'YZ</code></p>
+        <p>First you AND literals together, then OR those products.</p>
+    </div>
+
+    <div class="definition-box">
+        <h3>Sum Term</h3>
+        <p>A single literal or a logical sum (OR) of two or more literals.</p>
+        <p><strong>Examples:</strong> <code>Y</code>, <code>Z'+W</code>, <code>X+Y+Z'</code>, <code>X'+Y'+Z+W</code></p>
+    </div>
+
+    <div class="definition-box">
+        <h3>Product-of-Sums (PoS)</h3>
+        <p>A logical product (AND) of sum terms. This is an OR-AND structure.</p>
+        <p><strong>Example:</strong> <code>F = Y(Z'+W)(X+Y+Z')(X'+Y'+Z+W)</code></p>
+        <p>First you OR literals together, then AND those sums.</p>
+    </div>
+
+    <div class="important-box">
+        <h4>Key Insight: Single Input Gates</h4>
+        <p>From lecture iClicker:</p>
+        <p>A Buffer = Single Input OR = Single Input AND = Single Input XOR</p>
+        <p>An Inverter = Single Input NOR = Single Input NAND = Single Input XNOR</p>
+    </div>
+
+    <h2 id="circuits">2. Circuit Implementations</h2>
+
+    <h3>Sum-of-Products Circuit</h3>
+
+    <p>Consider the function: <code>F = X + Y'Z + X'YZ'</code></p>
+
+    <div class="example-box">
+        <h4>AND-OR Implementation</h4>
+        <p>Step 1: Each product term feeds into an AND gate</p>
+        <div class="list-container">
+            <div class="list-item">First AND gate: inputs are Y' and Z, output is Y'Z</div>
+            <div class="list-item">Second AND gate: inputs are X', Y, and Z', output is X'YZ'</div>
+            <div class="list-item">Third input is just X (a single literal)</div>
+        </div>
+        <p>Step 2: All AND outputs (and the literal X) feed into a final OR gate to produce F</p>
+    </div>
+
+    <div class="example-box">
+        <h4>NAND-NAND Implementation</h4>
+        <p>By applying DeMorgan's theorem, any AND-OR circuit can be converted to NAND-NAND.</p>
+        <p>The first level of NAND gates computes the product terms (as NANDs).</p>
+        <p>The second level NAND gate acts as the OR (since NAND of NANDs = OR).</p>
+    </div>
+
+    <h3>Product-of-Sums Circuit</h3>
+
+    <p>Consider the function: <code>F = A'(B + C)(A + B' + C')</code></p>
+
+    <div class="example-box">
+        <h4>OR-AND Implementation</h4>
+        <p>Step 1: Each sum term feeds into an OR gate</p>
+        <div class="list-container">
+            <div class="list-item">First OR gate: inputs are B and C, output is B+C</div>
+            <div class="list-item">Second OR gate: inputs are A, B', and C', output is A+B'+C'</div>
+            <div class="list-item">Third input is just A' (a single literal)</div>
+        </div>
+        <p>Step 2: All OR outputs (and the literal A') feed into a final AND gate to produce F</p>
+    </div>
+
+    <div class="example-box">
+        <h4>NOR-NOR Implementation</h4>
+        <p>By applying DeMorgan's theorem, any OR-AND circuit can be converted to NOR-NOR.</p>
+        <p>The first level of NOR gates computes the sum terms (as NORs).</p>
+        <p>The second level NOR gate acts as the AND (since NOR of NORs = AND).</p>
+    </div>
+
+    <h3>K-Map Visualization of Circuit Forms</h3>
+
+    <div class="example-box">
+        <h4>K-Map for SoP: F = X + Y'Z + X'YZ'</h4>
+        <p>Each product term corresponds to a group of 1s in the K-map.</p>
+        <p>Group size = 2<sup>(number of variables that don't appear in the term)</sup></p>
+        <div class="list-container">
+            <div class="list-item">X: This term has no Y or Z, so it covers 2<sup>2</sup>=4 cells where X=1</div>
+            <div class="list-item">Y'Z: This term has no X, so it covers 2<sup>1</sup>=2 cells where Y=0 and Z=1</div>
+            <div class="list-item">X'YZ': This term specifies all variables, so it covers 2<sup>0</sup>=1 cell where X=0, Y=1, Z=0</div>
+        </div>
+        <p>The resulting K-map has 1s in cells: 001, 010, 100, 101, 110, 111</p>
+    </div>
+
+    <div class="example-box">
+        <h4>K-Map for PoS: F = X(Y'+Z)(X+Y+Z')</h4>
+        <p>Each sum term corresponds to a group of 0s in the K-map.</p>
+        <p>Group size = 2<sup>(number of variables that don't appear in the term)</sup></p>
+        <p>After placing all 0 groups, the remaining cells are filled with 1s.</p>
+    </div>
+
+    <h2 id="minterms">3. Minterms and Canonical SoP</h2>
+
+    <h3>Normal Terms</h3>
+
+    <div class="definition-box">
+        <p>A <strong>normal term</strong> is a product or sum term in which no variable appears more than once.</p>
+        <p>An <strong>n-variable minterm</strong> is a normal product term with n literals (every variable appears exactly once).</p>
+        <p>An <strong>n-variable maxterm</strong> is a normal sum term with n literals (every variable appears exactly once).</p>
+    </div>
+
+    <h3>What is a Minterm?</h3>
+
+    <p>For a function f(x<sub>1</sub>, x<sub>2</sub>, x<sub>3</sub>), a minterm is a product of all 3 variables in either original or complemented form.</p>
+
+    <p>Since each variable can be either present or complemented, there are 2<sup>3</sup> = 8 possible minterms for a 3-variable function.</p>
+
+    <div class="example-box">
+        <h4>Example: Generic Minterm m<sub>12</sub> for f(x,y,z,w)</h4>
+        <p>Step 1: Start with generic form: (x or x')(y or y')(z or z')(w or w')</p>
+        <p>Step 2: Convert decimal 12 to 4-bit binary: 12 = 1100</p>
+        <p>Step 3: For minterms, use uncomplemented for bit 1 and complemented for bit 0</p>
+        <p>Result: m<sub>12</sub> = x·y·z'·w'</p>
+    </div>
+
+    <h3>Indexed Minterm Notation</h3>
+
+    <p>Each minterm is indexed by the decimal value of the binary combination that makes it equal to 1.</p>
+
+    <table>
+        <tr>
+            <th>Index</th>
+            <th>Binary</th>
+            <th>Minterm Expression</th>
+            <th>Notation</th>
+        </tr>
+        <tr>
+            <td>0</td>
+            <td>000</td>
+            <td>x<sub>1</sub>'·x<sub>2</sub>'·x<sub>3</sub>'</td>
+            <td>m<sub>0</sub></td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>001</td>
+            <td>x<sub>1</sub>'·x<sub>2</sub>'·x<sub>3</sub></td>
+            <td>m<sub>1</sub></td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>010</td>
+            <td>x<sub>1</sub>'·x<sub>2</sub>·x<sub>3</sub>'</td>
+            <td>m<sub>2</sub></td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>011</td>
+            <td>x<sub>1</sub>'·x<sub>2</sub>·x<sub>3</sub></td>
+            <td>m<sub>3</sub></td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>100</td>
+            <td>x<sub>1</sub>·x<sub>2</sub>'·x<sub>3</sub>'</td>
+            <td>m<sub>4</sub></td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td>101</td>
+            <td>x<sub>1</sub>·x<sub>2</sub>'·x<sub>3</sub></td>
+            <td>m<sub>5</sub></td>
+        </tr>
+        <tr>
+            <td>6</td>
+            <td>110</td>
+            <td>x<sub>1</sub>·x<sub>2</sub>·x<sub>3</sub>'</td>
+            <td>m<sub>6</sub></td>
+        </tr>
+        <tr>
+            <td>7</td>
+            <td>111</td>
+            <td>x<sub>1</sub>·x<sub>2</sub>·x<sub>3</sub></td>
+            <td>m<sub>7</sub></td>
+        </tr>
+    </table>
+
+    <div class="important-box">
+        <h4>Key Property of Minterms</h4>
+        <p>A minterm is a product (AND). For the product to equal 1, all inputs must be 1.</p>
+        <p>Therefore, use the uncomplemented variable for bit 1 and the complemented variable for bit 0.</p>
+        <p>Each minterm m<sub>i</sub> outputs 1 ONLY when the input combination equals the binary representation of i.</p>
+    </div>
+
+    <h3>Truth Table Representation</h3>
+
+    <p>When you construct a truth table with all 8 minterms as columns, each minterm equals 1 for exactly one row (the row corresponding to its index). This creates a diagonal pattern of 1s in the truth table.</p>
+
+    <h3>Sum-of-Minterms Representation</h3>
+
+    <p>Any Boolean function can be represented as a sum of minterms. You simply add (OR) together the minterms corresponding to rows where the function outputs 1.</p>
+
+    <div class="example-box">
+        <h4>Example: f(x<sub>1</sub>,x<sub>2</sub>,x<sub>3</sub>) = m<sub>1</sub> + m<sub>3</sub> + m<sub>4</sub></h4>
+        <p>This function outputs 1 when:</p>
+        <div class="list-container">
+            <div class="list-item">x<sub>1</sub>x<sub>2</sub>x<sub>3</sub> = 001 (row 1)</div>
+            <div class="list-item">x<sub>1</sub>x<sub>2</sub>x<sub>3</sub> = 011 (row 3)</div>
+            <div class="list-item">x<sub>1</sub>x<sub>2</sub>x<sub>3</sub> = 100 (row 4)</div>
+        </div>
+        <p>Expanded form: f = x<sub>1</sub>'x<sub>2</sub>'x<sub>3</sub> + x<sub>1</sub>'x<sub>2</sub>x<sub>3</sub> + x<sub>1</sub>x<sub>2</sub>'x<sub>3</sub>'</p>
+    </div>
+
+    <h3>Shannon's Expansion for SoP</h3>
+
+    <p>Shannon's expansion theorem provides a systematic way to derive the sum-of-minterms from a truth table.</p>
+
+    <div class="definition-box">
+        <p>For a 2-variable function F(x<sub>1</sub>,x<sub>2</sub>):</p>
+        <p><code>F(x<sub>1</sub>,x<sub>2</sub>) = x<sub>1</sub>'x<sub>2</sub>'·F(0,0) + x<sub>1</sub>'x<sub>2</sub>·F(0,1) + x<sub>1</sub>x<sub>2</sub>'·F(1,0) + x<sub>1</sub>x<sub>2</sub>·F(1,1)</code></p>
+        <p>Where F(a,b) is the output value from the truth table at row x<sub>1</sub>=a, x<sub>2</sub>=b.</p>
+    </div>
+
+    <p>Each term in the expansion is a minterm multiplied by the truth table value for that input combination. Since the truth table values are 0 or 1, this effectively selects only the minterms where the function outputs 1.</p>
+
+    <h2 id="maxterms">4. Maxterms and Canonical PoS</h2>
+
+    <h3>What is a Maxterm?</h3>
+
+    <p>For a function f(x, y, z), a maxterm is a sum of n distinctive literals (all variables appear exactly once in either original or complemented form).</p>
+
+    <p>For a 3-variable function, there are 2<sup>3</sup> = 8 maxterms.</p>
+
+    <div class="example-box">
+        <h4>Examples for f(x,y,z):</h4>
+        <p><code>x+y+z</code> is a maxterm (all 3 variables present)</p>
+        <p><code>x'+y'+z'</code> is a maxterm (all 3 variables present)</p>
+        <p><code>x+y</code> is NOT a maxterm for a 3-variable function (z is missing)</p>
+    </div>
+
+    <h3>Indexed Maxterm Notation</h3>
+
+    <p>Each maxterm is indexed by the decimal value of the binary combination that makes it equal to 0.</p>
+
+    <div class="important-box">
+        <h4>Critical Difference from Minterms</h4>
+        <p>For maxterms, use the OPPOSITE rule:</p>
+        <p>Use the uncomplemented variable for bit 0 and the complemented variable for bit 1.</p>
+    </div>
+
+    <table>
+        <tr>
+            <th>Index</th>
+            <th>Binary</th>
+            <th>Maxterm Expression</th>
+            <th>Notation</th>
+        </tr>
+        <tr>
+            <td>0</td>
+            <td>000</td>
+            <td>x<sub>1</sub>+x<sub>2</sub>+x<sub>3</sub></td>
+            <td>M<sub>0</sub></td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>001</td>
+            <td>x<sub>1</sub>+x<sub>2</sub>+x<sub>3</sub>'</td>
+            <td>M<sub>1</sub></td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>010</td>
+            <td>x<sub>1</sub>+x<sub>2</sub>'+x<sub>3</sub></td>
+            <td>M<sub>2</sub></td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>011</td>
+            <td>x<sub>1</sub>+x<sub>2</sub>'+x<sub>3</sub>'</td>
+            <td>M<sub>3</sub></td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>100</td>
+            <td>x<sub>1</sub>'+x<sub>2</sub>+x<sub>3</sub></td>
+            <td>M<sub>4</sub></td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td>101</td>
+            <td>x<sub>1</sub>'+x<sub>2</sub>+x<sub>3</sub>'</td>
+            <td>M<sub>5</sub></td>
+        </tr>
+        <tr>
+            <td>6</td>
+            <td>110</td>
+            <td>x<sub>1</sub>'+x<sub>2</sub>'+x<sub>3</sub></td>
+            <td>M<sub>6</sub></td>
+        </tr>
+        <tr>
+            <td>7</td>
+            <td>111</td>
+            <td>x<sub>1</sub>'+x<sub>2</sub>'+x<sub>3</sub>'</td>
+            <td>M<sub>7</sub></td>
+        </tr>
+    </table>
+
+    <div class="important-box">
+        <h4>Key Property of Maxterms</h4>
+        <p>A maxterm is a sum (OR). For the sum to equal 0, all inputs must be 0.</p>
+        <p>Therefore, use the uncomplemented variable for bit 0 and the complemented variable for bit 1.</p>
+        <p>Each maxterm M<sub>i</sub> outputs 0 ONLY when the input combination equals the binary representation of i.</p>
+    </div>
+
+    <div class="example-box">
+        <h4>Example: Generic Maxterm M<sub>12</sub> for f(x,y,z,w)</h4>
+        <p>Step 1: Start with generic form: (x or x')+(y or y')+(z or z')+(w or w')</p>
+        <p>Step 2: Convert decimal 12 to 4-bit binary: 12 = 1100</p>
+        <p>Step 3: For maxterms, use complemented for bit 1 and uncomplemented for bit 0 (OPPOSITE of minterms)</p>
+        <p>Result: M<sub>12</sub> = x'+y'+z+w</p>
+    </div>
+
+    <h3>Product-of-Maxterms Representation</h3>
+
+    <p>Any Boolean function can be represented as a product of maxterms. You multiply (AND) together the maxterms corresponding to rows where the function outputs 0.</p>
+
+    <div class="example-box">
+        <h4>Example: f(x<sub>1</sub>,x<sub>2</sub>,x<sub>3</sub>) = M<sub>1</sub> · M<sub>3</sub> · M<sub>4</sub></h4>
+        <p>This function outputs 0 when:</p>
+        <div class="list-container">
+            <div class="list-item">x<sub>1</sub>x<sub>2</sub>x<sub>3</sub> = 001 (row 1)</div>
+            <div class="list-item">x<sub>1</sub>x<sub>2</sub>x<sub>3</sub> = 011 (row 3)</div>
+            <div class="list-item">x<sub>1</sub>x<sub>2</sub>x<sub>3</sub> = 100 (row 4)</div>
+        </div>
+        <p>Expanded form: f = (x<sub>1</sub>+x<sub>2</sub>+x<sub>3</sub>')(x<sub>1</sub>+x<sub>2</sub>'+x<sub>3</sub>')(x<sub>1</sub>'+x<sub>2</sub>+x<sub>3</sub>)</p>
+    </div>
+
+    <h2 id="canonical">5. Canonical Forms</h2>
+
+    <h3>Canonical Sum-of-Products</h3>
+
+    <div class="definition-box">
+        <p>The <strong>canonical sum</strong> of a logic function is a sum of minterms corresponding to all input combinations for which the function produces a 1 output.</p>
+    </div>
+
+    <p>This is also called the canonical SoP form or the standard sum form.</p>
+
+    <div class="example-box">
+        <h4>Example: Three Variable Function</h4>
+        <p>f(x<sub>1</sub>, x<sub>2</sub>, x<sub>3</sub>) = m<sub>0</sub> + m<sub>3</sub> + m<sub>4</sub> + m<sub>7</sub></p>
+        <p>Compact notation: f = Σm(0,3,4,7) = Σ(0,3,4,7)</p>
+        <p>The set {0,3,4,7} is called the ON set (the minterms where f=1).</p>
+    </div>
+
+    <h3>Canonical Product-of-Sums</h3>
+
+    <div class="definition-box">
+        <p>The <strong>canonical product</strong> of a logic function is a product of maxterms corresponding to all input combinations for which the function produces a 0 output.</p>
+    </div>
+
+    <p>This is also called the canonical PoS form or the standard product form.</p>
+
+    <div class="example-box">
+        <h4>Example: Product-of-Maxterms</h4>
+        <p>f = M<sub>1</sub> · M<sub>2</sub> · M<sub>4</sub></p>
+        <p>Compact notation: f = ΠM(1,2,4) = Π(1,2,4)</p>
+        <p>The set {1,2,4} is called the OFF set (the maxterms where f=0).</p>
+    </div>
+
+    <div class="important-box">
+        <h4>Fundamental Relationship</h4>
+        <p>The ON set and OFF set are complements of each other.</p>
+        <p>If you know one, you automatically know the other.</p>
+        <p>For a 3-variable function, ON set ∪ OFF set = {0,1,2,3,4,5,6,7}</p>
+    </div>
+
+    <h2 id="kmaps">6. Karnaugh Maps (K-Maps)</h2>
+
+    <h3>What is a K-Map?</h3>
+
+    <p>A Karnaugh map (K-map) is a graphical method for simplifying Boolean expressions. It arranges truth table values in a grid where adjacent cells differ by only one variable.</p>
+
+    <h3>K-Map Sizes</h3>
+
+    <table class="truth-table-small">
+        <tr>
+            <th>Variables</th>
+            <th>Squares</th>
+            <th>Grid Size</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>2<sup>1</sup> = 2</td>
+            <td>1x2</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>2<sup>2</sup> = 4</td>
+            <td>2x2</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>2<sup>3</sup> = 8</td>
+            <td>2x4</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>2<sup>4</sup> = 16</td>
+            <td>4x4</td>
+        </tr>
+    </table>
+
+    <h3>Plotting Single-Variable K-Maps</h3>
+
+    <p>For a single variable A, the K-map has 2 cells arranged horizontally.</p>
+
+    <div class="example-box">
+        <h4>Example 1: F(A) where F=1 only when A=1</h4>
+        <table class="truth-table-small">
+            <tr><th>A</th><th>F</th></tr>
+            <tr><td>0</td><td>0</td></tr>
+            <tr><td>1</td><td>1</td></tr>
+        </table>
+        <p>K-Map: [0 | 1]</p>
+        <p>Result: F(A) = A</p>
+    </div>
+
+    <div class="example-box">
+        <h4>Example 2: F(A) where F=1 only when A=0</h4>
+        <table class="truth-table-small">
+            <tr><th>A</th><th>F</th></tr>
+            <tr><td>0</td><td>1</td></tr>
+            <tr><td>1</td><td>0</td></tr>
+        </table>
+        <p>K-Map: [1 | 0]</p>
+        <p>Result: F(A) = A'</p>
+    </div>
+
+    <h3>Plotting 2-Variable K-Maps</h3>
+
+    <p>For two variables A and B, the K-map is a 2x2 grid.</p>
+
+    <div class="important-box">
+        <h4>K-Map Layout for F(A,B)</h4>
+        <pre>
+        A
+    B   0    1
+    0  r0   r2
+    1  r1   r3
+        </pre>
+        <p>Where r0, r1, r2, r3 are the truth table values at rows 00, 01, 10, 11 respectively.</p>
+    </div>
+
+    <div class="example-box">
+        <h4>Example: F(A,B) = A</h4>
+        <p>Truth table: 00→0, 01→0, 10→1, 11→1</p>
+        <pre>
+        A
+    B   0    1
+    0   0    1
+    1   0    1
+        </pre>
+        <p>The two 1s in the right column (where A=1) form a vertical group.</p>
+        <p>Result: F = A</p>
+    </div>
+
+    <div class="example-box">
+        <h4>Example: F(A,B) = A + B</h4>
+        <p>Truth table: 00→0, 01→1, 10→1, 11→1</p>
+        <pre>
+        A
+    B   0    1
+    0   0    1
+    1   1    1
+        </pre>
+        <p>The three 1s cannot form a single rectangular group, so we need two groups.</p>
+        <p>Result: F = A + B</p>
+    </div>
+
+    <h3>XOR in K-Maps</h3>
+
+    <div class="example-box">
+        <h4>F(A,B) = A ⊕ B (XOR)</h4>
+        <p>Truth table: 00→0, 01→1, 10→1, 11→0</p>
+        <pre>
+        A
+    B   0    1
+    0   0    1
+    1   1    0
+        </pre>
+        <p>This is a checkerboard pattern. The two 1s are NOT adjacent (diagonals don't count).</p>
+        <p>Result: F = A'B + AB' (cannot be simplified further)</p>
+        <p>XOR functions cannot be simplified using K-maps.</p>
+    </div>
+
+    <h3>Plotting 3-Variable K-Maps</h3>
+
+    <p>For three variables, the K-map is a 2x4 grid. The column labels use Gray code ordering.</p>
+
+    <div class="important-box">
+        <h4>Gray Code Ordering</h4>
+        <p>The columns are labeled in Gray code order: 00, 01, 11, 10</p>
+        <p>NOT binary order: 00, 01, 10, 11</p>
+        <p>This ensures that adjacent columns differ by only one bit.</p>
+    </div>
+
+    <div class="example-box">
+        <h4>K-Map Layout for F(A,B,C)</h4>
+        <pre>
+           BC
+       A   00   01   11   10
+       0   r0   r1   r3   r2
+       1   r4   r5   r7   r6
+        </pre>
+        <p>Where r0 through r7 are the truth table values for rows 000 through 111.</p>
+        <p>Notice that row 3 (011) goes in the 11 column, and row 2 (010) goes in the 10 column.</p>
+    </div>
+
+    <h3>Plotting 4-Variable K-Maps</h3>
+
+    <p>For four variables, the K-map is a 4x4 grid. Both row and column labels use Gray code ordering.</p>
+
+    <div class="example-box">
+        <h4>K-Map Layout for F(A,B,C,D)</h4>
+        <pre>
+            AB
+       CD   00   01   11   10
+       00   r0   r4  r12   r8
+       01   r1   r5  r13   r9
+       11   r3   r7  r15  r11
+       10   r2   r6  r14  r10
+        </pre>
+        <p>Both rows and columns use Gray code: 00, 01, 11, 10</p>
+    </div>
+
+    <h3>Larger K-Maps</h3>
+
+    <div class="list-container">
+        <div class="list-item">5 variables: Two 4x4 K-maps side by side (one for A=0, one for A=1)</div>
+        <div class="list-item">6 variables: Four 4x4 K-maps (becomes very complex and impractical)</div>
+    </div>
+
+    <p>For functions with more than 4 variables, algorithmic methods (like Quine-McCluskey) are typically used instead of K-maps.</p>
+
+    <h2 id="simplification">7. Logic Simplification Using K-Maps</h2>
+
+    <h3>The Three Steps: ABC</h3>
+
+    <p>To minimize a Boolean expression using K-maps, follow these three steps.</p>
+
+    <h3>Step A: Grouping</h3>
+
+    <div class="definition-box">
+        <h4>Grouping Rules</h4>
+        <div class="list-container">
+            <div class="list-item">Group adjacent 1s for SoP (or 0s for PoS)</div>
+            <div class="list-item">Generate all prime implicants (groups that cannot grow any bigger)</div>
+            <div class="list-item">Groups must be horizontal or vertical (NOT diagonal)</div>
+            <div class="list-item">Adjacent means one cell after another in a row or column</div>
+            <div class="list-item">First and last rows wrap around (top connects to bottom)</div>
+            <div class="list-item">First and last columns wrap around (left connects to right)</div>
+            <div class="list-item">Groups must contain 2<sup>k</sup> cells (1, 2, 4, 8, 16, etc.)</div>
+            <div class="list-item">Make groups as large as possible</div>
+            <div class="list-item">Cells can be included in multiple groups</div>
+            <div class="list-item">All 1-cells must be covered for SoP (all 0-cells for PoS)</div>
+        </div>
+    </div>
+
+    <div class="example-box">
+        <h4>Valid Group Sizes in a 4-Variable K-Map</h4>
+        <div class="list-container">
+            <div class="list-item">16 cells: The entire map (function is constant 1)</div>
+            <div class="list-item">8 cells: Half the map (2x4 or 4x2 rectangle)</div>
+            <div class="list-item">4 cells: A 2x2 square or a 1x4 or 4x1 line</div>
+            <div class="list-item">2 cells: A 1x2 or 2x1 pair</div>
+            <div class="list-item">1 cell: A single isolated 1</div>
+        </div>
+    </div>
+
+    <h3>Step B: Selecting Essential Prime Implicants</h3>
+
+    <div class="definition-box">
+        <p>A <strong>prime implicant</strong> is a group of 1s that cannot be made any larger.</p>
+        <p>An <strong>essential prime implicant</strong> is a prime implicant that covers at least one 1-cell that no other prime implicant covers.</p>
+    </div>
+
+    <p>To find essential prime implicants:</p>
+    <div class="list-container">
+        <div class="list-item">Identify all prime implicants (maximal groups)</div>
+        <div class="list-item">For each 1-cell, determine which prime implicants cover it</div>
+        <div class="list-item">If a 1-cell is covered by only one prime implicant, that implicant is essential</div>
+        <div class="list-item">All essential prime implicants MUST be included in the final expression</div>
+    </div>
+
+    <p>If the essential prime implicants do not cover all 1-cells, select a minimal set of non-essential prime implicants to cover the remaining cells.</p>
+
+    <h3>Step C: Writing the Minimized Expression</h3>
+
+    <p>For each group in the final cover, write a product term (for SoP) or sum term (for PoS).</p>
+
+    <div class="definition-box">
+        <h4>Variables Absorbed by Groups</h4>
+        <p>A group of 2<sup>k</sup> minterms (or maxterms) absorbs k variables.</p>
+        <p>For an n-variable function, each group results in a term with n-k variables.</p>
+    </div>
+
+    <div class="example-box">
+        <h4>Writing Product Terms from Groups (SoP)</h4>
+        <p>For each group of 1s:</p>
+        <div class="list-container">
+            <div class="list-item">Look at the binary coordinates of all cells in the group</div>
+            <div class="list-item">Ignore variables that alternate between 0 and 1 within the group</div>
+            <div class="list-item">Keep only variables that have a constant value throughout the group</div>
+            <div class="list-item">For constant 1, use the uncomplemented variable</div>
+            <div class="list-item">For constant 0, use the complemented variable</div>
+            <div class="list-item">Form the product (AND) of these variables</div>
+        </div>
+    </div>
+
+    <div class="example-box">
+        <h4>Example: 4-Variable Group</h4>
+        <p>Consider a 2x2 group in the corner of a 4-variable K-map covering cells 0000, 0001, 0010, 0011.</p>
+        <p>Variables A and B are both 0 in all four cells (constant).</p>
+        <p>Variables C and D alternate (C goes 0,0,1,1 and D goes 0,1,0,1).</p>
+        <p>Result: A'B' (C and D are absorbed)</p>
+    </div>
+
+    <div class="example-box">
+        <h4>Writing Sum Terms from Groups (PoS)</h4>
+        <p>For each group of 0s, follow the same procedure as SoP but:</p>
+        <div class="list-container">
+            <div class="list-item">Form a sum (OR) instead of a product</div>
+            <div class="list-item">For constant 0, use the uncomplemented variable</div>
+            <div class="list-item">For constant 1, use the complemented variable (OPPOSITE of SoP)</div>
+        </div>
+    </div>
+
+    <h2 id="dontcares">8. Don't Care Conditions</h2>
+
+    <h3>Incompletely Specified Functions</h3>
+
+    <p>In many real-world circuits, certain input combinations are impossible or irrelevant. For these combinations, we don't care whether the output is 0 or 1.</p>
+
+    <div class="definition-box">
+        <p>A <strong>don't care</strong> condition (denoted d or X) represents an input combination where the output can be either 0 or 1.</p>
+        <p>An <strong>incompletely specified function</strong> is a function that includes don't care conditions.</p>
+    </div>
+
+    <h3>Using Don't Cares for Optimization</h3>
+
+    <p>Don't cares provide flexibility during minimization. You can treat each don't care as either 0 or 1, whichever leads to a simpler expression.</p>
+
+    <div class="example-box">
+        <h4>Example: f = Σm(2, 4, 5, 6, 10) + D(12, 13, 14, 15)</h4>
+        <p>This function has:</p>
+        <div class="list-container">
+            <div class="list-item">ON set: {2, 4, 5, 6, 10} (must be 1)</div>
+            <div class="list-item">Don't care set: {12, 13, 14, 15} (can be 0 or 1)</div>
+            <div class="list-container">OFF set: {0, 1, 3, 7, 8, 9, 11} (must be 0)</div>
+        </div>
+        <p>When grouping in the K-map:</p>
+        <div class="list-container">
+            <div class="list-item">Include don't cares in groups if it makes the groups larger</div>
+            <div class="list-item">Leave don't cares out of groups if including them doesn't help</div>
+            <div class="list-item">Don't cares do NOT need to be covered (unlike 1s)</div>
+        </div>
+    </div>
+
+    <div class="important-box">
+        <h4>Strategy for Don't Cares</h4>
+        <p>When minimizing with don't cares:</p>
+        <div class="list-container">
+            <div class="list-item">Treat don't cares as 1s when they help create or enlarge groups</div>
+            <div class="list-item">Treat don't cares as 0s (ignore them) when they don't help</div>
+            <div class="list-item">The goal is to minimize the number of terms and literals</div>
+        </div>
+    </div>
+
+    <h2 id="tools">9. Interactive Tools</h2>
+
+    <h3>Karnaugh Map Simplifier</h3>
+
+    <div class="interactive-section">
+        <h4>Interactive K-Map Tool</h4>
+        <p>Click cells to toggle between 0, 1, and d (don't care). The tool will help you visualize groupings.</p>
+
+        <div class="radio-group">
+            <label><input type="radio" name="kmap-vars" value="2" checked> 2 Variables</label>
+            <label><input type="radio" name="kmap-vars" value="3"> 3 Variables</label>
+            <label><input type="radio" name="kmap-vars" value="4"> 4 Variables</label>
+        </div>
+
+        <div id="kmap-display"></div>
+
+        <div class="controls">
+            <button onclick="clearKMap()">Clear All</button>
+            <button class="secondary" onclick="fillRandomKMap()">Random Fill</button>
+        </div>
+
+        <div class="output-display" id="kmap-output">
+            Click cells to build your K-map. The minimized expression will appear here.
+        </div>
+    </div>
+
+    <h3>Minterm/Maxterm Converter</h3>
+
+    <div class="interactive-section">
+        <h4>Convert Between Index and Expression</h4>
+        <p>Enter a decimal index and number of variables to see the minterm and maxterm expressions.</p>
+
+        <div>
+            <label>Number of Variables: </label>
+            <input type="number" class="converter-input" id="num-vars" value="3" min="2" max="4">
+        </div>
+        <div>
+            <label>Decimal Index: </label>
+            <input type="number" class="converter-input" id="term-index" value="0" min="0">
+        </div>
+        <div class="controls">
+            <button onclick="convertTerm()">Convert</button>
+        </div>
+
+        <div class="output-display" id="term-output"></div>
+    </div>
+
+    <h3>Practice Problems</h3>
+
+    <div class="practice-problem">
+        <h4>Problem 1: Sum-of-Minterms</h4>
+        <p>Represent f(x<sub>1</sub>,x<sub>2</sub>,x<sub>3</sub>) = m<sub>1</sub> + m<sub>3</sub> + m<sub>4</sub> using a truth table and as a Boolean expression.</p>
+        <button onclick="toggleAnswer('answer1')">Show Answer</button>
+        <div id="answer1" class="answer">
+            <p><strong>Truth Table:</strong></p>
+            <table class="truth-table-small">
+                <tr>
+                    <th>x<sub>1</sub></th>
+                    <th>x<sub>2</sub></th>
+                    <th>x<sub>3</sub></th>
+                    <th>f</th>
+                </tr>
+                <tr><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+                <tr><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+                <tr><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+                <tr><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+                <tr><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+                <tr><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+                <tr><td>1</td><td>1</td><td>1</td><td>0</td></tr>
+            </table>
+            <p><strong>Boolean Expression:</strong></p>
+            <p>f = x<sub>1</sub>'x<sub>2</sub>'x<sub>3</sub> + x<sub>1</sub>'x<sub>2</sub>x<sub>3</sub> + x<sub>1</sub>x<sub>2</sub>'x<sub>3</sub>'</p>
+            <p>This can be simplified to: f = x<sub>1</sub>'x<sub>3</sub> + x<sub>1</sub>x<sub>2</sub>'x<sub>3</sub>'</p>
+        </div>
+    </div>
+
+    <div class="practice-problem">
+        <h4>Problem 2: Product-of-Maxterms</h4>
+        <p>Represent f(x<sub>1</sub>,x<sub>2</sub>,x<sub>3</sub>) = M<sub>1</sub> · M<sub>3</sub> · M<sub>4</sub> using a truth table and as a Boolean expression.</p>
+        <button onclick="toggleAnswer('answer2')">Show Answer</button>
+        <div id="answer2" class="answer">
+            <p><strong>Truth Table:</strong></p>
+            <table class="truth-table-small">
+                <tr>
+                    <th>x<sub>1</sub></th>
+                    <th>x<sub>2</sub></th>
+                    <th>x<sub>3</sub></th>
+                    <th>f</th>
+                </tr>
+                <tr><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+                <tr><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+                <tr><td>0</td><td>1</td><td>0</td><td>1</td></tr>
+                <tr><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+                <tr><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>1</td><td>0</td><td>1</td><td>1</td></tr>
+                <tr><td>1</td><td>1</td><td>0</td><td>1</td></tr>
+                <tr><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+            </table>
+            <p><strong>Boolean Expression:</strong></p>
+            <p>f = (x<sub>1</sub>+x<sub>2</sub>+x<sub>3</sub>')(x<sub>1</sub>+x<sub>2</sub>'+x<sub>3</sub>')(x<sub>1</sub>'+x<sub>2</sub>+x<sub>3</sub>)</p>
+        </div>
+    </div>
+
+    <div class="practice-problem">
+        <h4>Problem 3: XOR K-Map</h4>
+        <p>Plot F = A ⊕ B on a K-map and explain why it cannot be simplified.</p>
+        <button onclick="toggleAnswer('answer3')">Show Answer</button>
+        <div id="answer3" class="answer">
+            <p><strong>K-Map:</strong></p>
+            <pre>
+        A
+    B   0    1
+    0   0    1
+    1   1    0
+            </pre>
+            <p><strong>Explanation:</strong></p>
+            <p>The XOR function creates a checkerboard pattern where the two 1s are not adjacent (they are diagonal). Since K-map grouping requires horizontal or vertical adjacency, no simplification is possible.</p>
+            <p>The minimized expression is: F = A'B + AB'</p>
+            <p>This is already in simplest form. XOR cannot be represented with fewer literals.</p>
+        </div>
+    </div>
+
+    <div class="practice-problem">
+        <h4>Problem 4: Converting Between Canonical Forms</h4>
+        <p>Given f = Σ(0,3,4,7), write the equivalent product-of-maxterms form.</p>
+        <button onclick="toggleAnswer('answer4')">Show Answer</button>
+        <div id="answer4" class="answer">
+            <p><strong>Solution:</strong></p>
+            <p>For a 3-variable function, the complete set is {0,1,2,3,4,5,6,7}.</p>
+            <p>ON set = {0,3,4,7}</p>
+            <p>OFF set = {1,2,5,6} (complement of ON set)</p>
+            <p>Therefore: f = Π(1,2,5,6) = M<sub>1</sub>·M<sub>2</sub>·M<sub>5</sub>·M<sub>6</sub></p>
+            <p>Expanded: f = (x+y+z')(x+y'+z)(x'+y+z')(x'+y'+z)</p>
+        </div>
+    </div>
+
+    <script>
+        let kmapSize = 2;
+        let kmapData = [];
+
+        function initKMap(size) {
+            kmapSize = size;
+            const numCells = Math.pow(2, size);
+            kmapData = new Array(numCells).fill(0);
+            renderKMap();
+        }
+
+        function renderKMap() {
+            const container = document.getElementById('kmap-display');
+            const kmap = document.createElement('div');
+            kmap.className = 'kmap-container';
+
+            if (kmapSize === 2) {
+                render2VarKMap(kmap);
+            } else if (kmapSize === 3) {
+                render3VarKMap(kmap);
+            } else if (kmapSize === 4) {
+                render4VarKMap(kmap);
+            }
+
+            container.innerHTML = '';
+            container.appendChild(kmap);
+            updateOutput();
+        }
+
+        function render2VarKMap(container) {
+            const grid = document.createElement('div');
+            grid.className = 'kmap-grid grid-2x2';
+
+            // Labels
+            grid.appendChild(createLabel(''));
+            grid.appendChild(createLabel('A'));
+            grid.appendChild(createLabel('B'));
+
+            // Row 0
+            grid.appendChild(createLabel('0'));
+            grid.appendChild(createCell(0, 0)); // AB=00
+            grid.appendChild(createCell(2, 2)); // AB=10
+
+            // Row 1
+            grid.appendChild(createLabel('1'));
+            grid.appendChild(createCell(1, 1)); // AB=01
+            grid.appendChild(createCell(3, 3)); // AB=11
+
+            container.appendChild(grid);
+        }
+
+        function render3VarKMap(container) {
+            const grid = document.createElement('div');
+            grid.className = 'kmap-grid grid-2x4';
+
+            // Top labels
+            grid.appendChild(createLabel(''));
+            grid.appendChild(createLabel('BC'));
+            const topLabels = ['00', '01', '11', '10'];
+            topLabels.forEach(label => grid.appendChild(createLabel(label)));
+
+            // Side label for A
+            grid.appendChild(createLabel('A'));
+
+            // Row 0 (A=0)
+            grid.appendChild(createLabel('0'));
+            grid.appendChild(createCell(0, 0));  // ABC=000
+            grid.appendChild(createCell(1, 1));  // ABC=001
+            grid.appendChild(createCell(3, 3));  // ABC=011
+            grid.appendChild(createCell(2, 2));  // ABC=010
+
+            // Row 1 (A=1)
+            grid.appendChild(createLabel('1'));
+            grid.appendChild(createCell(4, 4));  // ABC=100
+            grid.appendChild(createCell(5, 5));  // ABC=101
+            grid.appendChild(createCell(7, 7));  // ABC=111
+            grid.appendChild(createCell(6, 6));  // ABC=110
+
+            container.appendChild(grid);
+        }
+
+        function render4VarKMap(container) {
+            const grid = document.createElement('div');
+            grid.className = 'kmap-grid grid-4x4';
+
+            // Top labels
+            grid.appendChild(createLabel(''));
+            grid.appendChild(createLabel('AB'));
+            const topLabels = ['00', '01', '11', '10'];
+            topLabels.forEach(label => grid.appendChild(createLabel(label)));
+
+            // Side label for CD
+            grid.appendChild(createLabel('CD'));
+
+            const grayCode = [0, 1, 3, 2];
+            const rowLabels = ['00', '01', '11', '10'];
+
+            for (let i = 0; i < 4; i++) {
+                grid.appendChild(createLabel(rowLabels[i]));
+                for (let j = 0; j < 4; j++) {
+                    const index = grayCode[i] + grayCode[j] * 4;
+                    grid.appendChild(createCell(index, index));
+                }
+            }
+
+            container.appendChild(grid);
+        }
+
+        function createLabel(text) {
+            const label = document.createElement('div');
+            label.className = 'kmap-cell kmap-label';
+            label.textContent = text;
+            return label;
+        }
+
+        function createCell(dataIndex, displayIndex) {
+            const cell = document.createElement('div');
+            cell.className = 'kmap-cell';
+            cell.dataset.index = dataIndex;
+
+            updateCellDisplay(cell, kmapData[dataIndex]);
+
+            cell.addEventListener('click', () => {
+                kmapData[dataIndex] = (kmapData[dataIndex] + 1) % 3;
+                updateCellDisplay(cell, kmapData[dataIndex]);
+                updateOutput();
+            });
+
+            return cell;
+        }
+
+        function updateCellDisplay(cell, value) {
+            cell.classList.remove('zero', 'one', 'dontcare');
+            if (value === 0) {
+                cell.classList.add('zero');
+                cell.textContent = '0';
+            } else if (value === 1) {
+                cell.classList.add('one');
+                cell.textContent = '1';
+            } else {
+                cell.classList.add('dontcare');
+                cell.textContent = 'd';
+            }
+        }
+
+        function clearKMap() {
+            kmapData.fill(0);
+            renderKMap();
+        }
+
+        function fillRandomKMap() {
+            for (let i = 0; i < kmapData.length; i++) {
+                kmapData[i] = Math.floor(Math.random() * 3);
+            }
+            renderKMap();
+        }
+
+        function updateOutput() {
+            const output = document.getElementById('kmap-output');
+            const minterms = [];
+            const maxterms = [];
+            const dontcares = [];
+
+            for (let i = 0; i < kmapData.length; i++) {
+                if (kmapData[i] === 1) minterms.push(i);
+                else if (kmapData[i] === 0) maxterms.push(i);
+                else dontcares.push(i);
+            }
+
+            let text = '';
+            if (minterms.length > 0) {
+                text += 'Sum-of-Products (SoP): f = Σm(' + minterms.join(',') + ')';
+                if (dontcares.length > 0) {
+                    text += ' + D(' + dontcares.join(',') + ')';
+                }
+                text += '\n\n';
+            }
+
+            if (maxterms.length > 0) {
+                text += 'Product-of-Sums (PoS): f = ΠM(' + maxterms.join(',') + ')';
+                if (dontcares.length > 0) {
+                    text += ' + D(' + dontcares.join(',') + ')';
+                }
+                text += '\n\n';
+            }
+
+            if (minterms.length === 0 && maxterms.length === 0) {
+                text = 'All cells are don\'t cares. Function is incompletely specified.';
+            }
+
+            text += '\nNote: This tool shows the canonical forms. Manual grouping is needed for minimization.';
+
+            output.textContent = text;
+        }
+
+        function convertTerm() {
+            const numVars = parseInt(document.getElementById('num-vars').value);
+            const index = parseInt(document.getElementById('term-index').value);
+            const output = document.getElementById('term-output');
+
+            if (index >= Math.pow(2, numVars)) {
+                output.textContent = 'Error: Index too large for ' + numVars + ' variables. Max index: ' + (Math.pow(2, numVars) - 1);
+                return;
+            }
+
+            const binary = index.toString(2).padStart(numVars, '0');
+            const vars = ['x', 'y', 'z', 'w', 'v', 'u'];
+
+            let mintermStr = '';
+            let maxtermStr = '';
+
+            for (let i = 0; i < numVars; i++) {
+                const varName = vars[i];
+                if (binary[i] === '1') {
+                    mintermStr += varName;
+                    maxtermStr += varName + '\'';
+                } else {
+                    mintermStr += varName + '\'';
+                    maxtermStr += varName;
+                }
+                if (i < numVars - 1) {
+                    mintermStr += '·';
+                    maxtermStr += '+';
+                }
+            }
+
+            let text = '';
+            text += 'Index: ' + index + '\n';
+            text += 'Binary: ' + binary + '\n\n';
+            text += 'Minterm m' + index + ' = ' + mintermStr + '\n';
+            text += 'This minterm is 1 when input = ' + binary + '\n\n';
+            text += 'Maxterm M' + index + ' = ' + maxtermStr + '\n';
+            text += 'This maxterm is 0 when input = ' + binary + '\n\n';
+            text += 'Remember: Minterms use uncomplemented for 1, complemented for 0\n';
+            text += 'Maxterms use complemented for 1, uncomplemented for 0 (opposite!)';
+
+            output.textContent = text;
+        }
+
+        function toggleAnswer(id) {
+            const answer = document.getElementById(id);
+            answer.classList.toggle('show');
+        }
+
+        // Radio button handlers
+        document.querySelectorAll('input[name="kmap-vars"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                initKMap(parseInt(e.target.value));
+            });
+        });
+
+        // Initialize on page load
+        initKMap(2);
+    </script>
+</body>
+</html>
