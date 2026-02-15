@@ -70,6 +70,10 @@ Use the `/sync-ece270-labs` skill to safely pull new labs. This only adds NEW la
 Labs use SystemVerilog and simulate on FPGA hardware.
 Lab reference files are in student-labs-main/refs/ including datasheets for 74HC series chips.
 
+### Lab Wiring Help
+
+When starting a new lab that involves breadboard circuit construction, ALWAYS read the full lab document first and then provide a wiring guide. This should include the wire color to length mapping from the wire kit, the exact chip pin connections based on datasheets, the DIO pin assignments for the AD2, and the test combinations for verifying each subcircuit. Do this before any wiring begins. Be smart about color mapping. Assign colors so that related signals use the same color (e.g. all carry signals one color, all sum signals another, inputs grouped by function). This makes debugging much easier since you can visually trace signal groups. After presenting the color mapping, ALWAYS ask the user if it looks good or if they want to change any of the color assignments before they start wiring.
+
 ### Key SystemVerilog Concepts
 Structural modeling uses primitive gates and module instances.
 Behavioral modeling uses always_comb for combinational and always_ff for sequential circuits.
