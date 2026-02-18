@@ -10,7 +10,7 @@ Create interactive lecture content that helps me understand and retain course ma
 
 ### Creating Interactive HTML Explanations
 
-CRITICAL REQUIREMENT. When creating HTML explanation files, they MUST be extremely comprehensive. This means including extensive text explanations for every concept with multiple paragraphs going deep into the why and how, not just the what. Include numerous worked examples showing step by step solutions. Provide intuitive analogies that make abstract concepts concrete. Cover edge cases and common mistakes students make. Include at least 10 to 15 practice problems per major topic with detailed solutions. Add visual diagrams for every concept that can be visualized. Include multiple ways of explaining the same concept for different learning styles. Reference specific textbook sections and page numbers when relevant. The explanations should be thorough enough that a student could learn the entire topic from the HTML file alone without needing the lecture.
+CRITICAL REQUIREMENT. When creating HTML explanation files, focus primarily on WORKED EXAMPLES. The user prefers fewer text heavy explanations and more practical application. Include at least 5 to 10 detailed worked examples per concept. The text should be concise and supportive, not the main focus. Breakdown complex diagrams and steps visually. Still reference specific textbook sections and page numbers. The goal is to learn by doing and seeing examples, not by reading long paragraphs.
 
 ### Using the Textbook
 
